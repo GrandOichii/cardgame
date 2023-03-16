@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Vg6zULBQC3agPuMWvp1+KB45N/owGHZHv1QHQimtUx5MqX3O2Z58Y66yjJ4dav0n9Dz+tw9rNmTVB4v6AU7JRg==",
+  "success": true,
+  "projectFilePath": "/Users/oichii/Desktop/cardgame/back/back.csproj",
+  "expectedPackageFiles": [
+    "/Users/oichii/.nuget/packages/keralua/1.3.2/keralua.1.3.2.nupkg.sha512",
+    "/Users/oichii/.nuget/packages/nlua/1.6.2/nlua.1.6.2.nupkg.sha512"
+  ],
+  "logs": []
+}

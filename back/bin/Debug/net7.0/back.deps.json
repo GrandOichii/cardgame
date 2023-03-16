@@ -1,0 +1,141 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "back/1.0.0": {
+        "dependencies": {
+          "NLua": "1.6.2"
+        },
+        "runtime": {
+          "back.dll": {}
+        }
+      },
+      "KeraLua/1.3.2": {
+        "runtime": {
+          "lib/net6.0/KeraLua.dll": {
+            "assemblyVersion": "1.3.2.0",
+            "fileVersion": "1.3.2.0"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/android-arm/native/liblua54.so": {
+            "rid": "android-arm",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/android-arm64/native/liblua54.so": {
+            "rid": "android-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/android-x64/native/liblua54.so": {
+            "rid": "android-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/android-x86/native/liblua54.so": {
+            "rid": "android-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/ios/native/liblua54.framework/Info.plist": {
+            "rid": "ios",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/ios/native/liblua54.framework/liblua54": {
+            "rid": "ios",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-x64/native/liblua54.so": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/maccatalyst/native/liblua54.framework/Info.plist": {
+            "rid": "maccatalyst",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/maccatalyst/native/liblua54.framework/liblua54": {
+            "rid": "maccatalyst",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx/native/liblua54.dylib": {
+            "rid": "osx",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/tvos/native/liblua54.framework/Info.plist": {
+            "rid": "tvos",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/tvos/native/liblua54.framework/liblua54": {
+            "rid": "tvos",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-arm/native/lua54.dll": {
+            "rid": "win-arm",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-arm64/native/lua54.dll": {
+            "rid": "win-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/lua54.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/lua54.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "NLua/1.6.2": {
+        "dependencies": {
+          "KeraLua": "1.3.2"
+        },
+        "runtime": {
+          "lib/net6.0/NLua.dll": {
+            "assemblyVersion": "1.6.2.0",
+            "fileVersion": "1.6.2.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "back/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "KeraLua/1.3.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NXqBDEUC2WbAE43Yx/x+PNfv80SLorUuZLU+2Y71rYSRgmY2vYfmI6+8yINYPRTrySecbaEVRQFlcGJllyYi6g==",
+      "path": "keralua/1.3.2",
+      "hashPath": "keralua.1.3.2.nupkg.sha512"
+    },
+    "NLua/1.6.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oh9D/x4DbYv+Nx6NMQ2BFKdbiVaOKA7M/sTBkXTf10Xjne/2ukreWGK8HHhciMacs9P/yGSTd1qqdSHFI3XyLQ==",
+      "path": "nlua/1.6.2",
+      "hashPath": "nlua.1.6.2.nupkg.sha512"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "starting_life": 20,
+    "starting_hand_size": 5,
+    "max_hand_size": 5,
+
+    
+    "players": [
+        {
+            "deck": "../decks/test.deck"
+        },
+        {
+            "deck": "../decks/test.deck"
+        }
+    ]
+}

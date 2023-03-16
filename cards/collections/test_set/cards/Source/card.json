@@ -1,0 +1,6 @@
+{
+    "name": "Source",
+    "type": "Energy",
+    "text": "Gain 1 energy token.",
+    "script": "script.lua"
+}
