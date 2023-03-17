@@ -2,8 +2,5 @@
     "name": "Old Wizard",
     "type": "Creature",
     "text": "When [cn:Old Wizard] enters play, [kv:power up] a card in your hand.",
-    "script": "script.lua",
-    "on": {
-        "enter": "OldWizard_Cast"
-    }
+    "script": "script.lua"
 }

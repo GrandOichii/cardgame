@@ -11,7 +11,7 @@ namespace game.player {
     class Player : ILuaSerializable{
         static private int LastPid = 0;
 
-        public int PID { get; }
+        public int ID { get; }
 
         private string _name;
         public string Name { get => _name; }
@@ -50,15 +50,15 @@ namespace game.player {
             _name = name;
 
             // pid
-            PID = LastPid;
+            ID = LastPid;
             LastPid++;
 
             // TODO
             // deck setting
             if (deck.Bond is not null)
-                Bond = new CardWrapper(deck.Bond);
+                Bond = new CardWrapper(match, deck.Bond);
 
-            Deck = CardDeck.From(deck);
+            Deck = CardDeck.From(match, deck);
             Deck.Shuffle();
 
             Hand = new(new());
@@ -88,7 +88,7 @@ namespace game.player {
             lState.NewTable("result");
             var result = lState.GetTable("result");
             result["name"] = _name;
-            result["id"] = PID;
+            result["id"] = ID;
             return result;
         }
     }
@@ -100,11 +100,17 @@ namespace game.player {
     }
 
     class TerminalPlayerController : PlayerController {
+        private void PrintCardsInZone(CardDeck zone, string zoneName) {
+            System.Console.WriteLine("=== Cards in " + zoneName + " ===");
+            foreach (var card in zone.Cards)
+                System.Console.WriteLine(card.ID + ": " + card.Card.Name);
+
+        }
+
         public override string PromptAction(Player controlledPlayer)
         {
-            System.Console.WriteLine("Cards in hand:");
-            foreach (var card in controlledPlayer.Hand.Cards)
-                System.Console.WriteLine(card.ID + ": " + card.Card.Name);
+            PrintCardsInZone(controlledPlayer.Hand, "hand");
+            PrintCardsInZone(controlledPlayer.Discard, "discard");
             System.Console.Write("Enter action for " + controlledPlayer.Name + ": ");
             string? result = null;
             while (result is null)

@@ -49,6 +49,37 @@ namespace game.core {
         }
     }
 
+    namespace actions
+    {
+        abstract class GameAction
+        {
+            abstract public void Exec(Match match, Player player, string[] args);
+        }
+
+        class CastCardAction : GameAction
+        {
+            public override void Exec(Match match, Player player, string[] args)
+            {
+                if (args.Length != 2) throw new Exception("Incorrect number of arguments for CastCardAction");
+
+                var cID = args[1];
+                var card = player.Hand[cID];
+
+                // TODO can't cast a card with id that's not in your hand, suspect cheating
+                if (card is null) throw new Exception("Player " + player.Name + " cast card with ID " + cID + ": it's not in their hand");
+
+                // TODO check if has enough energy to cast the card
+                var castFunc = card.Table[Card.ON_CAST_FNAME] as LuaFunction;
+                if (castFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.ON_CAST_FNAME + " function");
+
+                // TODO figure out the input and output args
+                player.Hand.Cards.Remove(card);
+                castFunc.Call(card.ToLuaTable(match.LState), player.ToLuaTable(match.LState));
+            }
+        }
+
+    }
+
     namespace phases {
 
         abstract class GamePhase {
@@ -59,19 +90,50 @@ namespace game.core {
         {
             public override void Action(Match match, Player player)
             {
+                // TODO replace with card draw per turn
                 player.DrawCards(1);
             }
         }
 
         class MainPhase : GamePhase
         {
+            private readonly string PASS_TURN_ACTION = "pass";
+            private static readonly Dictionary<string, actions.GameAction> ACTION_MAP =
+            new(){
+                { "cast", new actions.CastCardAction() }
+            };
+
             public override void Action(Match match, Player player)
             {
-                var action = player.PromptAction();
+                string action;
+                while (true)
+                {
+                    action = PromptAction(match, player);
+                    var words = action.Split(" ");
+
+                    var actionWord = words[0];
+                    if (actionWord == PASS_TURN_ACTION) break;
+
+                    // TODO remove
+                    if (actionWord == "quit")
+                    {
+                        match.Winner = player;
+                        return;
+                    }
+                    
+                    if (!ACTION_MAP.ContainsKey(actionWord)) throw new Exception("Unknown action from player " + player.Name + ": " + actionWord);
+
+                    ACTION_MAP[actionWord].Exec(match, player, words);
+                    
+                }
                 // TODO
-                if (action == "quit")
-                    match.Winner = player;
             }
+
+            private string PromptAction(Match match, Player player)
+            {
+                // TODO get all available actions
+                return player.PromptAction();
+            } 
         }
 
         class TurnEnd : GamePhase
@@ -88,6 +150,11 @@ namespace game.core {
         public List<CardWrapper> _cards;
         public List<CardWrapper> Cards { get => _cards; }
 
+        public CardWrapper? this[string cardID]
+        {
+            get => _cards.Find(card => card.ID == cardID);
+        }
+
         public CardDeck(List<CardWrapper> cards) {
             _cards = cards;
         }
@@ -103,17 +170,21 @@ namespace game.core {
             return result;
         }
 
-        static public CardDeck From(Deck deck) {
+        static public CardDeck From(Match match, Deck deck) {
             var cards = new List<CardWrapper>();
             foreach (var pair in deck.Cards)
                 for (int i = 0; i < pair.Value; i++)
-                    cards.Add(new CardWrapper(pair.Key));
+                    cards.Add(new CardWrapper(match, pair.Key));
             return new CardDeck(cards);
         }
 
         public void AddToBack(List<CardWrapper> cards) {
             foreach (var card in cards)
-                _cards.Add(card);
+                AddToBack(card);
+        }
+
+        public void AddToBack(CardWrapper card) {
+            _cards.Add(card);
         }
     }
 }

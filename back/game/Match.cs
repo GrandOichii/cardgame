@@ -7,6 +7,7 @@ using game.core.phases;
 using game.collection;
 using game.cards;
 using game.deck;
+using game.scripts;
 
 namespace game.match {
 
@@ -22,6 +23,23 @@ namespace game.match {
             return result;
         }
     }
+
+    class CardManager
+    {
+        public Dictionary<string, CardWrapper> Cards { get; } = new();
+
+        public CardWrapper? this[string cID]
+        {
+            get => Cards.ContainsKey(cID) ? Cards[cID] : null;
+        }
+
+
+        public void Add(List<CardWrapper> cards)
+        {
+            foreach (var card in cards)
+                Cards[card.ID] = card;
+        }
+    }
     
     class Match {
         static private List<GamePhase> _phases = new(){
@@ -32,11 +50,13 @@ namespace game.match {
         
         // lua state
         private Lua _lState;
-        public Lua LStata { get => _lState; }
+        public Lua LState { get => _lState; }
+        private ScriptMaster _scriptMaster;
+        public CardManager AllCards { get; }
 
         // players
         private List<Player> _players;
-        private List<Player> Players {get => _players; }
+        private List<Player> Players { get => _players; }
 
         // game vars
         private int _curPlayerI;
@@ -50,26 +70,23 @@ namespace game.match {
             Config = config;
             
             _lState = new();
+            _scriptMaster = new(this);
+            AllCards = new();
+            LoadLuaScripts();
             _players = new();
+        }
 
-            /*
-            var type = typeof(TiledGame);
-            foreach (var method in type.GetMethods())
-            {
-                if (method.GetCustomAttribute(typeof(LuaCommand)) is object)
-                {
-                    LState[method.Name] = method.CreateDelegate(Expression.GetDelegateType(
-                        (from parameter in method.GetParameters() select parameter.ParameterType)
-                        .Concat(new[] { method.ReturnType })
-                        .ToArray())
-                    , this);
-                }
-            }
-            */
+        private void LoadLuaScripts()
+        {
+            //string[] scriptPaths = { "common.lua" };
+            string[] scriptPaths = { "C:\\Users\\ihawk\\code\\cardgame\\back\\common.lua" };
+
+            foreach (var path in scriptPaths)
+                LState.DoFile(path);
         }
 
         public bool AddPlayer(string playerName, PlayerController controller, Deck deck) {
-            // TODO
+        // TODO
             if (_players.Count >= 2) return false;
 
             var player = new Player(this, playerName, deck, controller);
@@ -78,10 +95,16 @@ namespace game.match {
             return true;
         }
 
+        public Player? PlayerByID(int pid) => _players.Find(player => player.ID == pid);
+
         private void Setup() {
             foreach (var player in _players) {
+                // add cards in deck to card pool
+                AllCards.Add(player.Deck.Cards);
+
                 // set life total
                 player.Life = Config.StartingLifeTotal;
+
                 // fill hand
                 player.Hand.AddToBack(player.Deck.PopTop(Config.StartingHandSize));
             }

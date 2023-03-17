@@ -55,7 +55,7 @@ namespace game.deck {
         }
 
         static public Deck FromText(CollectionPool collections, string text) {
-            var lines = text.Split("\n");
+            var lines = text.Split(Environment.NewLine);
             Card? bond = null;
             int startI = 0;
             if (lines.Length > 2 && lines[1] == "") {

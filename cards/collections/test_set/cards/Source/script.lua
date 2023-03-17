@@ -1,9 +1,9 @@
 
 
 function _CreateCard(props)
-    Common:Foo()
-    local card = Common:Source(props)
+    local card = CardCreation:Source(props)
 
+    print(Utility:TableToStr(card))
     return card
 end
 
