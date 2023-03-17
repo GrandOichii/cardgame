@@ -41,6 +41,10 @@
             "NLua": {
               "target": "Package",
               "version": "[1.6.2, )"
+            },
+            "WebSocketSharp": {
+              "target": "Package",
+              "version": "[1.0.3-rc11, )"
             }
           },
           "imports": [

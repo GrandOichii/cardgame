@@ -17,8 +17,8 @@ namespace game.cards {
     class CardWrapper {
         static public IIDCreator IDCreator = new IncrementIDCreator(); 
 
-        private string ID { get; }
-        private Card Card { get; }
+        public string ID { get; }
+        public Card Card { get; }
         public CardWrapper(Card card) {
             ID = IDCreator.CreateID();
 
@@ -32,6 +32,8 @@ namespace game.cards {
 
         [JsonPropertyName("text")]
         public string Text { get; set; }="";
+        [JsonPropertyName("types")]
+        public string Type { get; set; }="";
 
         [JsonPropertyName("script")]
         public string ScriptPath { get; set; }="";
@@ -44,8 +46,10 @@ namespace game.cards {
         public string Text { get; }
         public string Type { get; }
 
-        protected Card(string name) {
+        protected Card(string name, string text, string type) {
             Name = name;
+            Text = text;
+            Type = type;
         }
 
         static public Card Load(string path) {
@@ -56,7 +60,9 @@ namespace game.cards {
                 throw new Exception("Failed to load card from " + path);
 
             var result = new Card(
-                template.Name
+                template.Name,
+                template.Text,
+                template.Type
             );
 
             return result;

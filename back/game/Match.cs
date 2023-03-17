@@ -41,13 +41,13 @@ namespace game.match {
         // game vars
         private int _curPlayerI;
 
-        private MatchConfig _config;
+        public MatchConfig Config { get; }
 
-        private Player? _winner;
-        public bool Active { get => _winner is null; }
+        public Player? Winner { get; set; }
+        public bool Active { get => Winner is null; }
 
         public Match(MatchConfig config) {
-            _config = config;
+            Config = config;
             
             _lState = new();
             _players = new();
@@ -72,7 +72,7 @@ namespace game.match {
             // TODO
             if (_players.Count >= 2) return false;
 
-            var player = new Player(playerName, deck, controller);
+            var player = new Player(this, playerName, deck, controller);
 
             _players.Add(player);
             return true;
@@ -81,9 +81,9 @@ namespace game.match {
         private void Setup() {
             foreach (var player in _players) {
                 // set life total
-                player.Life = _config.StartingLifeTotal;
+                player.Life = Config.StartingLifeTotal;
                 // fill hand
-                player.Hand.AddToBack(player.Deck.PopTop(_config.StartingHandSize));
+                player.Hand.AddToBack(player.Deck.PopTop(Config.StartingHandSize));
             }
         }
 

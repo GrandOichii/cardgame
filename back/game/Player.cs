@@ -2,6 +2,7 @@ using NLua;
 
 using game.core;
 using game.cards;
+using game.match;
 using game.deck;
 
 namespace game.player {
@@ -42,7 +43,7 @@ namespace game.player {
 
 
         public PlayerController Controller { get; set; }
-        public Player(string name, Deck deck, PlayerController controller) {
+        public Player(Match match, string name, Deck deck, PlayerController controller) {
             Controller = controller;
 
             // base stats
@@ -62,6 +63,20 @@ namespace game.player {
 
             Hand = new(new());
             Discard = new(new());
+        }
+
+        public void DrawCards(int amount) {
+            var cards = Deck.PopTop(1);
+            Hand.AddToBack(cards);
+        }
+
+        public string PromptAction() {
+            return Controller.PromptAction(this);
+        }
+
+        public int PromptDiscard(int amount, bool force) {
+            // TODO
+            return 0;
         }
 
         public void LoadDeckTemplate(Deck template) {
@@ -87,6 +102,9 @@ namespace game.player {
     class TerminalPlayerController : PlayerController {
         public override string PromptAction(Player controlledPlayer)
         {
+            System.Console.WriteLine("Cards in hand:");
+            foreach (var card in controlledPlayer.Hand.Cards)
+                System.Console.WriteLine(card.ID + ": " + card.Card.Name);
             System.Console.Write("Enter action for " + controlledPlayer.Name + ": ");
             string? result = null;
             while (result is null)

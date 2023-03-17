@@ -59,18 +59,18 @@ namespace game.core {
         {
             public override void Action(Match match, Player player)
             {
-                // TODO
-                throw new NotImplementedException();
+                player.DrawCards(1);
             }
         }
 
-        
         class MainPhase : GamePhase
         {
             public override void Action(Match match, Player player)
             {
+                var action = player.PromptAction();
                 // TODO
-                throw new NotImplementedException();
+                if (action == "quit")
+                    match.Winner = player;
             }
         }
 
@@ -78,8 +78,8 @@ namespace game.core {
         {
             public override void Action(Match match, Player player)
             {
-                // TODO
-                throw new NotImplementedException();
+                // discard to hand size
+                int discarded = player.PromptDiscard(match.Config.MaxHandSize - player.Hand.Cards.Count, true);
             }
         }
     }

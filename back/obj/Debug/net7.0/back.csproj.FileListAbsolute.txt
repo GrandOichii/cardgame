@@ -32,3 +32,4 @@
 /Users/oichii/Desktop/cardgame/back/bin/Debug/net7.0/runtimes/win-x64/native/lua54.dll
 /Users/oichii/Desktop/cardgame/back/bin/Debug/net7.0/runtimes/win-x86/native/lua54.dll
 /Users/oichii/Desktop/cardgame/back/obj/Debug/net7.0/back.csproj.CopyComplete
+/Users/oichii/Desktop/cardgame/back/bin/Debug/net7.0/websocket-sharp.dll
