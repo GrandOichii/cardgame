@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLua;
 
+using game.player;
 using game.match;
 
 namespace game.scripts
@@ -54,14 +55,29 @@ namespace game.scripts
         }
 
         [LuaCommand]
-        public void PlaceIntoDiscard(string cid, int pid) {
+        public void PlaceIntoZone(string cid, int pid, string zoneName) {
+
             var player = _match.PlayerByID(pid);
             if (player is null) throw new Exception("No player with ID " + pid);
+
+            if (!player.Zones.ContainsKey(zoneName)) throw new Exception("No zone with name " + zoneName);
+            var zone = player.Zones[zoneName];
 
             var card = _match.AllCards[cid];
             if (card is null) throw new Exception("No card with ID " + cid);
 
-            player.Discard.AddToBack(card); 
+            zone.AddToBack(card); 
+
+        }
+
+        [LuaCommand]
+        public void PlaceIntoDiscard(string cid, int pid) {
+            PlaceIntoZone(cid, pid, Player.DISCARD_ZONE_NAME);
+        }
+
+        [LuaCommand]
+        public void PlaceIntoPlay(string cid, int pid) {
+            PlaceIntoZone(cid, pid, Player.IN_PLAY_ZONE_NAME);
         }
 
     }

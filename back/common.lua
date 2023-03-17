@@ -37,13 +37,28 @@ end
 
 function CardCreation:InPlayCard(props)
     local result = CardCreation:CardObject(props)
-    
-    result.on_cast = function(owner)
-        print('Spell is placed into play')
+
+    result.on_cast = function(this, owner)
+        PlaceIntoPlay(this.id, owner.id)
     end
 
     return result
 end
+
+
+function CardCreation:Damageable(props)
+    local result = CardCreation:InPlayCard(props)
+    result.health = props.health
+    return result
+end
+
+
+function CardCreation:Creature(props)
+    local result = CardCreation:Damageable(props)
+    result.attack = props.attack
+    return result
+end
+
 
 -- Utility Functions
 Utility = {}

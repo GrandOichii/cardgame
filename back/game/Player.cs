@@ -37,9 +37,16 @@ namespace game.player {
         // cards
         public CardWrapper? Bond { get; }=null;
 
+        public static readonly string HAND_ZONE_NAME = "hand";
         public CardDeck Hand { get; }
+        public static readonly string IN_PLAY_ZONE_NAME = "in_play";
+        public CardDeck InPlay { get; }
+        public static readonly string DECK_ZONE_NAME = "deck";
         public CardDeck Deck { get; }
+        public static readonly string DISCARD_ZONE_NAME = "discard";
         public CardDeck Discard { get; }
+
+        public Dictionary<string, CardDeck> Zones { get; }
 
 
         public PlayerController Controller { get; set; }
@@ -53,16 +60,24 @@ namespace game.player {
             ID = LastPid;
             LastPid++;
 
-            // TODO
-            // deck setting
+            // bond setting
             if (deck.Bond is not null)
                 Bond = new CardWrapper(match, deck.Bond);
 
+            // deck setting
             Deck = CardDeck.From(match, deck);
             Deck.Shuffle();
 
             Hand = new(new());
             Discard = new(new());
+            InPlay = new(new());
+
+            Zones = new(){
+                {HAND_ZONE_NAME, Hand},
+                {DISCARD_ZONE_NAME, Discard},
+                {DECK_ZONE_NAME, Deck},
+                {IN_PLAY_ZONE_NAME, InPlay},
+            };
         }
 
         public void DrawCards(int amount) {
@@ -110,12 +125,13 @@ namespace game.player {
         public override string PromptAction(Player controlledPlayer)
         {
             PrintCardsInZone(controlledPlayer.Hand, "hand");
+            PrintCardsInZone(controlledPlayer.InPlay, "play");
             PrintCardsInZone(controlledPlayer.Discard, "discard");
             System.Console.Write("Enter action for " + controlledPlayer.Name + ": ");
             string? result = null;
             while (result is null)
                 result = Console.ReadLine();
-
+            System.Console.WriteLine();
             return result;
         }
     }
