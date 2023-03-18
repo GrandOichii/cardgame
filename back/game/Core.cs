@@ -68,7 +68,13 @@ namespace game.core {
                 // TODO can't cast a card with id that's not in your hand, suspect cheating
                 if (card is null) throw new Exception("Player " + player.Name + " cast card with ID " + cID + ": it's not in their hand");
 
-                // TODO check if has enough energy to cast the card
+                var canCastFunc = card.Table[Card.CAN_CAST_FNAME] as LuaFunction;
+                if (canCastFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAN_CAST_FNAME + " function");
+                var canCast = (bool)canCastFunc.Call()[0];
+                
+                // TODO throw exception?
+                if (!canCast) return;
+
                 var castFunc = card.Table[Card.ON_CAST_FNAME] as LuaFunction;
                 if (castFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.ON_CAST_FNAME + " function");
 

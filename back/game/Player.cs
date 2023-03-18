@@ -104,6 +104,8 @@ namespace game.player {
             var result = lState.GetTable("result");
             result["name"] = _name;
             result["id"] = ID;
+            result["energy"] = Energy;
+            result["life"] = Life;
             return result;
         }
     }
@@ -122,12 +124,14 @@ namespace game.player {
 
         }
 
-        public override string PromptAction(Player controlledPlayer)
+        public override string PromptAction(Player player)
         {
-            PrintCardsInZone(controlledPlayer.Hand, "hand");
-            PrintCardsInZone(controlledPlayer.InPlay, "play");
-            PrintCardsInZone(controlledPlayer.Discard, "discard");
-            System.Console.Write("Enter action for " + controlledPlayer.Name + ": ");
+            System.Console.WriteLine("Life: " + player.Life);
+            System.Console.WriteLine("Energy: " + player.Energy);
+            PrintCardsInZone(player.Hand, "hand");
+            PrintCardsInZone(player.InPlay, "play");
+            PrintCardsInZone(player.Discard, "discard");
+            System.Console.Write("Enter action for " + player.Name + ": ");
             string? result = null;
             while (result is null)
                 result = Console.ReadLine();

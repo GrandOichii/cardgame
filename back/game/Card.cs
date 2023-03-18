@@ -60,6 +60,7 @@ namespace game.cards {
 
     class Card {
         static public string ON_CAST_FNAME = "on_cast";
+        static public string CAN_CAST_FNAME = "can_cast";
         static public string CREATION_FNAME = "_CreateCard";
 
         static private string CARD_INFO_PATH = "card.json";

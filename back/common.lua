@@ -8,6 +8,10 @@ function CardCreation:CardObject(props)
     result.type = props.type
     result.cost = props.cost
 
+    result.can_cast = function (owner)
+        return owner.energy <= result.cost
+    end
+
     return result
 end
 
@@ -15,8 +19,9 @@ end
 function CardCreation:Spell(props)
     local result = CardCreation:CardObject(props)
     
-    result.on_cast = function(match, owner)
-        print('Spell is placed into discard')
+    result.on_cast = function(owner)
+        -- spend energy
+        TakeEnergy(owner.id, result.cost)
     end
     
     return result
@@ -28,6 +33,8 @@ function CardCreation:Source(props)
 
     result.cost = -1
     result.on_cast = function (this, owner)
+        -- spend energy
+        TakeEnergy(owner.id, result.cost)
         PlaceIntoDiscard(this.id, owner.id)
     end
             
