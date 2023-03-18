@@ -1,7 +1,7 @@
 {
     "starting_life": 20,
-    "starting_hand_size": 5,
-    "max_hand_size": 5,
+    "starting_hand_size": 3,
+    "max_hand_size": 3,
     "turn_start_card_draw": 2,
 
     "comment": "NOT IMPLEMENTED",

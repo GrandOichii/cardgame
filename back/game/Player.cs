@@ -83,7 +83,7 @@ namespace game.player {
         }
 
         public void DrawCards(int amount) {
-            var cards = Deck.PopTop(1);
+            var cards = Deck.PopTop(amount);
             Hand.AddToBack(cards);
         }
 

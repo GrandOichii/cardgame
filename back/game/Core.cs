@@ -104,6 +104,7 @@ namespace game.core {
                 // replenish energy
                 player.Energy = player.MaxEnergy;
                 // TODO replace with card draw per turn
+                System.Console.WriteLine(match.Config.TurnStartCardDraw);
                 player.DrawCards(match.Config.TurnStartCardDraw);
             }
         }
