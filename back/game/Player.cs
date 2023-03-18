@@ -22,6 +22,7 @@ namespace game.player {
                 // TODO
                 return _maxEnergy;
             }
+            set => _maxEnergy = value;
         }
 
         private int _energy = 0;
@@ -30,6 +31,7 @@ namespace game.player {
                 // TODO
                 return _energy;
             }
+            set => _energy = value;
         }
 
         public int Life { get; set; }

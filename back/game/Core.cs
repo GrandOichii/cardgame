@@ -62,6 +62,8 @@ namespace game.core {
             {
                 if (args.Length != 2) throw new Exception("Incorrect number of arguments for CastCardAction");
 
+                var pTable = player.ToLuaTable(match.LState);
+
                 var cID = args[1];
                 var card = player.Hand[cID];
 
@@ -70,17 +72,20 @@ namespace game.core {
 
                 var canCastFunc = card.Table[Card.CAN_CAST_FNAME] as LuaFunction;
                 if (canCastFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAN_CAST_FNAME + " function");
-                var canCast = (bool)canCastFunc.Call()[0];
+                var canCast = (bool)canCastFunc.Call(pTable)[0];
                 
                 // TODO throw exception?
-                if (!canCast) return;
+                if (!canCast) {
+                    System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") " + "tried to cast an uncastable spell " + card.Card.Name + " (" + card.ID + ")");
+                    return;
+                }
 
                 var castFunc = card.Table[Card.ON_CAST_FNAME] as LuaFunction;
                 if (castFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.ON_CAST_FNAME + " function");
 
                 // TODO figure out the input and output args
                 player.Hand.Cards.Remove(card);
-                castFunc.Call(card.ToLuaTable(match.LState), player.ToLuaTable(match.LState));
+                castFunc.Call(card.ToLuaTable(match.LState), pTable);
             }
         }
 
@@ -89,15 +94,17 @@ namespace game.core {
     namespace phases {
 
         abstract class GamePhase {
-            abstract public void Action(Match match, Player player);
+            abstract public void Exec(Match match, Player player);
         }
 
         class TurnStart : GamePhase
         {
-            public override void Action(Match match, Player player)
+            public override void Exec(Match match, Player player)
             {
+                // replenish energy
+                player.Energy = player.MaxEnergy;
                 // TODO replace with card draw per turn
-                player.DrawCards(1);
+                player.DrawCards(match.Config.TurnStartCardDraw);
             }
         }
 
@@ -109,7 +116,7 @@ namespace game.core {
                 { "cast", new actions.CastCardAction() }
             };
 
-            public override void Action(Match match, Player player)
+            public override void Exec(Match match, Player player)
             {
                 string action;
                 while (true)
@@ -144,7 +151,7 @@ namespace game.core {
 
         class TurnEnd : GamePhase
         {
-            public override void Action(Match match, Player player)
+            public override void Exec(Match match, Player player)
             {
                 // discard to hand size
                 int discarded = player.PromptDiscard(match.Config.MaxHandSize - player.Hand.Cards.Count, true);

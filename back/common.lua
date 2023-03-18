@@ -9,7 +9,7 @@ function CardCreation:CardObject(props)
     result.cost = props.cost
 
     result.can_cast = function (owner)
-        return owner.energy <= result.cost
+        return owner.energy >= result.cost
     end
 
     return result
@@ -19,9 +19,10 @@ end
 function CardCreation:Spell(props)
     local result = CardCreation:CardObject(props)
     
-    result.on_cast = function(owner)
+    result.on_cast = function(this, owner)
         -- spend energy
         TakeEnergy(owner.id, result.cost)
+        PlaceIntoDiscard(this.id, owner.id)
     end
     
     return result
@@ -31,11 +32,16 @@ end
 function CardCreation:Source(props)
     local result = CardCreation:CardObject(props)
 
-    result.cost = -1
+    result.cost = 0
+    result.can_cast = function ()
+        -- TODO
+        return true
+    end
     result.on_cast = function (this, owner)
-        -- spend energy
-        TakeEnergy(owner.id, result.cost)
+        -- TODO disallow any further source cards to be played this turn
+        IncreaseMaxEnergy(owner.id, 1)
         PlaceIntoDiscard(this.id, owner.id)
+        
     end
             
     return result
@@ -47,6 +53,7 @@ function CardCreation:InPlayCard(props)
 
     result.on_cast = function(this, owner)
         PlaceIntoPlay(this.id, owner.id)
+        TakeEnergy(owner.id, result.cost)
     end
 
     return result

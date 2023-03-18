@@ -4,6 +4,8 @@
         "PlayerByID",
         "PlaceIntoDiscard",
         "PlaceIntoZone",
-        "PlaceIntoPlay"
+        "PlaceIntoPlay",
+        "TakeEnergy",
+        "IncreaseMaxEnergy"
     ]
 }

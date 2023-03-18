@@ -13,9 +13,7 @@ using game.match;
 namespace game.scripts
 {
     [AttributeUsage(AttributeTargets.Method)]
-    internal class LuaCommand : Attribute
-    {
-    }
+    internal class LuaCommand : Attribute {}
 
     class ScriptMaster
     {
@@ -38,6 +36,12 @@ namespace game.scripts
 
         }
 
+        private Player GetPlayer(int pid) {
+            var player = _match.PlayerByID(pid);
+            if (player is null) throw new Exception("No player with ID " + pid);
+            return player;
+        }
+
         [LuaCommand]
         public void TestCommand()
         {
@@ -57,8 +61,7 @@ namespace game.scripts
         [LuaCommand]
         public void PlaceIntoZone(string cid, int pid, string zoneName) {
 
-            var player = _match.PlayerByID(pid);
-            if (player is null) throw new Exception("No player with ID " + pid);
+            var player = GetPlayer(pid);
 
             if (!player.Zones.ContainsKey(zoneName)) throw new Exception("No zone with name " + zoneName);
             var zone = player.Zones[zoneName];
@@ -78,6 +81,22 @@ namespace game.scripts
         [LuaCommand]
         public void PlaceIntoPlay(string cid, int pid) {
             PlaceIntoZone(cid, pid, Player.IN_PLAY_ZONE_NAME);
+        }
+
+        [LuaCommand]
+        public void TakeEnergy(int pid, int amount) {
+            var player = GetPlayer(pid);
+            
+            player.Energy -= amount;
+            System.Console.WriteLine("New energy: " + player.Energy);
+        }
+
+        [LuaCommand]
+        public void IncreaseMaxEnergy(int pid, int amount) {
+            var player = GetPlayer(pid);
+
+            player.MaxEnergy += amount;
+            player.Energy += amount;
         }
 
     }

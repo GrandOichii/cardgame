@@ -14,6 +14,8 @@ namespace game.match {
     struct MatchConfig {
         [JsonPropertyName("starting_life")]
         public int StartingLifeTotal { get; set; }
+        [JsonPropertyName("turn_start_card_draw")]
+        public int TurnStartCardDraw { get; set; }
         [JsonPropertyName("starting_hand_size")]
         public int StartingHandSize { get; set; }
         [JsonPropertyName("max_hand_size")]
@@ -114,7 +116,7 @@ namespace game.match {
             while(Active) {
                 var cPlayer = _players[_curPlayerI];
                 foreach (var phase in _phases) {
-                    phase.Action(this, cPlayer);
+                    phase.Exec(this, cPlayer);
 
                     if (!Active) return;
                 }
