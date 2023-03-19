@@ -3,6 +3,7 @@
     "cards": [
         "cards/Good_Cleric",
         "cards/Source",
+        "cards/Healer",
         "cards/Old_Wizard"
     ]
 }

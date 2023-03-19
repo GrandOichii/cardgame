@@ -167,6 +167,8 @@ namespace game.core {
         {
             public override void Exec(Match match, Player player)
             {
+                match.Emit("turn_end", new(){ {"player", player} });
+
                 // discard to hand size
                 int discarded = player.PromptDiscard(match.Config.MaxHandSize - player.Hand.Cards.Count, true);
             }
@@ -219,14 +221,16 @@ namespace game.core {
         
         public bool IsSilent { get; }
         public string Zone { get; }
+        public string On { get; }
         public LuaFunction? CheckF { get; }
         public LuaFunction EffectF { get; }
         
-        public Trigger(bool isSilent, string zone, LuaFunction? checkF, LuaFunction effectF) {
+        public Trigger(bool isSilent, string zone, string on, LuaFunction? checkF, LuaFunction effectF) {
             IsSilent = isSilent;
             Zone = zone;
             CheckF = checkF;
             EffectF = effectF;
+            On = on;
         }
 
         public static Trigger FromLua(LuaTable table) {
@@ -235,7 +239,9 @@ namespace game.core {
             if (effect is null) throw new Exception("Failed to parse trigger: effect is nil");
             var zone = table["zone"] as string;
             if (zone is null) throw new Exception("Failed to parse trigger: zone is nil");
-            return new Trigger(isSilent, zone, table["check"] as LuaFunction, effect);
+            var on = table["on"] as string;
+            if (on is null) throw new Exception("Failed to parse trigger: on is nil");
+            return new Trigger(isSilent, zone, on, table["check"] as LuaFunction, effect);
         }
     }
 }

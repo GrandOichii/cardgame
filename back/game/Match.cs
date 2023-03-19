@@ -12,7 +12,7 @@ using game.scripts;
 
 namespace game.match {
 
-    struct MatchConfig {
+    struct MatchConfig : ILuaSerializable {
         [JsonPropertyName("starting_life")]
         public int StartingLifeTotal { get; set; }
         [JsonPropertyName("turn_start_card_draw")]
@@ -21,8 +21,20 @@ namespace game.match {
         public int StartingHandSize { get; set; }
         [JsonPropertyName("max_hand_size")]
         public int MaxHandSize { get; set; }
+
         static public MatchConfig FromText(string text) {
             var result = JsonSerializer.Deserialize<MatchConfig>(text);
+            return result;
+        }
+
+        public LuaTable ToLuaTable(Lua lState)
+        {
+            lState.NewTable("result");
+            var result = lState.GetTable("result");
+            result["starting_life"] = StartingLifeTotal;
+            result["turn_start_card_draw"] = TurnStartCardDraw;
+            result["starting_hand_size"] = StartingHandSize;
+            result["max_hand_size"] = MaxHandSize;
             return result;
         }
     }
@@ -59,7 +71,7 @@ namespace game.match {
 
         // players
         private List<Player> _players;
-        private List<Player> Players { get => _players; }
+        public List<Player> Players { get => _players; }
 
         // game vars
         private int _curPlayerI;
@@ -151,7 +163,6 @@ namespace game.match {
             
             // TODO decide on player order
             // TODO make isSilent useful
-            System.Console.WriteLine("STARTED EMIT " + signal);
             foreach (var player in _players) {
                 foreach (var pair in player.Zones) {
                     foreach (var card in pair.Value.Cards) {
@@ -163,16 +174,18 @@ namespace game.match {
                         foreach (LuaTable trigger in triggers.Values) {
                             var zone = trigger["zone"] as string;
                             if (zone != pair.Key && zone != Player.ANYWHERE_ZONE) continue;
+
                             var t = Trigger.FromLua(trigger);
+                            if (!t.On.Equals(signal)) continue;
                             if (t.CheckF != null) {
-                                // TODO execute check function
+                                var canTrigger = (bool)t.CheckF.Call(emitArgs)[0];
+                                if (!canTrigger) continue;
                             }
                             t.EffectF.Call(emitArgs);
                         }
                     }
                 }
             }
-            System.Console.WriteLine("ENDED EMIT " + signal);
         }
     }
 

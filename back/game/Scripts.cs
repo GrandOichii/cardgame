@@ -97,5 +97,26 @@ namespace game.scripts
             player.Energy += amount;
         }
 
+        [LuaCommand]
+        public LuaTable GetController(string cid) {
+            foreach (var player in _match.Players)
+                foreach (var zone in player.Zones.Values)
+                    foreach (var card in zone.Cards)
+                        if (card.ID == cid) return player.ToLuaTable(_match.LState);
+            throw new Exception("Failed to find owner of card with ID:" + cid);
+        }
+
+        [LuaCommand]
+        public int GainLife(int pid, int amount) {
+            if (amount < 0) {
+                System.Console.WriteLine("WARN: player with id " + pid + " tried to gain negative amount of life: " + amount);
+                return 0;
+            }
+            var player = GetPlayer(pid);
+            var life = player.Life;
+            player.Life += amount;
+            return player.Life - life;
+        }
+
     }
 }

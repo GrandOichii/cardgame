@@ -6,6 +6,8 @@
         "PlaceIntoZone",
         "PlaceIntoPlay",
         "TakeEnergy",
-        "IncreaseMaxEnergy"
+        "IncreaseMaxEnergy",
+        "GetController",
+        "GainLife"
     ]
 }

@@ -78,56 +78,6 @@ function EffectCreation.TriggerBuilder:Create()
 
     return result
 end
--- Effect creator
--- EffectCreation = {}
--- EffectCreation.Triggers = {}
-
-
-
--- function EffectCreation.Triggers:CreateZone()
---     local result = {}
---     function result:Add(isSilent, checkF, effectF)
---         result.isSilent = isSilent
---         result.triggers[#result.triggers+1] = {
---             isSilent = isSilent,
---             check = checkF,
---             effect = effectF
---         }
---     end
---     return result
--- end
-
-
--- function EffectCreation.Triggers:CreateTriggers()
---     local result = {}
---     function result:Zone(zoneName)
---         if self[zoneName] == nil then
---             local zone = EffectCreation.Triggers:CreateZone()
---             result[zoneName] = zone
-            
---         end
---         return self[zoneName]
-    
---     end
---     return result
--- end
-
-
--- function EffectCreation.Triggers:Create()
---     local result = {}
---     function result:On(what)
---         if self[what] == nil then
---             -- local triggers = {}
---             local triggers = EffectCreation.Triggers:CreateTriggers()
---             self[what] = triggers
---         end
---         return self[what]
---     end
-
-
---     return result
--- end
-
 
 -- Card Creation
 CardCreation = {}
