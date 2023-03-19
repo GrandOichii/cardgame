@@ -1,5 +1,15 @@
--- Card Creation
-CardCreation = {}
+ZONES = {
+    IN_PLAY = 'in_play',
+    HAND = 'hand',
+    ANYWHERE = 'anywhere',
+    DISCARD = 'discard',
+    DECK = 'deck'
+}
+
+TRIGGERS = {
+    TURN_START = 'turn_start',
+    TURN_END = 'turn_end'
+}
 
 -- Extends the object function with further functionality
 function ExtendFunc(o, funcName, func)
@@ -11,6 +21,118 @@ function ExtendFunc(o, funcName, func)
 end
 
 
+EffectCreation = {}
+EffectCreation.TriggerBuilder = {}
+function EffectCreation.TriggerBuilder:Create()
+    local result = {
+        values = {}
+    }
+
+    function result:Zone(zoneName)
+        self.values.zone = zoneName
+        return self
+    end
+
+    function result:On(what)
+        self.values.on = what
+        return self
+    end
+
+    function result:IsSilent(isSilent)
+        self.values.isSilent = isSilent
+        return self
+    end
+
+    function result:CheckF(checkF)
+        self.values.checkF = checkF
+        return self
+    end
+
+    function result:EffectF(effectF)
+        self.values.effectF = effectF
+        return self
+    end
+
+    function result:Build()
+        local trigger = {}
+        if self.values.isSilent == nil then
+            error("Can't build trigger: isSilent is missing")
+        end
+        if self.values.zone == nil then
+            error("Can't build trigger: zone is missing")
+        end
+        if self.values.on == nil then
+            error("Can't build trigger: on is missing")
+        end
+        if self.values.effectF == nil then
+            error("Can't build trigger: effectF is missing")
+        end
+
+        trigger.zone = self.values.zone
+        trigger.on = self.values.on
+        trigger.effect = self.values.effectF
+        trigger.isSilent = self.values.isSilent
+        trigger.check = self.values.checkF
+        return trigger
+    end
+
+    return result
+end
+-- Effect creator
+-- EffectCreation = {}
+-- EffectCreation.Triggers = {}
+
+
+
+-- function EffectCreation.Triggers:CreateZone()
+--     local result = {}
+--     function result:Add(isSilent, checkF, effectF)
+--         result.isSilent = isSilent
+--         result.triggers[#result.triggers+1] = {
+--             isSilent = isSilent,
+--             check = checkF,
+--             effect = effectF
+--         }
+--     end
+--     return result
+-- end
+
+
+-- function EffectCreation.Triggers:CreateTriggers()
+--     local result = {}
+--     function result:Zone(zoneName)
+--         if self[zoneName] == nil then
+--             local zone = EffectCreation.Triggers:CreateZone()
+--             result[zoneName] = zone
+            
+--         end
+--         return self[zoneName]
+    
+--     end
+--     return result
+-- end
+
+
+-- function EffectCreation.Triggers:Create()
+--     local result = {}
+--     function result:On(what)
+--         if self[what] == nil then
+--             -- local triggers = {}
+--             local triggers = EffectCreation.Triggers:CreateTriggers()
+--             self[what] = triggers
+--         end
+--         return self[what]
+--     end
+
+
+--     return result
+-- end
+
+
+-- Card Creation
+CardCreation = {}
+
+
 -- Creates a card object
 -- 
 -- Has a can_cast function, which returns true if it's owner can cast it
@@ -19,6 +141,8 @@ end
 --
 -- Creates a dummy function on_cast - spell's effect when casting it
 --
+-- Creates a triggers list
+--
 -- Required props: name, type, cost
 function CardCreation:CardObject(props)
     local result = {}
@@ -26,6 +150,9 @@ function CardCreation:CardObject(props)
     result.name = props.name
     result.type = props.type
     result.cost = props.cost
+    
+    result.triggers = {}
+
 
     result.can_cast = function (owner)
         return owner.energy >= result.cost
@@ -69,6 +196,7 @@ function CardCreation:Source(props)
     local result = CardCreation:Spell(props)
 
     result.cost = 0
+    
 
     result.can_cast = function ()
         -- TODO

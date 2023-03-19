@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using game.player;
+using game.core;
 using game.core.phases;
 using game.collection;
 using game.cards;
@@ -139,6 +140,39 @@ namespace game.match {
 
             // end game
             End();
+        }
+
+        public void Emit(string signal, Dictionary<string, ILuaSerializable> args) {
+            // form the args
+            _lState.NewTable("emit_args");
+            var emitArgs = _lState.GetTable("emit_args");
+            foreach (var pair in args)
+                emitArgs[pair.Key] = pair.Value.ToLuaTable(_lState);
+            
+            // TODO decide on player order
+            // TODO make isSilent useful
+            System.Console.WriteLine("STARTED EMIT " + signal);
+            foreach (var player in _players) {
+                foreach (var pair in player.Zones) {
+                    foreach (var card in pair.Value.Cards) {
+                        var cTable = card.Table;
+                        var triggers = cTable["triggers"] as LuaTable;
+                        if (triggers is null) {
+                            continue;
+                        }
+                        foreach (LuaTable trigger in triggers.Values) {
+                            var zone = trigger["zone"] as string;
+                            if (zone != pair.Key && zone != Player.ANYWHERE_ZONE) continue;
+                            var t = Trigger.FromLua(trigger);
+                            if (t.CheckF != null) {
+                                // TODO execute check function
+                            }
+                            t.EffectF.Call(emitArgs);
+                        }
+                    }
+                }
+            }
+            System.Console.WriteLine("ENDED EMIT " + signal);
         }
     }
 

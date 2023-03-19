@@ -66,10 +66,10 @@ namespace game.core {
 
                 var cID = args[1];
                 var card = player.Hand[cID];
-                var cTable = card.Table;
 
                 // TODO can't cast a card with id that's not in your hand, suspect cheating
                 if (card is null) throw new Exception("Player " + player.Name + " cast card with ID " + cID + ": it's not in their hand");
+                var cTable = card.Table;
 
                 var canCastFunc = card.Table[Card.CAN_CAST_FNAME] as LuaFunction;
                 if (canCastFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAN_CAST_FNAME + " function");
@@ -117,6 +117,8 @@ namespace game.core {
                 // replenish energy
                 player.Energy = player.MaxEnergy;
                 player.DrawCards(match.Config.TurnStartCardDraw);
+
+                match.Emit("turn_start", new(){ {"player", player} });
             }
         }
 
@@ -210,6 +212,30 @@ namespace game.core {
 
         public void AddToBack(CardWrapper card) {
             _cards.Add(card);
+        }
+    }
+
+    class Trigger {
+        
+        public bool IsSilent { get; }
+        public string Zone { get; }
+        public LuaFunction? CheckF { get; }
+        public LuaFunction EffectF { get; }
+        
+        public Trigger(bool isSilent, string zone, LuaFunction? checkF, LuaFunction effectF) {
+            IsSilent = isSilent;
+            Zone = zone;
+            CheckF = checkF;
+            EffectF = effectF;
+        }
+
+        public static Trigger FromLua(LuaTable table) {
+            var isSilent = (bool)table["isSilent"];
+            var effect = table["effect"] as LuaFunction;
+            if (effect is null) throw new Exception("Failed to parse trigger: effect is nil");
+            var zone = table["zone"] as string;
+            if (zone is null) throw new Exception("Failed to parse trigger: zone is nil");
+            return new Trigger(isSilent, zone, table["check"] as LuaFunction, effect);
         }
     }
 }

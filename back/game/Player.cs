@@ -39,6 +39,7 @@ namespace game.player {
         // cards
         public CardWrapper? Bond { get; }=null;
 
+        public static readonly string ANYWHERE_ZONE = "anywhere";
         public static readonly string HAND_ZONE_NAME = "hand";
         public CardDeck Hand { get; }
         public static readonly string IN_PLAY_ZONE_NAME = "in_play";
