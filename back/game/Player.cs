@@ -8,7 +8,7 @@ using game.deck;
 namespace game.player {
 
     // A match partisipating player
-    class Player : ILuaSerializable{
+    class Player : ILuaSerializable, IDamageable {
         static private int LastPid = 0;
 
         public int ID { get; }
@@ -118,6 +118,14 @@ namespace game.player {
             result["life"] = Life;
             result["mutable"] = MutableData;
             return result;
+        }
+
+        public int ProcessDamage(int damage)
+        {
+            // TODO refactor for different types of damage
+            int l = Life;
+            Life -= damage;
+            return l - damage;
         }
     }
 

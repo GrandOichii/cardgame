@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 using game.player;
 using game.core;
 using game.core.phases;
-using game.collection;
 using game.cards;
 using game.deck;
 using game.scripts;
@@ -13,14 +12,13 @@ using game.scripts;
 namespace game.match {
 
     struct MatchConfig : ILuaSerializable {
-        [JsonPropertyName("starting_life")]
-        public int StartingLifeTotal { get; set; }
-        [JsonPropertyName("turn_start_card_draw")]
-        public int TurnStartCardDraw { get; set; }
-        [JsonPropertyName("starting_hand_size")]
-        public int StartingHandSize { get; set; }
-        [JsonPropertyName("max_hand_size")]
-        public int MaxHandSize { get; set; }
+        [JsonPropertyName("starting_life")]         public int StartingLifeTotal { get; set; }
+
+        [JsonPropertyName("turn_start_card_draw")]  public int TurnStartCardDraw { get; set; }
+
+        [JsonPropertyName("starting_hand_size")]    public int StartingHandSize { get; set; }
+
+        [JsonPropertyName("max_hand_size")]         public int MaxHandSize { get; set; }
 
         static public MatchConfig FromText(string text) {
             var result = JsonSerializer.Deserialize<MatchConfig>(text);
@@ -86,8 +84,9 @@ namespace game.match {
             
             _lState = new();
             _scriptMaster = new(this);
-            AllCards = new();
             LoadLuaScripts();
+
+            AllCards = new();
             _players = new();
         }
 
@@ -185,6 +184,11 @@ namespace game.match {
                     }
                 }
             }
+        }
+
+        public Player OpponentOf(Player player) {
+            if (_players[0] == player) return _players[1];
+            return _players[0];
         }
     }
 

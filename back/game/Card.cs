@@ -16,7 +16,7 @@ script: str
 */
 
 namespace game.cards {
-    class CardWrapper {
+    class CardWrapper : IDamageable {
         static public IIDCreator IDCreator = new IncrementIDCreator(); 
 
         public string ID { get; }
@@ -36,6 +36,17 @@ namespace game.cards {
             if (t is null) throw new Exception("Card creation script from " + card.ScriptPath + " did not create a card object");
             Table = t;
             Table["id"] = ID;
+        }
+
+        public int ProcessDamage(int damage)
+        {
+            var healthO = Table["health"];
+            if (healthO is null) throw new Exception("Tried to damage " + Card.Name + " (" + ID + "), which is not damageable");
+            int health = (int) healthO;
+            int or = health;
+            health -= damage;
+            Table["health"] = health;
+            return or - (int)Table["health"];
         }
 
         // public LuaTable ToLuaTable(Lua lState)

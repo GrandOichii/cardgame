@@ -177,11 +177,17 @@ end
 -- Creates a in play card object
 --
 -- Overrides the on_cast function to put the card into play
+--
+-- Has an on_leave function, triggers when card leaves play
 function CardCreation:InPlayCard(props)
     local result = CardCreation:CardObject(props)
 
     result.on_cast = function(owner)
         PlaceIntoPlay(result.id, owner.id)
+    end
+
+    result.on_leave = function (owner)
+        
     end
 
     return result
@@ -194,6 +200,10 @@ end
 function CardCreation:Damageable(props)
     local result = CardCreation:InPlayCard(props)
     result.health = props.health
+    result.maxHealth = props.maxHealth
+    result.on_leave = function (owner)
+        result.health = result.maxHealth
+    end
     return result
 end
 
@@ -204,6 +214,10 @@ end
 function CardCreation:Creature(props)
     local result = CardCreation:Damageable(props)
     result.attack = props.attack
+    result.availableAttacks = 0
+    ExtendFunc(result, 'on_leave', function (owner)
+        result.availableAttacks = 0
+    end)
     return result
 end
 

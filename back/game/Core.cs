@@ -16,6 +16,10 @@ namespace game.core {
         }
     }
     
+    interface IDamageable {
+        public int ProcessDamage(int damage);
+    }
+
     interface ILuaSerializable {
         abstract public LuaTable ToLuaTable(Lua lState);
     }
@@ -102,6 +106,55 @@ namespace game.core {
             }
         }
 
+        class AttackAction : GameAction
+        {
+            public override void Exec(Match match, Player player, string[] args)
+            {
+                if (args.Length == 1 || args.Length > 3) throw new Exception("Incorrect number of arguments for AttackAction");
+
+                // TODO get available attacks
+                // TODO check if can attack target
+                var attackerID = args[1];
+                CardWrapper? attacker = null;
+                foreach (var card in player.InPlay.Cards) {
+                    if (card.ID != attackerID) continue;
+                    attacker = card;
+                    break;
+                }
+                if (attacker is null) 
+                    throw new Exception("Player " + player.Name + " tried to attack with creature with id " + attackerID + ", which is not in play under their control");
+                var availableAttacksO = attacker.Table["availableAttacks"];
+                if (availableAttacksO == null) throw new Exception("Player " + player.Name + " tried to attack with a card that can't attack: " + attacker.Card.Name);
+                
+                int? availableAttacks = availableAttacksO as int?;
+                if (availableAttacks == 0) {
+                    System.Console.WriteLine("WARN: Player " + player.Name + " tried to attack with " + attacker.Card.Name + " (" + attacker.ID + "), which has to available attacks");
+                    return;
+                }
+                Player opponent = match.OpponentOf(player);
+                IDamageable target = opponent;
+                if (args.Length == 3) {
+                    // is attacking a card in play
+                    var attackedID = args[2];
+                    bool set = false;
+                    foreach (var card in opponent.InPlay.Cards) {
+                        if (card.ID == attackedID) {
+                            set = true;
+                            target = card;
+                            break;
+                        }
+                    }
+                    if (!set) throw new Exception("Player " + player.Name + " tried to attack a card with ID " + attackedID + ", which is not in play");
+                }
+
+                // TODO change when implementing damage types
+                int? attack = attacker.Table["attack"] as int?;
+                if (attack is null) throw new Exception("Player " + player.Name + " tried to attack with a  card with ID " + attackerID + ", which has no attack value");    
+                int a = (int)attack;
+                target.ProcessDamage(a);
+            }
+        }
+
     }
 
     namespace phases {
@@ -116,9 +169,17 @@ namespace game.core {
             {
                 // replenish energy
                 player.Energy = player.MaxEnergy;
-                player.DrawCards(match.Config.TurnStartCardDraw);
-
+                // emit turn start effects
                 match.Emit("turn_start", new(){ {"player", player} });
+
+                // replenish creatures' attacks
+                foreach (var card in player.InPlay.Cards)
+                    if (card.Table["availableAttacks"] is not null)
+                        // TODO replace if creatures will be able to attack multiple times
+                        card.Table["availableAttacks"] = 1;
+
+                // draw for the turn
+                player.DrawCards(match.Config.TurnStartCardDraw);
             }
         }
 
@@ -127,7 +188,8 @@ namespace game.core {
             private readonly string PASS_TURN_ACTION = "pass";
             private static readonly Dictionary<string, actions.GameAction> ACTION_MAP =
             new(){
-                { "cast", new actions.CastCardAction() }
+                { "cast", new actions.CastCardAction() },
+                { "attack", new actions.AttackAction() }
             };
 
             public override void Exec(Match match, Player player)
