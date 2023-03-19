@@ -66,6 +66,7 @@ namespace game.core {
 
                 var cID = args[1];
                 var card = player.Hand[cID];
+                var cTable = card.Table;
 
                 // TODO can't cast a card with id that's not in your hand, suspect cheating
                 if (card is null) throw new Exception("Player " + player.Name + " cast card with ID " + cID + ": it's not in their hand");
@@ -76,16 +77,28 @@ namespace game.core {
                 
                 // TODO throw exception?
                 if (!canCast) {
-                    System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") " + "tried to cast an uncastable spell " + card.Card.Name + " (" + card.ID + ")");
+                    System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") " + "tried to cast an uncastable catd " + card.Card.Name + " (" + card.ID + ")");
                     return;
                 }
 
+                var costFunc = card.Table[Card.CAST_COST_FNAME] as LuaFunction;
+                if (costFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAST_COST_FNAME + " function");
+
+                // remove card from player's hand
+                player.Hand.Cards.Remove(card);
+                // TODO figure out the input and output args
+                // var payed = (bool)costFunc.Call(cTable, pTable)[0];
+                costFunc.Call(cTable, pTable);
+                // TODO throw an exception?
+                // if (!payed) {
+                //     System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") tried to cast " + card.Card.Name + " (" + card.ID + "), but FAILED for some reason");
+                //     return;
+                // }
+
                 var castFunc = card.Table[Card.ON_CAST_FNAME] as LuaFunction;
                 if (castFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.ON_CAST_FNAME + " function");
-
-                // TODO figure out the input and output args
-                player.Hand.Cards.Remove(card);
-                castFunc.Call(card.ToLuaTable(match.LState), pTable);
+                // TODO figure out input and output args
+                castFunc.Call(cTable, pTable);
             }
         }
 
@@ -103,8 +116,6 @@ namespace game.core {
             {
                 // replenish energy
                 player.Energy = player.MaxEnergy;
-                // TODO replace with card draw per turn
-                System.Console.WriteLine(match.Config.TurnStartCardDraw);
                 player.DrawCards(match.Config.TurnStartCardDraw);
             }
         }

@@ -80,8 +80,8 @@ namespace game.match {
 
         private void LoadLuaScripts()
         {
-            string[] scriptPaths = { "common.lua" };
-            // string[] scriptPaths = { "C:\\Users\\ihawk\\code\\cardgame\\back\\common.lua" };
+            string[] scriptPaths = { "core.lua" };
+            // string[] scriptPaths = { "C:\\Users\\ihawk\\code\\cardgame\\back\\core.lua" };
 
             foreach (var path in scriptPaths)
                 LState.DoFile(path);

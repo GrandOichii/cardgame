@@ -60,7 +60,6 @@ namespace game.scripts
 
         [LuaCommand]
         public void PlaceIntoZone(string cid, int pid, string zoneName) {
-
             var player = GetPlayer(pid);
 
             if (!player.Zones.ContainsKey(zoneName)) throw new Exception("No zone with name " + zoneName);
@@ -88,7 +87,6 @@ namespace game.scripts
             var player = GetPlayer(pid);
             
             player.Energy -= amount;
-            System.Console.WriteLine("New energy: " + player.Energy);
         }
 
         [LuaCommand]

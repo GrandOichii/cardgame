@@ -16,7 +16,7 @@ script: str
 */
 
 namespace game.cards {
-    class CardWrapper : ILuaSerializable {
+    class CardWrapper {
         static public IIDCreator IDCreator = new IncrementIDCreator(); 
 
         public string ID { get; }
@@ -35,14 +35,15 @@ namespace game.cards {
             var t = creationFunc.Call(props)[0] as LuaTable;
             if (t is null) throw new Exception("Card creation script from " + card.ScriptPath + " did not create a card object");
             Table = t;
+            Table["id"] = ID;
         }
 
-        public LuaTable ToLuaTable(Lua lState)
-        {
-            var result = Card.ToLuaProps(lState);
-            result["id"] = ID;
-            return result;
-        }
+        // public LuaTable ToLuaTable(Lua lState)
+        // {
+        //     var result = Card.ToLuaProps(lState);
+        //     result["id"] = ID;
+        //     return result;
+        // }
     }
 
     class JCard {
@@ -59,6 +60,7 @@ namespace game.cards {
     }
 
     class Card {
+        static public string CAST_COST_FNAME = "cast_cost";
         static public string ON_CAST_FNAME = "on_cast";
         static public string CAN_CAST_FNAME = "can_cast";
         static public string CREATION_FNAME = "_CreateCard";
