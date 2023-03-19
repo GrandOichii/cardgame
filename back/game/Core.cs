@@ -69,7 +69,7 @@ namespace game.core {
 
                 // TODO can't cast a card with id that's not in your hand, suspect cheating
                 if (card is null) throw new Exception("Player " + player.Name + " cast card with ID " + cID + ": it's not in their hand");
-                var cTable = card.Table;
+                // var cTable = card.Table;
 
                 var canCastFunc = card.Table[Card.CAN_CAST_FNAME] as LuaFunction;
                 if (canCastFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAN_CAST_FNAME + " function");
@@ -88,7 +88,7 @@ namespace game.core {
                 player.Hand.Cards.Remove(card);
                 // TODO figure out the input and output args
                 // var payed = (bool)costFunc.Call(cTable, pTable)[0];
-                costFunc.Call(cTable, pTable);
+                costFunc.Call(pTable);
                 // TODO throw an exception?
                 // if (!payed) {
                 //     System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") tried to cast " + card.Card.Name + " (" + card.ID + "), but FAILED for some reason");
@@ -98,7 +98,7 @@ namespace game.core {
                 var castFunc = card.Table[Card.ON_CAST_FNAME] as LuaFunction;
                 if (castFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.ON_CAST_FNAME + " function");
                 // TODO figure out input and output args
-                castFunc.Call(cTable, pTable);
+                castFunc.Call(pTable);
             }
         }
 

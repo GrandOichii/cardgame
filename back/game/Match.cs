@@ -174,7 +174,6 @@ namespace game.match {
                         foreach (LuaTable trigger in triggers.Values) {
                             var zone = trigger["zone"] as string;
                             if (zone != pair.Key && zone != Player.ANYWHERE_ZONE) continue;
-
                             var t = Trigger.FromLua(trigger);
                             if (!t.On.Equals(signal)) continue;
                             if (t.CheckF != null) {

@@ -108,12 +108,12 @@ function CardCreation:CardObject(props)
         return owner.energy >= result.cost
     end
 
-    result.cast_cost = function(this, owner)
+    result.cast_cost = function(owner)
         -- spend energy
         TakeEnergy(owner.id, result.cost)
     end
 
-    result.on_cast = function (this, owner)
+    result.on_cast = function (owner)
         
     end
 
@@ -127,8 +127,8 @@ end
 function CardCreation:Spell(props)
     local result = CardCreation:CardObject(props)
 
-    ExtendFunc(result, 'cast_cost', function (this, owner)
-        PlaceIntoDiscard(this.id, owner.id)
+    ExtendFunc(result, 'cast_cost', function (owner)
+        PlaceIntoDiscard(result.id, owner.id)
     end)
     
     return result
@@ -147,17 +147,29 @@ function CardCreation:Source(props)
 
     result.cost = 0
     
-
-    result.can_cast = function ()
+    result.can_cast = function (owner)
         -- TODO
+        local data = owner.mutable
+        if data.sourceCount == 0 then
+            return false
+        end
         return true
     end
 
-    result.on_cast = function (this, owner)
-        -- TODO disallow any further source cards to be played this turn
+    result.on_cast = function (owner)
         IncreaseMaxEnergy(owner.id, 1)
+        owner.mutable.sourceCount = owner.mutable.sourceCount - 1
     end
-            
+
+    result.triggers[#result.triggers+1] = EffectCreation.TriggerBuilder:Create()
+        :Zone(ZONES.ANYWHERE)
+        :On(TRIGGERS.TURN_START)
+        :IsSilent(true)
+        :EffectF(function (args)
+            args.player.mutable.sourceCount = 1
+        end)
+        :Build()
+
     return result
 end
 
@@ -168,8 +180,8 @@ end
 function CardCreation:InPlayCard(props)
     local result = CardCreation:CardObject(props)
 
-    result.on_cast = function(this, owner)
-        PlaceIntoPlay(this.id, owner.id)
+    result.on_cast = function(owner)
+        PlaceIntoPlay(result.id, owner.id)
     end
 
     return result

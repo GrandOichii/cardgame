@@ -53,6 +53,9 @@ namespace game.player {
 
 
         public PlayerController Controller { get; set; }
+
+        public LuaTable MutableData { get; }
+
         public Player(Match match, string name, Deck deck, PlayerController controller) {
             Controller = controller;
 
@@ -81,6 +84,10 @@ namespace game.player {
                 {DECK_ZONE_NAME, Deck},
                 {IN_PLAY_ZONE_NAME, InPlay},
             };
+
+            var lState = match.LState;
+            lState.NewTable("result");
+            MutableData = lState.GetTable("result");
         }
 
         public void DrawCards(int amount) {
@@ -109,6 +116,7 @@ namespace game.player {
             result["id"] = ID;
             result["energy"] = Energy;
             result["life"] = Life;
+            result["mutable"] = MutableData;
             return result;
         }
     }
