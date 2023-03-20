@@ -3,6 +3,7 @@
     "starting_hand_size": 3,
     "max_hand_size": 3,
     "turn_start_card_draw": 2,
+    "starting_energy": 3,
 
     "comment": "NOT IMPLEMENTED",
     "players": [

@@ -110,6 +110,7 @@ namespace game.core {
         {
             public override void Exec(Match match, Player player, string[] args)
             {
+                // TODO? move to structure of damage promise
                 if (args.Length == 1 || args.Length > 3) throw new Exception("Incorrect number of arguments for AttackAction");
 
                 // TODO get available attacks
@@ -126,7 +127,7 @@ namespace game.core {
                 var availableAttacksO = attacker.Table["availableAttacks"];
                 if (availableAttacksO == null) throw new Exception("Player " + player.Name + " tried to attack with a card that can't attack: " + attacker.Card.Name);
                 
-                int? availableAttacks = availableAttacksO as int?;
+                long availableAttacks = (long)availableAttacksO;
                 if (availableAttacks == 0) {
                     System.Console.WriteLine("WARN: Player " + player.Name + " tried to attack with " + attacker.Card.Name + " (" + attacker.ID + "), which has to available attacks");
                     return;
@@ -148,10 +149,10 @@ namespace game.core {
                 }
 
                 // TODO change when implementing damage types
-                int? attack = attacker.Table["attack"] as int?;
-                if (attack is null) throw new Exception("Player " + player.Name + " tried to attack with a  card with ID " + attackerID + ", which has no attack value");    
-                int a = (int)attack;
-                target.ProcessDamage(a);
+                long attack = (long)attacker.Table["attack"];
+                // if (attack is null) throw new Exception("Player " + player.Name + " tried to attack with a  card with ID " + attackerID + ", which has no attack value");    
+                
+                target.ProcessDamage((int)attack);
             }
         }
 

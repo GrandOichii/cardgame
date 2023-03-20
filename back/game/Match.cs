@@ -12,6 +12,7 @@ using game.scripts;
 namespace game.match {
 
     struct MatchConfig : ILuaSerializable {
+        [JsonPropertyName("starting_energy")]       public int StartingEnergy { get; set; }
         [JsonPropertyName("starting_life")]         public int StartingLifeTotal { get; set; }
 
         [JsonPropertyName("turn_start_card_draw")]  public int TurnStartCardDraw { get; set; }
@@ -33,6 +34,7 @@ namespace game.match {
             result["turn_start_card_draw"] = TurnStartCardDraw;
             result["starting_hand_size"] = StartingHandSize;
             result["max_hand_size"] = MaxHandSize;
+            result["starting_energy"] = StartingEnergy;
             return result;
         }
     }
@@ -113,6 +115,10 @@ namespace game.match {
 
         private void Setup() {
             foreach (var player in _players) {
+                // set starting energy
+                player.Energy = Config.StartingEnergy;
+                player.MaxEnergy = Config.StartingEnergy;
+                
                 // add cards in deck to card pool
                 AllCards.Add(player.Deck.Cards);
 

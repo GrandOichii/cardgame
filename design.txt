@@ -1,184 +1,92 @@
-== Game basis ==
-Two-player game.
-Each player has 15 life.
-The goal is to lower the opponent's life to 0.
-Players take turns casting cards and attacking with creatures.
-Each deck has 50-60 cards.
-Up to 3 same cards in a deck (except for energy cards, unlimited amount can be in a deck).
+== Druid battle ==
 
-== Game Turn ==
-
-- Turn start
-- Draw
-- Main step
-- Turn end
-
-
-== Wanted features ==
-- No stack :( . Can find a replacement.
-- Countering spells
-- Different types of damage, if not implied - generic damage
-- Can change numbers in brackets ([]) if they are in play or in hand
-- Cards can be hidden
-- Deck consistency and thinning shouldn't be that important, so as to make people consider larger decks.
+== Game core ==
+A 2-player card game, players take turns casting spells and attacking with creatures to decrease the opponent's life total to 0.
 
 
 == Card types ==
 
-- Creature - creatures are used to attack the opponent. Can be damaged and will die when enough damage is dealt.
-Creatures have Attack and Health. When reaching 0 Health, a creature dies.
+    = Source =
+Source are cards that fuel the players' energy.
+By casting a source card, a player gets a permanent 1 to their maximum energy reserve.
+Players can play only one Source card per turn.
 
-- Fort - a structure that gives it's controller some functionality. Can be damaged and will die when enough damage is dealt.
-Can be attacked by controller's creatures.
 
-- Spell - an effect that goes to discard pile after casting.
 
-- Energy - creates energy for the controller. Only one Energy card can be cast per turn by a player. All energy spells are free.
+    = Unit =
+Units are used for attacking the enemy directly or their treasures.
+A unit can be placed by each player on a lane. Only one unit can be on each side of the table. 
+If a player would play a unit on a lane, where they already have a unit, the unit is replaced.
+A unit has health and attack.
+If a unit's health would reach 0, they get destroyed.
+Units can attack. If a unit would attack on a lane, where there is a defensive unit, they each deal damage to each other simultaneously.
 
-- Bond - each player starts the game with one bond card. Cannot be inerted in a deck.
+Example:
+    [Forest Shaman]
+    cost: 3
+    attack: 2
+    defence: 3
+    text: TODO
 
-== Possible words to use ==
 
-Idea
 
+    = Charm =
+Charms are cards played on lanes to give benefitial/detremental effects.
+Only one charm can be played on each of the lanes. If a charm would be played on a lane, the previous charm is destroyed.
 
-== Keywords ==
+Example:
+    [Lava Field]
+    cost: 3
+    text: At the start of each player's turn, this lane deals 1 damage to each unit placed on it.
 
-{Hidden} - enters play hidden, has to be revealed. While hidden, the card can have a funny replacement name.
 
-{Power Up} - increase all bracketed numbers on a card by one.
 
-{Power Down} - decrease all bracketed numbers on a card by one.
+    = Treasure =
+Treasures are cards with special effects. Unlike other cards, a player can have any number of treasures in play.
+Treasures have health. If a Treasure's health would reach 0, it gets destroyed.
+Treasures can be attacked by units.
 
-{Aggressive} - (for creatures) has to attack each turn.
+Example:
+    [Font of Life]
+    cost: 5
+    text: At the start of your turn, restore 2 life of all your units.
 
-{Luring} - has to be attacked.
 
-{Fast} - can attack as soon as enters play.
 
-{Good} - when playing a card with this keyword (or revealing if hidden), increase your devotion to good by one.
+= Spell =
+Spells are cards that have a single effect. After that effect's resolution, they are discarded.
 
-{Evil} - when playing a card with this keyword (or revealing if hidden), increase your devotion to evil by one.
+Example:
+    [Ground Pound]
+    cost: 2
+    text: Deal 3 damage to target player or unit.
 
-== Possible cards ==
 
 
-Source (energy):
-Gain 1 energy token.
+= Bond =
+Bonds are powerful cards that players start the game with already in play.
+Bonds can be placed in decks.
+Bonds can't be removed.
 
+Example:
+    [Perfection]
+    text: When you place a Unit, if it has the same attack and health, it gains TODO.
 
-Good Deeds (energy):
-Can't cast [cardname] while devotion to good is less than 1.
-Gain 2 energy tokens.
+card types:
+    Unit - attackers and defenders on each lane. Each player can have only 1 unit on each plane
+    Treasure - additional cards in play that players can have. Have positive and negative effects. Can be attacked by units
+    Source - energy source
+    Spell - a single use card, has some effect, then goes to discard
+    Bond - character-specific ability
 
+== Cards ==
+Name: Landslide
+Type: Spell
+Cost: {TODO 3}
+Text: Shift all charms to their left.
+(Moves all charms on lanes to a lane to their left. TODO The right-most is moved to discard or left-most?)
 
-TODO Evil Energy (energy):
-Can't cast [cardname] while devotion to evil is less than 1.
-Gain 2 energy tokens.
 
 
-Spell trap (fort-TODO):
-{Hidden}
-When your opponent casts a spell, reveal [cardname], break it and destroy [cardname]
 
-
-Meteorite (spell): 
-Deals (1/ 3 /5) fire damage to target creature or fort.
-
-
-Spiked floor (fort-TODO): 
-When [cardname] enters play, give it to your opponent.
-When a creature enters play under your control, [cardname] deals (0/ 1 /2) damage to that creature.
-
-
-Peek (spell):
-Look at target {Hidden} card in play.
-
-
-Power up (spell):
-{Power up} all spells in your hand and cards in play you control once.
-
-
-Mine now! (spell):
-Look at your opponents hand and take one card. {Power it down} once.
-
-
-TODO Take soul (spell):
-{LifeSteal} (5/ 5 /15).
-Reveal [cardname] from your hand, TODO some other price: {Power up} [cardname].
-If [cardname] would be {Powered Up}, instead {Power it Up} twice. (Doesn't trigger from itself)
-
-
-Hidden Assassin (creature- TODO):
-{Hidden}
-TODO some cost: reveal [cardname] and destroy target creature. |Has to be hidden to activate|
-
-
-Ascension Altar (fort- TODO):
-Destroy one of your creatures: {Power up} this card.
-When (0/ 0 /7) is equal to 7, destroy it and put all creatures and forts from you hand into play.
-[cardname] can't be {Powered Down}.
-
-
-Old Wizard (creature- TODO):
-When [cardname] enters play, {Power Up} a card in your hand.
-
-
-Cunning Saboteur (creature- TODO):
-When [cardname] enters play, you can {Power Down} a card in play.
-
-
-Awoken Dragon (creature- TODO):
-{Aggressive}
-{Hidden}
-
-TODO some cost: reveal [cardname].
-
-
-Earth elemental (creature- TODO):
-{Luring}
-When [cardname] enters play, shuffle 5 Throw Rock cards into your deck.
-(Throw Rock (spell): Deal 1 damage to any target.)
-
-
-Zombie (creature- TODO):
-When [cardname] enters play, it randomly gains {Aggressive}, {Luring} or {Fast}.
-
-
-Rise again (spell- TODO):
-Reanimate target creature. {Power it down}.
-
-
-Reassemble (spell- TODO):
-Reanimate target fort. {Power it down}.
-
-
-Good Cleric (creature- TODO):
-{Good}
-
-
-Evil Cleric (creature- TODO):
-{Evil}
-
-
-Unification (bond):
-When your devotion to good is greater than 10, summon an Archangel creature into play. [cardname] is disabled for the rest of the game.
-Archangel (creature- TODO):
-
-
-
-False Prophet (creature- TODO):
-When [cardname] enters play, choose one:
-a) Increase your opponent's devotion to good by 1
-b) Increase your opponent's devotion to evil by 1
-
-
-Angel Protector (creature- TODO):
-{Good}
-{Hidden}
-
-Take Control (spell):
-Steal target creature or fort in play from you opponent.
-
-If a creature you control would be destroyed, instead reveal [cardname]. (Has to be hidden to trigger)
 
