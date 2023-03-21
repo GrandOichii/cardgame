@@ -6,14 +6,6 @@ using game.core;
 using game.match;
 using System.Net;
 
-/*
-name: str
-text: str
-type: str
-script: str
-
-
-*/
 
 namespace game.cards {
     class CardWrapper : IDamageable {

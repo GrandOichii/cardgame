@@ -66,11 +66,11 @@ namespace game.core {
             abstract public void Exec(Match match, Player player, string[] args);
         }
 
-        class CastCardAction : GameAction
+        class PlayCardAction : GameAction
         {
             public override void Exec(Match match, Player player, string[] args)
             {
-                if (args.Length != 2) throw new Exception("Incorrect number of arguments for CastCardAction");
+                if (args.Length != 2) throw new Exception("Incorrect number of arguments for PlayCardAction");
 
                 var pTable = player.ToLuaTable(match.LState);
 
@@ -195,7 +195,7 @@ namespace game.core {
             private readonly string PASS_TURN_ACTION = "pass";
             private static readonly Dictionary<string, actions.GameAction> ACTION_MAP =
             new(){
-                { "cast", new actions.CastCardAction() },
+                { "cast", new actions.PlayCardAction() },
                 { "attack", new actions.AttackAction() }
             };
 
