@@ -4,7 +4,7 @@ function _CreateCard(props)
     props.attack = 0
     props.health = 2
     props.cost = 2
-    local result = CardCreation:Creature(props)
+    local result = CardCreation:Unit(props)
 
     result.triggers[#result.triggers+1] = EffectCreation.TriggerBuilder:Create()
         :CheckF(function (args)

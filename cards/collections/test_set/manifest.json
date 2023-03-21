@@ -1,6 +1,9 @@
 {
     "name": "test_set",
     "cards": [
+        "cards/New_Recruit"
+    ],
+    "cards1": [
         "cards/Good_Cleric",
         "cards/Source",
         "cards/Healer",

@@ -211,7 +211,7 @@ end
 -- Creates a creature card object
 --
 -- Required props: attack
-function CardCreation:Creature(props)
+function CardCreation:Unit(props)
     local result = CardCreation:Damageable(props)
     result.attack = props.attack
     result.availableAttacks = 0

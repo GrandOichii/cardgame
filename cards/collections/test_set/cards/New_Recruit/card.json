@@ -1,0 +1,6 @@
+{
+    "name": "New Recruit",
+    "type": "Creature",
+    "text": "",
+    "script": "script.lua"
+}

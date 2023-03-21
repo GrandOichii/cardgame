@@ -14,6 +14,12 @@ namespace game.core {
         static public List<T> Shuffled<T>(List<T> list) {
             return list.OrderBy(a => Rnd.Next()).ToList();
         }
+
+        static public LuaFunction GetLuaF(LuaTable t, string fName) {
+            var result = t[fName]as LuaFunction;
+            if (result is null) throw new Exception("Failed to get function name " + fName + " from lua table");
+            return result;
+        }
     }
     
     interface IDamageable {
