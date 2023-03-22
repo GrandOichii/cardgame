@@ -14,7 +14,7 @@ Card
             
 
 Card - card object stored in the database
-CardW - a wrapper for the card, user in Match. Is used for wrapping cards in: hand, treasures, deck, discard.
+CardW - a wrapper for the card, user in Match. Is used for wrapping cards in: hand, treasures, deck, discard. Can be summoned
 UnitW - a wrapper for CardW, displays a unit card
 TreasureW - a wapper for CardW, displays a treasure card
 
@@ -30,6 +30,10 @@ Match:
     Config // match configurations
 
 
+CardMaster - a singleton class, manages all the loaded cards.
+Contains 3 methods:
+- Load(cName: str, colName: str) - if the card is not loaded into CardMaster, loads the card and adds 1 to it's reference counter. If already loaded, increases reference counter by 1.
+- Get(cName: str, colName: str) -
 
 == Notes ==
 Cards should have a Play method
@@ -174,10 +178,10 @@ Text:
 Type: Charm
 Cost: TODO
 Text:
-    At the beginning of your turn, all non-[Peaseful Peasant] units in this lane are destroyed and replaced with a conjured [Peaseful Peasants] unit.
+    At the beginning of your turn, all non-[Peaseful Peasant] units in this lane are destroyed and replaced with a summoned [Peaseful Peasants] unit.
 
 
-(Conjured)
+(Summoned)
     [Peaseful Peasants]
 Type: Unit
 Attack: 0
@@ -211,10 +215,10 @@ Text:
     [Collective Prayer]
 Type: Bond
 Text: 
-    Discard 7 [Healing Light] cards: conjure an [Archangel] card into play.
+    Discard 7 [Healing Light] cards: summon an [Archangel] card into play.
 
 
-(Conjured)
+(Summoned)
     [Archangel]
 Type: Unit
 Attack: 7
@@ -224,7 +228,7 @@ Text:
     Your [Lesser Angel] units ignore defending units.
 
 
-(Conjured)
+(Summoned)
     [Lesser Angel]
 Type: Unit
 Attack: 4
@@ -233,7 +237,7 @@ Text:
     At the start of your turn, gain 3 life.
 
 
-(Conjured)
+(Summoned)
     [Healing Light]
 Type: Spell
 Cost: 2
@@ -278,10 +282,10 @@ Text:
 Type: Charm
 Cost: TODO
 Text:
-    At the start of your turn, each player with a unit in this lane conjures a [Corrupting Darkness] card into their hand.
+    At the start of your turn, each player with a unit in this lane summons a [Corrupting Darkness] card into their hand.
 
 
-(Conjured)
+(Summoned)
     [Corrupting Darkness]
 Type: Spell
 Cost: 2
@@ -327,6 +331,7 @@ Attack: 2
 Life: 3
 Text:
     When [Landlord] enters play, destroy the opponent's charm on this lane.
+    Your opponent can't cast Charms on this lane.
 
 
     [Taskmaster]
@@ -335,7 +340,7 @@ Cost: 3
 Attack: 3
 Life: 2
 Text:
-    Whenever an opoonent's unit is destroyed, conjure a [Coin Pouch] treasure into play.
+    Whenever an opoonent's unit is destroyed, summon a [Coin Pouch] treasure into play.
 
 
     [Mechanical Engineer]
@@ -353,7 +358,7 @@ Cost: 4
 Attack: 6
 Life: 6
 Text:
-    When [Earth Elemental] enters play, conjure (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
+    When [Earth Elemental] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
 
 
     [Earthling]
@@ -362,7 +367,7 @@ Cost: 1
 Attack: 2
 Life: 2
 Text:
-    When [Earthling] enters play, conjure 2 [Throw Rock] cards and shuffle them into your deck.
+    When [Earthling] enters play, summon 2 [Throw Rock] cards and shuffle them into your deck.
 
 
     [Fire Elemental]
@@ -402,10 +407,10 @@ Text:
 Type: Treasure
 Cost: 5
 Text:
-    At the start of your turn, [Cursed Totem] deals (1/ 1 /3) damage to all units. If your unit dies this way, conjure an [Ancient Spirit] into play.
+    At the start of your turn, [Cursed Totem] deals (1/ 1 /3) damage to all units. If your unit dies this way, summon an [Ancient Spirit] into play.
 
 
-(Conjured)
+(Summoned)
     [Ancient Spirit]
 Type: Unit
 Attack: 5
@@ -415,7 +420,7 @@ Text:
     Ingores the defending unit.
 
 
-(Conjured)
+(Summoned)
     [Throw Rock]
 Type: Spell
 Cost: 3
@@ -423,12 +428,28 @@ Text:
     Deal 1 damage to target treasure.
 
 
-(Conjured)
+(Summoned)
     [Coin Pouch]
 Type: Treasure
 Life: 1
 Text:
     Pay 2 energy: Destroy [Coin Pouch] and draw (0/ 2 /5) cards.
+
+
+    [Powerstone]
+Type: Treasure
+Cost: 3
+Life: 5
+Text:
+    Units you control have +2 power.
+    At the start of your turn, {Power Down} [Powerstone]. If (0/ 3 /10) is equal to 0, destroy [Powerstone].
+
+
+    [Remember the old times]
+Type: Spell
+Cost: 3
+Text:
+    {Power Up} a card in your discard 3 times.
 
 
     [Old Mentor]
@@ -465,10 +486,10 @@ Type: Treasure
 Life: 5
 Text:
     At the start of your turn, all your units gain +1 life.
-    When [Shawarma Stand] is destroyed, conjure an [Angry Cook] into play.
+    When [Shawarma Stand] is destroyed, summon an [Angry Cook] into play.
 
 
-(Conjured)
+(Summoned)
     [Angry Cook]
 Type: Unit
 Attack: 3
@@ -516,8 +537,14 @@ Attack: 2
 Life: 2
 Text: 
 
+
+    [Repentace]
+Type: Bond
+Text:
+    As long as you have 7 or lower life, TODO
+
 == Keywords ==
-{Good} - When you cast a {Good} card, conjure a [Healing Light] card into your hand.
-{Evil} - When you cast a {Evil} card, conjure a [Corrupting Darkness] card into your hand.
+{Good} - When you cast a {Good} card, summon a [Healing Light] card into your hand.
+{Evil} - When you cast a {Evil} card, summon a [Corrupting Darkness] card into your hand.
 {Power Up} - Increment all bracketed numbers in the card.
 {Power Down} - Decrement all bracketed numbers in the card.

@@ -1,0 +1,85 @@
+// formatted text
+(Utility)
+FmtStr:
+    Original: str
+    Formatted: str // returns HTML (TODO?)
+
+
+// singleton object, is used for loading, unloading and getting cards, is created on server setup
+(Cards)
+CardMaster:
+    - Load(cName: str, colName: str) // If the card is not loaded, loads the card and creates it's reference counter. Increments it's reference counter by 1.
+    - Unload(cName: str, colName: str) // Decrements the card ref counter by 1. If 0, unloads the card.
+    - Get(cName: str, colName: str) -> Card // If card is not loaded, throws exception. Returns the loaded card.
+
+
+// card template, is stored server-side
+(Cards)
+Card:
+    - Name: str
+    - Type: str
+    - Text: FmtStr
+
+
+// interface for classes that can be damaged
+(Core)
+Damageable:
+    - ProcessDamage(long damage) // processes the damage dealt to the object
+
+
+// shared interface between units and treasures
+(Cards)
+HasMarkedDamage(Damageable):
+    - MarkedDamage: int // damage that was dealt to this card
+    - getLife() -> int // returns the amount of life on the card
+
+
+// wrapper for the card, used in the match
+// describes cards in: Deck, Hand, Discard
+(Cards)
+CardW:
+    - Original: Card
+    - Info: LuaTable // all the info about the card
+
+
+// wrapper for the unit card
+(Cards)
+UnitW(Damageable):
+    - Card: CardW
+    - AvailableAttacks: int // available attacks for the card
+
+
+// wrapper for the treasure card
+(Cards)
+TreasureW(Damageable):
+    - Card: CardW
+
+
+// controller of a player, can be either terminal controlled, bot (lua scripted), or connected player
+(Players)
+PlayerController:
+    - RequestAction(player: Player) -> [string]
+    - RequestCards(player: Player, allowedCardIDs: [string]) // beforehand uses a LuaFunction to filter cards and creates a list of card IDs that can be choices
+
+
+// a player object, is used in a match
+(Players)
+Player:
+    - Life: int // remaining life of the player`
+
+
+// responsible for creating new matches
+(Matches)
+MatchPool:
+    - CardMaster: CardMaster
+    - Matches: [Match]
+
+
+// a single match object
+(Matches)
+Match:
+    - CardMaster: CardMaster // is passed from MatchPool
+    - LState: LuaState // state of the match
+    - Players: [Player]
+
+

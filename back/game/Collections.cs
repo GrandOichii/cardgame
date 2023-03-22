@@ -50,7 +50,7 @@ namespace game.collection {
 
             var cards = new List<Card>();
             foreach (var cPath in info.CardPaths)
-                cards.Add(Card.Load(Path.Join(path, cPath)));
+                cards.Add(Card.Load(Path.Join(path, cPath), info.Name));
             
             var result = new Collection(info.Name, cards);
             return result;
