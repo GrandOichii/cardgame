@@ -11,6 +11,29 @@ Card
         Damageable
             Treasure
             Unit
+            
+
+Card - card object stored in the database
+CardW - a wrapper for the card, user in Match. Is used for wrapping cards in: hand, treasures, deck, discard.
+UnitW - a wrapper for CardW, displays a unit card
+TreasureW - a wapper for CardW, displays a treasure card
+
+
+Zone - a zone, contains cards
+Match:
+    []Player:
+        Hand(Zone<CardW>)
+        Discard(Zone<CardW>)
+        Treasures(Zone<TreasureW>)
+        []UnitW // units
+    LState // lua state
+    Config // match configurations
+
+
+
+== Notes ==
+Cards should have a Play method
+
 
 == Turn Structure ==
 (1) Turn start
