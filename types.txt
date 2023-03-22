@@ -96,8 +96,8 @@ EffectCreation - responsible for creating triggers
 EffectCreation:ActivatedEffectBuilder() - returns a builder class, builds a activated effect object.
 ActivatedEffect:
     zone: str
-    cost: function(owner, args) -> bool // cost function, returns false if owner can't pay OR doesn't pay
-    effect: function(owner, args) // resolves the effect of the trigger
+    cost: function(card, owner, args) -> bool // cost function, returns false if owner can't pay OR doesn't pay
+    effect: function(card, owner, args) // resolves the effect of the trigger
 
 
 EffectCreation:TriggerBuilder() - (extends EffectCreation:ActivatedEffectBuilder) returns a builder class, builds a trigger object.
@@ -105,9 +105,13 @@ Trigger object (extends ActivatedEffect):
     on: str
     isSilent: bool
     check?: function(owner, args) -> bool // checker function, returns false if can't trigger
+! If user specifies cost as null, replace it with a function that returns true
 
+
+IN_PLAY_ZONE_MAP - table, maps the card type to the zone it should be placed in.
 
 CardCreation - responsible for creating cards for the match
+
 
 CardCreation:CardObject(props: table) - creates a card object
     Required props: cost, name, type.
@@ -124,6 +128,7 @@ CardCreation:CardObject(props: table) - creates a card object
 
 CardCreation:Spell(props: table) - creates a card object that is discarded after it's effect.
     Uses: CardCreation:CardObject(props)
+    play function is reimplemented, calls effect function, then is discarded
     Adds to the card:
         effect(player) - function, resolves the effect of the card. !Is used in the reimplemented play function.
 
@@ -134,4 +139,27 @@ CardCreation:Source(props: table) - creates a card object of the Source card.
     Sets the can_pay function to a checker of the player's allowed amount of source cards this turn. If equal to zero, return false.
 
 
+CardCreation:InPlay(props: table) - creates a card that will be in play (TODO? except bond)
+    Uses: CardCreation:CardObject(props)
+    play function is reimplemented, now calls c# function to place the card in the zone, taken from IN_PLAY_ZONE_MAP. Uses the card's type field.
+
+
 CardCreation:Damageable(props: table) - creates a damageable card object.
+    Uses: CardCreation:InPlay(props)
+    Required props: life.
+    Adds to the card:
+        life: long - the amount of life the card has
+        base_life: long -  the base amount of life the card has
+        trigger of leaving play, sets the life to base_life
+    !!! Check if enters with no life
+    
+
+
+CardCreation:Treasure(props: table) - creates a treasure card object.
+    Uses: CardCreation:Damageable(props)
+    ! C# function that places the card in play just appends this card to the Treasure Zone
+
+
+CardCreation:Unit(props: table) - creates a unit card object.
+    Uses: CardCreation:Damageable(props)
+    ! C# function that places the unit in the lane should prompt the player to choose the lane the unit should be placed on.
