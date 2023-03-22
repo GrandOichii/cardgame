@@ -1,3 +1,5 @@
+=== C# ===
+
 // formatted text
 (Utility)
 FmtStr:
@@ -38,6 +40,7 @@ HasMarkedDamage(Damageable):
 // describes cards in: Deck, Hand, Discard
 (Cards)
 CardW:
+    - ID: str // the id of the card
     - Original: Card
     - Info: LuaTable // all the info about the card
 
@@ -78,8 +81,57 @@ MatchPool:
 // a single match object
 (Matches)
 Match:
+    - AllCards: Dict<string, CardW> // dictionary of all cards, present in the match. CardID --> Card wrapper.
+    - SummonedCards: Dict<string, CardW> // TODO a dictionary of all cards, summonde by players
     - CardMaster: CardMaster // is passed from MatchPool
     - LState: LuaState // state of the match
     - Players: [Player]
 
 
+
+
+=== Lua ===
+EffectCreation - responsible for creating triggers
+
+EffectCreation:ActivatedEffectBuilder() - returns a builder class, builds a activated effect object.
+ActivatedEffect:
+    zone: str
+    cost: function(owner, args) -> bool // cost function, returns false if owner can't pay OR doesn't pay
+    effect: function(owner, args) // resolves the effect of the trigger
+
+
+EffectCreation:TriggerBuilder() - (extends EffectCreation:ActivatedEffectBuilder) returns a builder class, builds a trigger object.
+Trigger object (extends ActivatedEffect):
+    on: str
+    isSilent: bool
+    check?: function(owner, args) -> bool // checker function, returns false if can't trigger
+
+
+CardCreation - responsible for creating cards for the match
+
+CardCreation:CardObject(props: table) - creates a card object
+    Required props: cost, name, type.
+    Adds to the card:
+        cost: long - the energy cost of the card
+        name: str - the name of the card
+        triggers: [] - a list of triggers
+        activated_effects: [] - a list of activated effects
+
+        can_play(player) -> bool - function, returns true if the player can play the card
+        pay_costs(player) - function, pays all the costs. !Has to be implemented further
+        play(player) - function, plays the card. !Has to implemented further
+
+
+CardCreation:Spell(props: table) - creates a card object that is discarded after it's effect.
+    Uses: CardCreation:CardObject(props)
+    Adds to the card:
+        effect(player) - function, resolves the effect of the card. !Is used in the reimplemented play function.
+
+
+CardCreation:Source(props: table) - creates a card object of the Source card.
+    Uses: CardCreation:Spell(props)
+    Sets the card's cost to 0, sets the effect to increase the maximum amount of energy the player has by 1, then decreases the allowed amount of source cards this by 1.
+    Sets the can_pay function to a checker of the player's allowed amount of source cards this turn. If equal to zero, return false.
+
+
+CardCreation:Damageable(props: table) - creates a damageable card object.
