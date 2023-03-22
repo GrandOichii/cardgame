@@ -154,7 +154,6 @@ CardCreation:Damageable(props: table) - creates a damageable card object.
     !!! Check if enters with no life
     
 
-
 CardCreation:Treasure(props: table) - creates a treasure card object.
     Uses: CardCreation:Damageable(props)
     ! C# function that places the card in play just appends this card to the Treasure Zone
