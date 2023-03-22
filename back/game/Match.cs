@@ -12,6 +12,7 @@ using game.scripts;
 namespace game.match {
 
     struct MatchConfig : ILuaSerializable {
+        [JsonPropertyName("lane_count")]            public int LaneCount { get; set; }
         [JsonPropertyName("starting_energy")]       public int StartingEnergy { get; set; }
         [JsonPropertyName("starting_life")]         public int StartingLifeTotal { get; set; }
 
@@ -41,15 +42,15 @@ namespace game.match {
 
     class CardManager
     {
-        public Dictionary<string, CardWrapper> Cards { get; } = new();
+        public Dictionary<string, CardW> Cards { get; } = new();
 
-        public CardWrapper? this[string cID]
+        public CardW? this[string cID]
         {
             get => Cards.ContainsKey(cID) ? Cards[cID] : null;
         }
 
 
-        public void Add(List<CardWrapper> cards)
+        public void Add(List<CardW> cards)
         {
             foreach (var card in cards)
                 Cards[card.ID] = card;

@@ -1,6 +1,6 @@
 {
     "name": "Old Wizard",
-    "type": "Creature",
+    "type": "Unit",
     "text": "When [cn:Old Wizard] enters play, [kv:power up] a card in your hand.",
     "script": "script.lua"
 }

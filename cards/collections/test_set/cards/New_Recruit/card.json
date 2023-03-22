@@ -1,6 +1,6 @@
 {
     "name": "New Recruit",
-    "type": "Creature",
+    "type": "Unit",
     "text": "",
     "script": "script.lua"
 }

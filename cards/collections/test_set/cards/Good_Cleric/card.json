@@ -1,8 +1,0 @@
-{
-    "name": "Good Cleric",
-    "text": "[kw:Good]",
-    "script": "script.lua",
-    "on": {
-        "cast": "GoodCleric_Cast"
-    }
-}

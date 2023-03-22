@@ -1,5 +1,5 @@
 == Game core ==
-A 2-player card game, players take turns casting spells and attacking with creatures to decrease the opponent's life total to 0.
+A 2-player card game, players take turns casting spells and attacking with units to decrease the opponent's life total to 0.
 
 
 == Code ==
@@ -107,7 +107,7 @@ Answer Prayers
 == Cards ==
 
     [New Recruit]
-Type: Creature
+Type: Unit
 Cost: 1
 Attack: 1
 Life: 1
@@ -283,7 +283,7 @@ Attack: 3
 Life: 3
 Text:
     {Evil}
-    Discard 3 [Healing Light] cards from your hand: Destroy the defending creature in this lane.
+    Discard 3 [Healing Light] cards from your hand: Destroy the defending unit in this lane.
 (The idea is that you are less)
 
 
@@ -487,7 +487,7 @@ Text:
 
 
     [Risen Dead]
-Type: Creature
+Type: Unit
 Cost: 2
 Attack: 2
 Life: 2

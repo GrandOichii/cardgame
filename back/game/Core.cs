@@ -77,38 +77,38 @@ namespace game.core {
                 var cID = args[1];
                 var card = player.Hand[cID];
 
-                // TODO can't cast a card with id that's not in your hand, suspect cheating
-                if (card is null) throw new Exception("Player " + player.Name + " cast card with ID " + cID + ": it's not in their hand");
+                // TODO can't play a card with id that's not in your hand, suspect cheating
+                if (card is null) throw new Exception("Player " + player.Name + "failed to play card with ID " + cID + ": it's not in their hand");
                 // var cTable = card.Table;
 
-                var canCastFunc = card.Table[Card.CAN_CAST_FNAME] as LuaFunction;
-                if (canCastFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAN_CAST_FNAME + " function");
-                var canCast = (bool)canCastFunc.Call(pTable)[0];
+                var canPlayFunc = Utility.GetLuaF(card.Table, Card.CAN_PLAY_FNAME);
+                // var canPlayFunc = card.Table[Card.CAN_PLAY_FNAME] as LuaFunction;
+                // if (canPlayFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAN_PLAY_FNAME + " function");
+                var canPlay = (bool)canPlayFunc.Call(pTable)[0];
                 
                 // TODO throw exception?
-                if (!canCast) {
-                    System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") " + "tried to cast an uncastable catd " + card.Card.Name + " (" + card.ID + ")");
+                if (!canPlay) {
+                    System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") " + "tried to play an unplayable catd " + card.Card.Name + " (" + card.ID + ")");
                     return;
                 }
 
-                var costFunc = card.Table[Card.CAST_COST_FNAME] as LuaFunction;
-                if (costFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.CAST_COST_FNAME + " function");
+                var costFunc = card.Table[Card.PLAY_COST_FNAME] as LuaFunction;
+                if (costFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.PLAY_COST_FNAME + " function");
 
                 // remove card from player's hand
                 player.Hand.Cards.Remove(card);
                 // TODO figure out the input and output args
-                // var payed = (bool)costFunc.Call(cTable, pTable)[0];
+
                 costFunc.Call(pTable);
                 // TODO throw an exception?
                 // if (!payed) {
-                //     System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") tried to cast " + card.Card.Name + " (" + card.ID + "), but FAILED for some reason");
+                //     System.Console.WriteLine("WARN: player " + player.Name + " (" + player.ID + ") tried to play " + card.Card.Name + " (" + card.ID + "), but FAILED for some reason");
                 //     return;
                 // }
 
-                var castFunc = card.Table[Card.ON_CAST_FNAME] as LuaFunction;
-                if (castFunc is null) throw new Exception("CardWrapper with id " + cID + "(card name: " + card.Card.Name + ") doesn't have a " + Card.ON_CAST_FNAME + " function");
+                var playFunc = Utility.GetLuaF(card.Table, Card.ON_PLAY_FNAME);
                 // TODO figure out input and output args
-                castFunc.Call(pTable);
+                playFunc.Call(pTable);
             }
         }
 
@@ -122,14 +122,14 @@ namespace game.core {
                 // TODO get available attacks
                 // TODO check if can attack target
                 var attackerID = args[1];
-                CardWrapper? attacker = null;
+                CardW? attacker = null;
                 foreach (var card in player.InPlay.Cards) {
                     if (card.ID != attackerID) continue;
                     attacker = card;
                     break;
                 }
                 if (attacker is null) 
-                    throw new Exception("Player " + player.Name + " tried to attack with creature with id " + attackerID + ", which is not in play under their control");
+                    throw new Exception("Player " + player.Name + " tried to attack with unit with id " + attackerID + ", which is not in play under their control");
                 var availableAttacksO = attacker.Table["availableAttacks"];
                 if (availableAttacksO == null) throw new Exception("Player " + player.Name + " tried to attack with a card that can't attack: " + attacker.Card.Name);
                 
@@ -153,6 +153,8 @@ namespace game.core {
                     }
                     if (!set) throw new Exception("Player " + player.Name + " tried to attack a card with ID " + attackedID + ", which is not in play");
                 }
+
+                // TODO emit that unit is attacking
 
                 // TODO change when implementing damage types
                 long attack = (long)attacker.Table["attack"];
@@ -179,10 +181,10 @@ namespace game.core {
                 // emit turn start effects
                 match.Emit("turn_start", new(){ {"player", player} });
 
-                // replenish creatures' attacks
+                // replenish all units' attacks
                 foreach (var card in player.InPlay.Cards)
                     if (card.Table["availableAttacks"] is not null)
-                        // TODO replace if creatures will be able to attack multiple times
+                        // TODO replace if units will be able to attack multiple times
                         card.Table["availableAttacks"] = 1;
 
                 // draw for the turn
@@ -195,7 +197,7 @@ namespace game.core {
             private readonly string PASS_TURN_ACTION = "pass";
             private static readonly Dictionary<string, actions.GameAction> ACTION_MAP =
             new(){
-                { "cast", new actions.PlayCardAction() },
+                { "play", new actions.PlayCardAction() },
                 { "attack", new actions.AttackAction() }
             };
 
@@ -244,16 +246,16 @@ namespace game.core {
         }
     }
 
-    class CardDeck {
-        public List<CardWrapper> _cards;
-        public List<CardWrapper> Cards { get => _cards; }
+    class Zone<T> where T : CardW {
+        public List<T> _cards;
+        public List<T> Cards { get => _cards; }
 
-        public CardWrapper? this[string cardID]
+        public T? this[string cardID]
         {
             get => _cards.Find(card => card.ID == cardID);
         }
 
-        public CardDeck(List<CardWrapper> cards) {
+        public Zone(List<T> cards) {
             _cards = cards;
         }
 
@@ -261,29 +263,36 @@ namespace game.core {
             _cards = Utility.Shuffled(Cards);
         }
 
-        public List<CardWrapper> PopTop(int amount) {
+        public List<T> PopTop(int amount) {
             if (amount > _cards.Count) amount = _cards.Count;
             var result = Cards.GetRange(0, amount);
             Cards.RemoveRange(0, amount);
             return result;
         }
 
-        static public CardDeck From(Match match, Deck deck) {
-            var cards = new List<CardWrapper>();
-            foreach (var pair in deck.Cards)
-                for (int i = 0; i < pair.Value; i++)
-                    cards.Add(new CardWrapper(match, pair.Key));
-            return new CardDeck(cards);
-        }
-
-        public void AddToBack(List<CardWrapper> cards) {
+        public void AddToBack(List<T> cards) {
             foreach (var card in cards)
                 AddToBack(card);
         }
 
-        public void AddToBack(CardWrapper card) {
+        public void AddToBack(T card) {
             _cards.Add(card);
         }
+    }
+
+    class CardDeck : Zone<CardW> {
+        public CardDeck(List<CardW> cards) : base(cards)
+        {
+        }
+
+        // static public CardDeck From(Match match, Deck deck) {
+        //     var cards = new List<CardW>();
+        //     foreach (var pair in deck.Cards)
+        //         for (int i = 0; i < pair.Value; i++)
+        //             cards.Add(new CardW(match, pair.Key));
+        //     return new CardDeck(cards);
+        // }
+
     }
 
     class Trigger {

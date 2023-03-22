@@ -9,6 +9,14 @@ namespace game.player {
 
     // A match partisipating player
     class Player : ILuaSerializable, IDamageable {
+        public static readonly string ANYWHERE_ZONE = "anywhere";
+        public static readonly string HAND_ZONE_NAME = "hand";
+        public static readonly string IN_PLAY_ZONE_NAME = "in_play";
+        public static readonly string DECK_ZONE_NAME = "deck";
+        public static readonly string DISCARD_ZONE_NAME = "discard";
+
+
+
         static private int LastPid = 0;
 
         public int ID { get; }
@@ -37,19 +45,15 @@ namespace game.player {
         public int Life { get; set; }
 
         // cards
-        public CardWrapper? Bond { get; }=null;
+        public CardW? Bond { get; }=null;
 
-        public static readonly string ANYWHERE_ZONE = "anywhere";
-        public static readonly string HAND_ZONE_NAME = "hand";
-        public CardDeck Hand { get; }
-        public static readonly string IN_PLAY_ZONE_NAME = "in_play";
-        public CardDeck InPlay { get; }
-        public static readonly string DECK_ZONE_NAME = "deck";
-        public CardDeck Deck { get; }
-        public static readonly string DISCARD_ZONE_NAME = "discard";
-        public CardDeck Discard { get; }
+        public Zone Hand { get; }
+        public UnitW[] Lanes { get; private set; }
+        public Zone Deck { get; }
+        public Zone Discard { get; }
+        public Zone Treasures { get; set; }
 
-        public Dictionary<string, CardDeck> Zones { get; }
+        public Dictionary<string, Zone> Zones { get; }
 
 
         public PlayerController Controller { get; set; }
@@ -68,15 +72,15 @@ namespace game.player {
 
             // bond setting
             if (deck.Bond is not null)
-                Bond = new CardWrapper(match, deck.Bond);
+                Bond = new CardW(match, deck.Bond);
 
             // deck setting
-            Deck = CardDeck.From(match, deck);
+            Deck = Zone.From(match, deck);
             Deck.Shuffle();
 
             Hand = new(new());
             Discard = new(new());
-            InPlay = new(new());
+            Lanes = new UnitW[match.Config.LaneCount];
 
             Zones = new(){
                 {HAND_ZONE_NAME, Hand},
@@ -129,14 +133,16 @@ namespace game.player {
         }
     }
 
+
     abstract class PlayerController {
         // TODO replace with PlayerInfo and MatchInfo
         abstract public string PromptAction(Player controlledPlayer);
 
     }
 
+
     class TerminalPlayerController : PlayerController {
-        private void PrintCardsInZone(CardDeck zone, string zoneName) {
+        private void PrintCardsInZone(Zone zone, string zoneName) {
             System.Console.WriteLine("=== Cards in " + zoneName + " ===");
             foreach (var card in zone.Cards)
                 System.Console.WriteLine(card.ID + ": " + card.Card.Name);

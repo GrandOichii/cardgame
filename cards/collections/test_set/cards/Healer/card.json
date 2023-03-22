@@ -1,6 +1,6 @@
 {
     "name": "Healer",
-    "type": "Creature",
+    "type": "Unit",
     "text": "At the end of your turn, gain 1 life.",
     "script": "script.lua"
 }

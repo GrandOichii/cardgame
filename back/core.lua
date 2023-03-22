@@ -85,11 +85,11 @@ CardCreation = {}
 
 -- Creates a card object
 -- 
--- Has a can_cast function, which returns true if it's owner can cast it
+-- Has a can_play function, which returns true if it's owner can play it
 --
--- Has a cast_cost function, which is called first when the player is casting the card
+-- Has a play_cost function, which is called first when the player is playing the card
 --
--- Creates a dummy function on_cast - spell's effect when casting it
+-- Creates a dummy function on_play - spell's effect when playing it
 --
 -- Creates a triggers list
 --
@@ -104,16 +104,16 @@ function CardCreation:CardObject(props)
     result.triggers = {}
 
 
-    result.can_cast = function (owner)
+    result.can_play = function (owner)
         return owner.energy >= result.cost
     end
 
-    result.cast_cost = function(owner)
+    result.play_cost = function(owner)
         -- spend energy
         TakeEnergy(owner.id, result.cost)
     end
 
-    result.on_cast = function (owner)
+    result.on_play = function (owner)
         
     end
 
@@ -121,13 +121,13 @@ function CardCreation:CardObject(props)
 end
 
 
--- Creates a spell card object - after casting is placed into the graveyard
+-- Creates a spell card object - after playing is placed into the graveyard
 -- 
--- Extends the function cast_cost by placing the card into discard
+-- Extends the function play_cost by placing the card into discard
 function CardCreation:Spell(props)
     local result = CardCreation:CardObject(props)
 
-    ExtendFunc(result, 'cast_cost', function (owner)
+    ExtendFunc(result, 'play_cost', function (owner)
         PlaceIntoDiscard(result.id, owner.id)
     end)
     
@@ -139,15 +139,15 @@ end
 --
 -- Overrides the cost in props to cost 0
 --
--- Overrides the can_cast function TODO
+-- Overrides the can_play function TODO
 --
--- Overrides the on_cast
+-- Overrides the on_play
 function CardCreation:Source(props)
     local result = CardCreation:Spell(props)
 
     result.cost = 0
     
-    result.can_cast = function (owner)
+    result.can_play = function (owner)
         -- TODO
         local data = owner.mutable
         if data.sourceCount == 0 then
@@ -156,7 +156,7 @@ function CardCreation:Source(props)
         return true
     end
 
-    result.on_cast = function (owner)
+    result.on_play = function (owner)
         IncreaseMaxEnergy(owner.id, 1)
         owner.mutable.sourceCount = owner.mutable.sourceCount - 1
     end
@@ -176,13 +176,13 @@ end
 
 -- Creates a in play card object
 --
--- Overrides the on_cast function to put the card into play
+-- Overrides the on_play function to put the card into play
 --
 -- Has an on_leave function, triggers when card leaves play
 function CardCreation:InPlayCard(props)
     local result = CardCreation:CardObject(props)
 
-    result.on_cast = function(owner)
+    result.on_play = function(owner)
         PlaceIntoPlay(result.id, owner.id)
     end
 
@@ -208,7 +208,7 @@ function CardCreation:Damageable(props)
 end
 
 
--- Creates a creature card object
+-- Creates a unit card object
 --
 -- Required props: attack
 function CardCreation:Unit(props)
