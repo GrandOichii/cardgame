@@ -1,0 +1,165 @@
+=== C# ===
+
+// formatted text
+(Utility)
+FmtStr:
+    Original: str
+    Formatted: str // returns HTML (TODO?)
+
+
+// singleton object, is used for loading, unloading and getting cards, is created on server setup
+(Cards)
+CardMaster:
+    - Load(cName: str, colName: str) // If the card is not loaded, loads the card and creates it's reference counter. Increments it's reference counter by 1.
+    - Unload(cName: str, colName: str) // Decrements the card ref counter by 1. If 0, unloads the card.
+    - Get(cName: str, colName: str) -> Card // If card is not loaded, throws exception. Returns the loaded card.
+
+
+// card template, is stored server-side
+(Cards)
+Card:
+    - Name: str
+    - Type: str
+    - Text: FmtStr
+
+
+// interface for classes that can be damaged
+(Core)
+Damageable:
+    - ProcessDamage(long damage) // processes the damage dealt to the object
+
+
+// shared interface between units and treasures
+(Cards)
+HasMarkedDamage(Damageable):
+    - MarkedDamage: int // damage that was dealt to this card
+    - getLife() -> int // returns the amount of life on the card
+
+
+// wrapper for the card, used in the match
+// describes cards in: Deck, Hand, Discard
+(Cards)
+CardW:
+    - ID: str // the id of the card
+    - Original: Card
+    - Info: LuaTable // all the info about the card
+
+
+// wrapper for the unit card
+(Cards)
+UnitW(Damageable):
+    - Card: CardW
+    - AvailableAttacks: int // available attacks for the card
+
+
+// wrapper for the treasure card
+(Cards)
+TreasureW(Damageable):
+    - Card: CardW
+
+
+// controller of a player, can be either terminal controlled, bot (lua scripted), or connected player
+(Players)
+PlayerController:
+    - RequestAction(player: Player) -> [string]
+    - RequestCards(player: Player, allowedCardIDs: [string]) // beforehand uses a LuaFunction to filter cards and creates a list of card IDs that can be choices
+
+
+// a player object, is used in a match
+(Players)
+Player:
+    - Life: int // remaining life of the player`
+
+
+// responsible for creating new matches
+(Matches)
+MatchPool:
+    - CardMaster: CardMaster
+    - Matches: [Match]
+
+
+// a single match object
+(Matches)
+Match:
+    - AllCards: Dict<string, CardW> // dictionary of all cards, present in the match. CardID --> Card wrapper.
+    - SummonedCards: Dict<string, CardW> // TODO a dictionary of all cards, summonde by players
+    - CardMaster: CardMaster // is passed from MatchPool
+    - LState: LuaState // state of the match
+    - Players: [Player]
+
+
+
+
+=== Lua ===
+EffectCreation - responsible for creating triggers
+
+EffectCreation:ActivatedEffectBuilder() - returns a builder class, builds a activated effect object.
+ActivatedEffect:
+    zone: str
+    cost: function(card, owner, args) -> bool // cost function, returns false if owner can't pay OR doesn't pay
+    effect: function(card, owner, args) // resolves the effect of the trigger
+
+
+EffectCreation:TriggerBuilder() - (extends EffectCreation:ActivatedEffectBuilder) returns a builder class, builds a trigger object.
+Trigger object (extends ActivatedEffect):
+    on: str
+    isSilent: bool
+    check?: function(owner, args) -> bool // checker function, returns false if can't trigger
+! If user specifies cost as null, replace it with a function that returns true
+
+
+IN_PLAY_ZONE_MAP - table, maps the card type to the zone it should be placed in.
+
+CardCreation - responsible for creating cards for the match
+
+
+CardCreation:CardObject(props: table) - creates a card object
+    Required props: cost, name, type.
+    Adds to the card:
+        cost: long - the energy cost of the card
+        name: str - the name of the card
+        triggers: [] - a list of triggers
+        activated_effects: [] - a list of activated effects
+
+        can_play(player) -> bool - function, returns true if the player can play the card
+        pay_costs(player) - function, pays all the costs. !Has to be implemented further
+        play(player) - function, plays the card. !Has to implemented further
+
+
+CardCreation:Spell(props: table) - creates a card object that is discarded after it's effect.
+    Uses: CardCreation:CardObject(props)
+    play function is reimplemented, calls effect function, then is discarded
+    Adds to the card:
+        effect(player) - function, resolves the effect of the card. !Is used in the reimplemented play function.
+
+
+CardCreation:Source(props: table) - creates a card object of the Source card.
+    Uses: CardCreation:Spell(props)
+    Sets the card's cost to 0, sets the effect to increase the maximum amount of energy the player has by 1, then decreases the allowed amount of source cards this by 1.
+    Sets the can_pay function to a checker of the player's allowed amount of source cards this turn. If equal to zero, return false.
+
+
+CardCreation:InPlay(props: table) - creates a card that will be in play (TODO? except bond)
+    Uses: CardCreation:CardObject(props)
+    play function is reimplemented, now calls c# function to place the card in the zone, taken from IN_PLAY_ZONE_MAP. Uses the card's type field.
+
+
+CardCreation:Damageable(props: table) - creates a damageable card object.
+    Uses: CardCreation:InPlay(props)
+    Required props: life.
+    Adds to the card:
+        life: long - the amount of life the card has
+        base_life: long -  the base amount of life the card has
+        trigger of leaving play, sets the life to base_life
+    !!! Check if enters with no life
+    
+
+
+CardCreation:Treasure(props: table) - creates a treasure card object.
+    Uses: CardCreation:Damageable(props)
+    ! C# function that places the card in play just appends this card to the Treasure Zone
+
+
+CardCreation:Unit(props: table) - creates a unit card object.
+    Uses: CardCreation:Damageable(props)
+    ! C# function that places the unit in the lane should prompt the player to choose the lane the unit should be placed on.

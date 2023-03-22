@@ -9,7 +9,7 @@ using System.Net;
 
 namespace game.cards {
 
-    class JCard {
+    internal class JCard {
         [JsonPropertyName("name")]
         public string Name { get; set; }="";
 
@@ -27,22 +27,24 @@ namespace game.cards {
         static public string ON_PLAY_FNAME = "on_play";
         static public string CAN_PLAY_FNAME = "can_play";
         static public string CREATION_FNAME = "_CreateCard";
-
         static private string CARD_INFO_PATH = "card.json";
+
 
         public string Name { get; }
         public string Text { get; }
         public string Type { get; }
+        public string Collection { get; }
         public string ScriptPath { get; }
 
-        protected Card(string name, string text, string type, string scriptPath) {
+        protected Card(string name, string text, string type, string collection, string scriptPath) {
             Name = name;
             Text = text;
             Type = type;
+            Collection = collection;
             ScriptPath = scriptPath;
         }
 
-        static public Card Load(string path) {
+        static public Card Load(string path, string collection) {
             var text = File.ReadAllText(Path.Join(path, CARD_INFO_PATH));
             var template = JsonSerializer.Deserialize<JCard>(text);
 
@@ -53,6 +55,7 @@ namespace game.cards {
                 template.Name,
                 template.Text,
                 template.Type,
+                collection,
                 Path.Join(path, template.ScriptPath)
             );
 
@@ -68,6 +71,7 @@ namespace game.cards {
             return result;
         }
     }
+<<<<<<< HEAD:back/game/Card.cs
 
 
 
@@ -128,4 +132,6 @@ namespace game.cards {
     class TreasureW : DamageableW
     {
     }
+=======
+>>>>>>> d12df691b554348afad4dc2f0ceffd2792be6dfd:back1/game/Card.cs
 }
