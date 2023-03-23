@@ -96,15 +96,15 @@ EffectCreation - responsible for creating triggers
 EffectCreation:ActivatedEffectBuilder() - returns a builder class, builds a activated effect object.
 ActivatedEffect:
     zone: str
-    cost: function(card, owner, args) -> bool // cost function, returns false if owner can't pay OR doesn't pay
+    cost: function(card, owner, args) -> bool // cost function, returns false if owner can't pay OR doesn't pay.
     effect: function(card, owner, args) // resolves the effect of the trigger
+    check?: function(owner, args) -> bool // checker function, returns false if can't trigger
 
 
 EffectCreation:TriggerBuilder() - (extends EffectCreation:ActivatedEffectBuilder) returns a builder class, builds a trigger object.
 Trigger object (extends ActivatedEffect):
     on: str
     isSilent: bool
-    check?: function(owner, args) -> bool // checker function, returns false if can't trigger
 ! If user specifies cost as null, replace it with a function that returns true
 
 
