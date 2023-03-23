@@ -10,6 +10,12 @@ namespace game.core.actions {
     }
 
 
-    
+    class PlayCardAction : GameAction
+    {
+        public override void Exec(Match match, Player player, string[] args)
+        {
+            // TODO
+        }
+    }
 
 }

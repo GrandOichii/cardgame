@@ -108,7 +108,7 @@ namespace game.cards.loaders {
                 template.Type,
                 template.Text,
                 colName,
-                File.ReadAllText(Path.Join(path, template.ScriptPath))
+                Path.Join(path, template.ScriptPath)
             );
         }
     }

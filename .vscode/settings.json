@@ -8,6 +8,7 @@
         "TakeEnergy",
         "IncreaseMaxEnergy",
         "GetController",
-        "GainLife"
+        "GainLife",
+        "Log"
     ]
 }

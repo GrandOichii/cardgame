@@ -92,6 +92,12 @@ end
 
 Common = {}
 
+function Common:RequireField(table, fieldName)
+    if table[fieldName] == nil then
+        error('Table' .. Utility:TableToStr(table) .. 'does not have field ' .. fieldName)
+    end
+end
+
 
 function Common:AlwaysTrue(...)
     return true
@@ -150,28 +156,158 @@ function Utility:TableToStr(t)
 end
 
 
-local activated = EffectCreation:ActivatedEffectBuilder()
-    :Zone('lanes')
-    :Check(Common:HasEnoughEnergy(2))
-    :Cost(Common:PayEnergy(2))
-    :Effect(function( player )
-        print('Player ' .. player.name .. ' activated effect!')
-    end)
-    :Build()
+-- local activated = EffectCreation:ActivatedEffectBuilder()
+--     :Zone('lanes')
+--     :Check(Common:HasEnoughEnergy(2))
+--     :Cost(Common:PayEnergy(2))
+--     :Effect(function( player )
+--         print('Player ' .. player.name .. ' activated effect!')
+--     end)
+--     :Build()
 
-print(Utility:TableToStr(activated))
+-- print(Utility:TableToStr(activated))
 
 
--- whenever a unit an opponent is destroyed, you may discard a card to return [CARDNAME] to your hand
-local triggered = EffectCreation:TriggerBuilder()
-    :IsSilent(false)
-    :Zone('discard')
-    :On('destroyed')
-    :Check(Common:EnoughCardsInHand(1))
-    :Cost(Common:CostDiscard(1))
-    :Effect(function (player)
-        print('Player ' .. player.name .. ' has a triggered effect!')
-    end)
-    :Build()
+-- -- whenever a unit an opponent is destroyed, you may discard a card to return [CARDNAME] to your hand
+-- local triggered = EffectCreation:TriggerBuilder()
+--     :IsSilent(false)
+--     :Zone('discard')
+--     :On('destroyed')
+--     :Check(Common:EnoughCardsInHand(1))
+--     :Cost(Common:CostDiscard(1))
+--     :Effect(function (player)
+--         print('Player ' .. player.name .. ' has a triggered effect!')
+--     end)
+--     :Build()
 
-print(Utility:TableToStr(triggered))
+-- print(Utility:TableToStr(triggered))
+
+
+-- Card Creation
+CardCreation = {}
+
+function CardCreation:CardObject(props)
+    local result = {}
+    
+    Common:RequireField(props, 'name')
+    Common:RequireField(props, 'type')
+    Common:RequireField(props, 'cost')
+    Log('Creating card object for card '..props.name)
+
+    result.name = props.name
+    result.type = props.type
+    result.cost = props.cost
+
+    function result:CanPlay(player)
+        return Common:HasEnoughEnergy(self.cost)(player)
+    end
+
+    function result:PayCosts(player)
+        return Common:PayEnergy(self.cost)(player)
+    end
+
+    function result:Play(player)
+        Log(player.name .. ' player card ' .. self.name)
+    end
+
+    return result
+end
+
+
+function CardCreation:Spell(props)
+    local result = CardCreation:CardObject(props)
+
+    function result:Effect(player)
+        Log('Spell effect of ' .. result.name .. ', played by ' .. player.name)
+    end
+
+    local prevPlay = result.Play;
+    function result:Play(player)
+        prevPlay(self, player)
+        result:Effect(player)
+    end
+
+    return result
+end
+
+
+function CardCreation:Source(props)
+    props.cost = 0
+    local result = CardCreation:Spell(props)
+
+    function result:Effect(player)
+        -- TODO
+    end
+
+    function result:CanPlay(player)
+        -- TODO
+    end
+
+    function result:PayCosts(player)
+        -- TODO
+    end
+
+    return result
+
+end
+
+
+function CardCreation:InPlay(props)
+    local result = CardCreation:CardObject(props)
+
+    local prevPlay = result.Play;
+    function result:Play(player)
+        prevPlay(self, player)
+        -- TODO
+    end
+
+    function result:LeavePlay(player)
+        Log('Card ' .. result.name .. ', controlled by ' .. player.name .. ', is leaving play')
+    end
+
+    return result
+end
+
+
+function CardCreation:Bond(props)
+    props.cost = 0
+
+    local result = CardCreation:InPlay(props)
+
+    return result
+end
+
+
+function CardCreation:Damageable(props)
+    Common:RequireField(props, 'life')
+
+    local result = CardCreation:InPlay(props)
+    result.life = props.life
+    result.baseLife = props.life
+
+    local prevLeave = result.LeavePlay
+    function result:LeavePlay(player)
+        prevLeave(self, player)
+        self.life = self.baseLife
+    end
+
+    return result
+end
+
+
+function CardCreation:Treasure(props)
+    local result = CardCreation:Damageable(props)
+
+    return result
+end
+
+
+function CardCreation:Unit(props)
+    Common:RequireField(props, 'power')
+
+    local result = CardCreation:Damageable(props)
+
+    result.power = props.power
+
+    return result
+end

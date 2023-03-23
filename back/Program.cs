@@ -46,9 +46,13 @@ class Program {
         var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
         g.CardMaster.LogContents();
 
+        m.AddPlayer(p1);
+        m.AddPlayer(p2);
+        m.Start();
+        
         deck1.UnloadCards(g.CardMaster);
         deck2.UnloadCards(g.CardMaster);
-        m.Start();
+        
         #endregion
 
         bool clear = g.CardMaster.CheckEmpty();

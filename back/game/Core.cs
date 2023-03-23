@@ -36,7 +36,7 @@ namespace game.core {
     }
 
     class Zone<T> where T : IHasCardW {
-        public List<T> _cards;
+        private List<T> _cards;
         public List<T> Cards { get => _cards; }
 
         public T? this[string cardID]

@@ -2,7 +2,30 @@ using NLua;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using game.util;
+using game.player;
+using game.cards;
+using game.scripts;
+using game.core.phases;
+
 namespace game.match {
+    class CardManager
+    {
+        public Dictionary<string, CardW> Cards { get; } = new();
+
+        public CardW? this[string cID]
+        {
+            get => Cards.ContainsKey(cID) ? Cards[cID] : null;
+        }
+
+
+        public void Add(List<CardW> cards)
+        {
+            foreach (var card in cards)
+                Cards[card.ID] = card;
+        }
+    }
+
     struct MatchConfig {
         [JsonPropertyName("lane_count")]            public int LaneCount { get; set; }
         [JsonPropertyName("starting_energy")]       public int StartingEnergy { get; set; }
@@ -31,18 +54,100 @@ namespace game.match {
     }
 
     class Match {
+        static private List<GamePhase> _phases = new(){
+            new TurnStart(),
+            new MainPhase(),
+            new TurnEnd()
+        };
+
         public MatchConfig Config { get; private set; }
         public Lua LState { get; private set; }
+        public Player? Winner { get; set; }
+        public bool Active { get => Winner is null; }
+        public List<Player> Players { get; private set; }
+        public Player? PlayerByID(int pid) => Players.Find(player => player.ID == pid);
+        private int _curPlayerI;
+
+        public CardManager AllCards { get; private set; }
+
         public Match(MatchConfig config) {
             Config = config;
 
             // load scripts
             LState = new();
+            new ScriptMaster(this);
+            LState.DoFile("core.lua");
 
+            AllCards = new();
+
+            Players = new();
         }
         
+        public bool AddPlayer(Player player) {
+            if (Players.Count >= 2) return false;
+            Logger.Instance.Log("Match", "Added player " + player.Name);
+            Players.Add(player);
+            return true;
+        }
+
         public void Start() {
+            if (Players.Count != 2) throw new Exception("Tried to launch match with " + Players.Count + " players");
+            Logger.Instance.Log("Match", "Match started!");
+
+            Setup();
+            Turns();
+            End();
+        }
+
+        private void Setup() {
+            Logger.Instance.Log("Match", "Performing setup...");
+            foreach (var player in Players) {
+                // set starting energy
+                player.Energy = Config.StartingEnergy;
+                player.MaxEnergy = Config.StartingEnergy;
+                
+                // add cards in deck to card pool
+                AllCards.Add(player.Deck.Cards);
+
+                // set life total
+                player.Life = Config.StartingLifeTotal;
+
+                // fill hand
+                player.Hand.AddToBack(player.Deck.PopTop(Config.StartingHandSize));
+            }
+            Logger.Instance.Log("Match", "Setup concluded");
+        }
+
+        private void Turns() {
+            Logger.Instance.Log("Match", "Started turns loop");
+            while(Active) {
+                var cPlayer = Players[_curPlayerI];
+                foreach (var phase in _phases) {
+                    phase.Exec(this, cPlayer);
+
+                    if (!Active) return;
+                }
+                _curPlayerI++;
+                if (_curPlayerI >= Players.Count)
+                    _curPlayerI = 0;
+            }
+           Logger.Instance.Log("Match", "Finished turns loop");
+        }
+
+        private void End() {
+            Logger.Instance.Log("Match", "Performing clean up");
             // TODO
+            Logger.Instance.Log("Match", "Clean up concluded");
+        }
+
+        public void Emit(string signal, Dictionary<string, object> args) {
+            var logMessage = "Emitted signal " + signal + ", args: ";
+            foreach (var pair in args) logMessage += pair.Key + ":" + pair.Value.ToString() + " ";
+            Logger.Instance.Log("Match", logMessage);
+
+            // TODO
+
+            Logger.Instance.Log("Match", "Finished emitting " + signal);
         }
     }
 
@@ -55,6 +160,7 @@ namespace game.match {
         }
 
         public Match NewMatch(MatchConfig config) {
+            Logger.Instance.Log("MatchPool", "Requested to create new match");
             return new Match(config);
         }
 

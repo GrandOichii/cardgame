@@ -1,5 +1,6 @@
 using NLua;
 
+using game.util;
 using game.core;
 using game.cards;
 using game.match;
@@ -60,11 +61,15 @@ namespace game.player {
 
 
         public Player(Match match, string name, Deck deck, PlayerController controller) {
+            Logger.Instance.Log("Player", "Creating player " + name);
+
             Controller = controller;
 
             _name = name;
 
+            Logger.Instance.Log("Player", "Creating bond");
             Bond = deck.CreateBond(match.LState);
+            Logger.Instance.Log("Player", "Creating deck");
             Deck = deck.ToDeckZone(match.LState);
 
             Hand = new(new());
@@ -73,13 +78,7 @@ namespace game.player {
 
             Lanes = new UnitW[match.Config.LaneCount];
 
-            // Zones = new(){
-            //     // {HAND_ZONE_NAME, Hand},
-            //     // {DISCARD_ZONE_NAME, Discard},
-            //     // {DECK_ZONE_NAME, Deck},
-            //     // {IN_PLAY_ZONE_NAME, InPlay},
-            // };
-            // Zones.Add(HAND_ZONE_NAME, Hand);
+            Logger.Instance.Log("Player", "Finished creating player " + name);
         }
 
         public long ProcessDamage(long damage)
@@ -87,11 +86,18 @@ namespace game.player {
             // TODO
             throw new NotImplementedException();
         }
+    
+        public void DrawCards(int amount) {
+            // TODO replace with draw cards call to lua state
+            var cards = Deck.PopTop(amount);
+
+            Hand.AddToBack(cards);
+        }
     }
 
     #region Player Controllers
     abstract class PlayerController {
-        abstract public string PromptAction(Player controlledPlayer);
+        abstract public string PromptAction(Player controlledPlayer, Match match);
     }
 
 
@@ -103,13 +109,15 @@ namespace game.player {
 
         }
 
-        public override string PromptAction(Player player)
+        public override string PromptAction(Player player, Match match)
         {
             System.Console.WriteLine("Life: " + player.Life);
             System.Console.WriteLine("Energy: " + player.Energy);
             for (int i = 0; i < player.Lanes.Length; i++) {
                 var unit = player.Lanes[i];
-                System.Console.WriteLine("Lane " + i + ": " + unit.ToShortStr());
+                var addMessage = "None";
+                if (unit is not null) addMessage = unit.ToShortStr();
+                System.Console.WriteLine("Lane " + i + ": " + addMessage);
             }
             PrintCardsInZone(player.Treasures, "treasures");
             PrintCardsInZone(player.Hand, "hand");

@@ -70,14 +70,14 @@ Players can play only one Source card per turn.
 Units are used for attacking the enemy directly or their treasures.
 A unit can be placed by each player on a lane. Only one unit can be on each side of the table. 
 If a player would play a unit on a lane, where they already have a unit, the unit is replaced.
-A unit has health and attack.
-If a unit's health would reach 0, they get destroyed.
+A unit has life and power.
+If a unit's life would reach 0, they get destroyed.
 Units can attack. If a unit would attack on a lane, where there is a defensive unit, they each deal damage to each other simultaneously.
 
 Example:
     [Forest Shaman]
     cost: 3
-    attack: 2
+    power: 2
     defence: 3
     text: TODO
 
@@ -96,7 +96,7 @@ Example:
 
     = Treasure =
 Treasures are cards with special effects. Unlike other cards, a player can have any number of treasures in play.
-Treasures have health. If a Treasure's health would reach 0, it gets destroyed.
+Treasures have life. If a Treasure's life would reach 0, it gets destroyed.
 Treasures can be attacked by units.
 
 Example:
@@ -123,7 +123,7 @@ Bonds can't be removed.
 
 Example:
     [Perfection]
-    text: When you place a Unit, if it has the same attack and health, it gains TODO.
+    text: When you place a Unit, if it has the same power and life, it gains TODO.
 
 
 == Card Names ==
@@ -136,7 +136,7 @@ Answer Prayers
     [New Recruit]
 Type: Unit
 Cost: 1
-Attack: 1
+Power: 1
 Life: 1
 Text: 
 
@@ -150,7 +150,7 @@ Text: Shift all charms to their left.
     [Lich King]
 Type: Unit
 Cost: 7
-Attack: 6
+Power: 6
 Life: 5
 Text: 
     Your opponent can't place units on this lane.
@@ -159,7 +159,7 @@ Text:
     [Storyteller]
 Type: Unit
 Cost: 4
-Attack: 2
+Power: 2
 Life: 4
 Text: 
     When [Storyteller] enters play, return 2 [Source] cards from your discard to your hand.
@@ -168,7 +168,7 @@ Text:
     [Faithful Cleric]
 Type: Unit
 Cost: 1
-Attack: 1
+Power: 1
 Life: 3
 Text: 
     {Good}
@@ -184,7 +184,7 @@ Text:
 (Summoned)
     [Peaseful Peasants]
 Type: Unit
-Attack: 0
+Power: 0
 Life: 1
 Text:
     At the start of your turn, [Peaseful Peasants] gains +1 life.
@@ -206,7 +206,7 @@ Text:
     [Crazed Engineer]
 Type: Unit
 Cost: 6
-Attack: 6
+Power: 6
 Life: 5
 Text:
     At the start of your turn, randomly {Power Up} (2/ 3 /5) cards in play.
@@ -221,7 +221,7 @@ Text:
 (Summoned)
     [Archangel]
 Type: Unit
-Attack: 7
+Power: 7
 Life: 7
 Text: 
     At the start of your turn, one of your [Healing Light] cards in your hand turns into a [Lesser Angel] card.
@@ -231,7 +231,7 @@ Text:
 (Summoned)
     [Lesser Angel]
 Type: Unit
-Attack: 4
+Power: 4
 Life: 4
 Text: 
     At the start of your turn, gain 3 life.
@@ -248,7 +248,7 @@ Text:
     [Priest of the Archdemon]
 Type: Unit
 Cost: 2
-Attack: 2
+Power: 2
 Life: 2
 Text: 
     {Evil}
@@ -257,10 +257,10 @@ Text:
     [Looming Shadow]
 Type: Unit
 Cost: 3
-Attack: 2
+Power: 2
 Life: 5
 Text:
-    Discard a [Corrupting Darkness] card from your hand: [Looming Shadow] gains +3 attack.
+    Discard a [Corrupting Darkness] card from your hand: [Looming Shadow] gains +3 power.
 
 
     [Reward Obedience]
@@ -296,7 +296,7 @@ Text:
     [Black Market Merchant]
 Type: Unit
 Cost: 4
-Attack: 1
+Power: 1
 Life: 2
 Text:
     {Good}
@@ -306,7 +306,7 @@ Text:
     [State Executioner]
 Type: Unit
 Cost: 5
-Attack: 3
+Power: 3
 Life: 3
 Text:
     {Evil}
@@ -317,17 +317,17 @@ Text:
     [Greedy Dragon]
 Type: Unit
 Cost: 6
-Attack: 2
+Power: 2
 Life: 5
 Text:
     {Aggresive}
-    Destroy one of your Treasures: Double [Greedy Dragon's] attack.
+    Destroy one of your Treasures: Double [Greedy Dragon's] power.
 
 
     [Landlord]
 Type: Unit
 Cost: 4
-Attack: 2
+Power: 2
 Life: 3
 Text:
     When [Landlord] enters play, destroy the opponent's charm on this lane.
@@ -337,7 +337,7 @@ Text:
     [Taskmaster]
 Type: Unit
 Cost: 3
-Attack: 3
+Power: 3
 Life: 2
 Text:
     Whenever an opoonent's unit is destroyed, summon a [Coin Pouch] treasure into play.
@@ -346,7 +346,7 @@ Text:
     [Mechanical Engineer]
 Type: Unit
 Cost: 5
-Attack: 3
+Power: 3
 Life: 5
 Text:
     When [Mechanical Engineer] enters play, {Power Up} all your treasures.
@@ -355,7 +355,7 @@ Text:
     [Earth Elemental]
 Type: Unit
 Cost: 4
-Attack: 6
+Power: 6
 Life: 6
 Text:
     When [Earth Elemental] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
@@ -364,7 +364,7 @@ Text:
     [Earthling]
 Type: Unit
 Cost: 1
-Attack: 2
+Power: 2
 Life: 2
 Text:
     When [Earthling] enters play, summon 2 [Throw Rock] cards and shuffle them into your deck.
@@ -373,17 +373,17 @@ Text:
     [Fire Elemental]
 Type: Unit
 Cost: 5
-Attack: 8
+Power: 8
 Life: 8
 Text:
     {Fast}
-    At the start of your turn, [Fire Elementals] attack becomes half of it's attack, and it's life becomes half of it's life. Round down each time.
+    At the start of your turn, [Fire Elementals] power becomes half of it's power, and it's life becomes half of it's life. Round down each time.
 
 
     [Goblin Provocateurs]
 Type: Unit
 Cost: 4
-Attack: 4
+Power: 4
 Life: 4
 Text:
     All of your enemy units are {Aggresive}.
@@ -392,7 +392,7 @@ Text:
     [Ice Wall]
 Type: Unit
 Cost: 3
-Attack: 0
+Power: 0
 Life: 8
 
 
@@ -413,7 +413,7 @@ Text:
 (Summoned)
     [Ancient Spirit]
 Type: Unit
-Attack: 5
+Power: 5
 Life: 3
 Text:
     {Fast}
@@ -455,7 +455,7 @@ Text:
     [Old Mentor]
 Type: Unit
 Cost: 2
-Attack: 1
+Power: 1
 Life: 2
 Text:
     When [Old Mentor] enters play, {Power Up} a card in your hand.
@@ -471,7 +471,7 @@ Text:
     [Power Engine]
 Type: Bond
 Text:
-    While (0/ 3 /10) is equal to 10, units you control have +8 attack.
+    While (0/ 3 /10) is equal to 10, units you control have +8 power.
 
 
     [Lifegem]
@@ -492,7 +492,7 @@ Text:
 (Summoned)
     [Angry Cook]
 Type: Unit
-Attack: 3
+Power: 3
 Life: 2
 Text:
     At the start of your turn, a random unit you control gains +1 life.
@@ -527,13 +527,13 @@ Type: Treasure
 Cost: 2
 Life: 5
 Text:
-    Disard 2 [Throw Rock] cards: target unit gains +4 attack.
+    Discard 2 [Throw Rock] cards: target unit gains +4 power.
 
 
     [Risen Dead]
 Type: Unit
 Cost: 2
-Attack: 2
+Power: 2
 Life: 2
 Text: 
 

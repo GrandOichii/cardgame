@@ -79,14 +79,14 @@ namespace game.cards {
         public string Type { get; private set; }
         public string Text { get; private set; }
         public string Collection { get; private set; }
-        public string Script { get; private set; }
+        public string ScriptPath { get; private set; }
 
-        public Card(string name, string type, string text, string collection, string script) {
+        public Card(string name, string type, string text, string collection, string scriptPath) {
             Name = name;
             Type = type;
             Text = text;
             Collection = collection;
-            Script = script;
+            ScriptPath = scriptPath;
         }
 
         public LuaTable GetProps(Lua lState) {
@@ -97,6 +97,7 @@ namespace game.cards {
         }
 
         public CardW ConstructWrapper(Lua lState) {
+            lState.DoFile(ScriptPath);
             var creationF = Utility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
             var props = GetProps(lState);
             var returned = creationF.Call(props);
@@ -167,12 +168,16 @@ namespace game.cards {
         }
 
         public long GetPower() {
-            // TODO
-            return 0;
+            return Utility.GetLong(Card.Info, "power");
         }
 
         public string ToShortStr() {
             return Card.Original.Name + ": " + GetPower() + "/" + GetLife();
+        }
+
+        public object[] ExecFunc(string fName, object[] args) {
+            var f = Utility.GetF(Card.Info, fName);
+            return f.Call(args);
         }
     }
 
