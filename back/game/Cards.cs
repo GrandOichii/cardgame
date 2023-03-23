@@ -5,9 +5,20 @@ using game.util;
 
 namespace game.cards {
 
+    class CardMaster {
+        public void Load(string cName, string colName) {
+
+        }
+
+        public void Unload(string cName, string colName) {
+            
+        }
+    }
+
     // card template class
     class Card {
         static public readonly string WRAPPER_CREATION_FNAME = "_CreateCard";
+        
         public string Name { get; private set; }
         public string Type { get; private set; }
         public string Text { get; private set; }
@@ -34,7 +45,6 @@ namespace game.cards {
             var props = GetProps(lState);
             var returned = creationF.Call(props);
             var table = Utility.GetReturnAsTable(returned);
-            // TODO
             return new CardW(this, table);
         }
     }
