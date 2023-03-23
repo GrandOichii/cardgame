@@ -4,6 +4,11 @@ using game.exceptions;
 
 namespace game.util {
     static class Utility {
+        static public Random Rnd { get; }=new();
+        static public List<T> Shuffled<T>(List<T> list) {
+            return list.OrderBy(a => Rnd.Next()).ToList();
+        }
+        
         static public LuaFunction GetGlobalF(Lua lState, string fName) {
             var f = lState[fName] as LuaFunction;
             if (f is null) throw new Exception("Failed to get function " + fName + " from glabal Lua state");

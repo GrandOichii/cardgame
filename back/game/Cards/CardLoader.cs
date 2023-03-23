@@ -22,6 +22,23 @@ namespace game.cards.loaders {
         }
     }
 
+    class JCard {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }="";
+        [JsonPropertyName("type")]
+        public string Type { get; set; }="";
+        [JsonPropertyName("text")]
+        public string Text { get; set; }="";
+        [JsonPropertyName("script")]
+        public string ScriptPath { get; set; }="";
+        static public JCard Load(string path) {
+            var text = File.ReadAllText(path);
+            var result = JsonSerializer.Deserialize<JCard>(text);
+            if (result is null) throw new Exception("Failed to load shord card info from path " + path);
+            return result;
+        }
+    }
+
     class JCollection {
         [JsonPropertyName("name")]
         public string Name { get; set; }="";
@@ -67,10 +84,12 @@ namespace game.cards.loaders {
                 var collection = JCollection.Load(Path.Join(cP, COLLECTION_INFO_FILE));
                 System.Console.WriteLine(collection.Name);
                 foreach (var cardPath in collection.Cards) {
-                    var path = Path.Join(cP, cardPath, CARD_INFO_FILE);
+                    var parentPath = Path.Join(cP, cardPath);
+                    var path = Path.Join(parentPath, CARD_INFO_FILE);
                     var card = JShortCard.Load(path);
                     var fullCardName = FmtCard(card.Name, collection.Name);
-                    Logger.Instance.Log("FileCardLoader", "Indexed card " + fullCardName + " to " + path);
+                    Logger.Instance.Log("FileCardLoader", "Indexed card " + fullCardName + " to " + parentPath);
+                    _cardIndex.Add(fullCardName, parentPath);
                 }
             }
             Logger.Instance.Log("FileCardLoader", "Finished indexing cards");
@@ -80,11 +99,17 @@ namespace game.cards.loaders {
 
         public override Card Load(string cName, string colName)
         {
-            
-            // TODO not tested
             var name = FmtCard(cName, colName);
             if (!_cardIndex.ContainsKey(name)) throw new Exception("Card " + name + " is not present in card loader");
-            return new Card();
+            var path = _cardIndex[name];
+            var template = JCard.Load(Path.Join(path, CARD_INFO_FILE));
+            return new Card(
+                template.Name,
+                template.Type,
+                template.Text,
+                colName,
+                File.ReadAllText(Path.Join(path, template.ScriptPath))
+            );
         }
     }
     #endregion

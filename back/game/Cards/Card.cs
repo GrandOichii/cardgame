@@ -19,6 +19,8 @@ namespace game.cards {
                 Logger.Instance.Log("CardMaster", "Card not present, loading...");
                 
                 // TODO load card
+                var card = _loader.Load(cName, colName);
+                _cardIndex.Add(name, card);
                 _refCount.Add(name, 0);
             }
 
@@ -48,12 +50,24 @@ namespace game.cards {
             return _cardIndex[name]; 
         }
 
-        private string FmtCard(string cName, string colName) => cName + ":" + colName;
+        private string FmtCard(string cName, string colName) => colName + ":" + cName;
 
         public CardMaster(CardLoader loader) {
             _loader = loader;
             _cardIndex = new();
             _refCount = new();
+        }
+
+        public bool CheckEmpty() => _cardIndex.Count == 0;
+
+        public void LogContents() {
+            Logger.Instance.Log("CardMaster", "Logging content of CardMaster...");
+            foreach (var cName in _cardIndex.Keys) {
+                var card = _cardIndex[cName];
+                var refC = _refCount[cName];
+                Logger.Instance.Log("CardMaster", cName + " --- " + "refCount: " + refC);
+            }
+            Logger.Instance.Log("CardMaster", "Finished");
         }
     }
 
@@ -92,18 +106,27 @@ namespace game.cards {
     }
 
 
+    interface IHasCardW {
+        public CardW GetCardWrapper();
+    }
+
     // card wrapper object
-    class CardW {
+    class CardW  : IHasCardW {
+        static public IDCreator IDCreator = new BasicIDCreator();
+        public string ID { get; private set; }
         public Card Original { get; private set; }
         public LuaTable Info { get; private set; }
         public CardW(Card original, LuaTable info) {
+            ID = IDCreator.Next();
             Original = original;
             Info = info;
         }
+
+        public CardW GetCardWrapper() => this;
     }
 
 
-    abstract class HasMarkedDamage : Damageable
+    abstract class HasMarkedDamage : IDamageable, IHasCardW
     {
         protected virtual string requiredCardType { get; }
         public CardW Card { get; private set; }
@@ -131,6 +154,8 @@ namespace game.cards {
             var life = Utility.GetLong(t, "life");
             return life;
         }
+
+        public CardW GetCardWrapper() => Card;
     }
 
 
@@ -139,6 +164,15 @@ namespace game.cards {
         protected override string requiredCardType => "Unit";
         public UnitW(CardW card) : base(card)
         {
+        }
+
+        public long GetPower() {
+            // TODO
+            return 0;
+        }
+
+        public string ToShortStr() {
+            return Card.Original.Name + ": " + GetPower() + "/" + GetLife();
         }
     }
 
