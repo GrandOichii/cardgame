@@ -33,8 +33,22 @@ namespace game.util {
             return lState.GetTable("_table");
         }
 
+        static void CheckIndex(object[] returned, int index) {
+            if (index < returned.Length) return;
+
+            throw new Exception("Can't access return value with index " + index + ": total amount of returned values is " + returned.Length);
+        }
+
+        static public bool GetReturnAsBool(object[] returned, int index=0) {
+            CheckIndex(returned, index);
+            var result = returned[index] as bool?;
+            if (result is null) throw new Exception("Return value in index " + index + " is not a table");
+            // TODO casting is bad
+            return (bool)result;
+        }
+
         static public LuaTable GetReturnAsTable(object[] returned, int index=0) {
-            if (index >= returned.Length) throw new Exception("Can't access return value with index " + index + ": total amount of returned values is " + returned.Length);
+            CheckIndex(returned, index);
             var result = returned[index] as LuaTable;
             if (result is null) throw new Exception("Return value in index " + index + " is not a table");
             return result;

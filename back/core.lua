@@ -225,6 +225,7 @@ function CardCreation:Spell(props)
     function result:Play(player)
         prevPlay(self, player)
         result:Effect(player)
+        PlaceIntoDiscard(self.id, player.id)
     end
 
     return result
@@ -241,10 +242,12 @@ function CardCreation:Source(props)
 
     function result:CanPlay(player)
         -- TODO
+        return true
     end
 
     function result:PayCosts(player)
         -- TODO
+        return true
     end
 
     return result

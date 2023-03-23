@@ -113,6 +113,10 @@ namespace game.cards {
 
     // card wrapper object
     class CardW  : IHasCardW {
+        static public string CAN_PLAY_FNAME = "CanPlay";
+        static public string PLAY_FNAME = "Play";
+        static public string PAY_COSTS_FNAME = "PayCosts";
+
         static public IDCreator IDCreator = new BasicIDCreator();
         public string ID { get; private set; }
         public Card Original { get; private set; }
@@ -121,9 +125,25 @@ namespace game.cards {
             ID = IDCreator.Next();
             Original = original;
             Info = info;
+
+            Info["id"] = ID;
         }
 
+        public string ShortStr() => Original.Name + " (" + ID + ")";
+
         public CardW GetCardWrapper() => this;
+
+        public object[] ExecFunc(string fName, params object[] args) {
+            var f = Utility.GetF(Info, fName);
+            return f.Call(args);
+        }
+
+        public bool ExecCheckerFunc(string fName, params object[] args) {
+            var f = Utility.GetF(Info, fName);
+            var results = f.Call(args);
+            var result = Utility.GetReturnAsBool(results);
+            return result;
+        }
     }
 
 
@@ -173,11 +193,6 @@ namespace game.cards {
 
         public string ToShortStr() {
             return Card.Original.Name + ": " + GetPower() + "/" + GetLife();
-        }
-
-        public object[] ExecFunc(string fName, object[] args) {
-            var f = Utility.GetF(Card.Info, fName);
-            return f.Call(args);
         }
     }
 

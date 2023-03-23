@@ -54,6 +54,8 @@ namespace game.player {
         public Zone<CardW> Discard { get; }
         public Zone<TreasureW> Treasures { get; set; }
 
+        private Match _match;
+
         #endregion
 
 
@@ -61,6 +63,10 @@ namespace game.player {
 
 
         public Player(Match match, string name, Deck deck, PlayerController controller) {
+            LastPid++;
+            ID = LastPid;
+
+            _match = match;
             Logger.Instance.Log("Player", "Creating player " + name);
 
             Controller = controller;
@@ -71,6 +77,7 @@ namespace game.player {
             Bond = deck.CreateBond(match.LState);
             Logger.Instance.Log("Player", "Creating deck");
             Deck = deck.ToDeckZone(match.LState);
+            Deck.Shuffle();
 
             Hand = new(new());
             Discard = new(new());
@@ -91,8 +98,19 @@ namespace game.player {
             // TODO replace with draw cards call to lua state
             var cards = Deck.PopTop(amount);
 
+            _match.Emit("card_draw", new(){{"player", ToLuaTable(_match.LState)}});
+
             Hand.AddToBack(cards);
         }
+
+        public LuaTable ToLuaTable(Lua lState) {
+            var result = Utility.CreateTable(lState);
+            result["name"] = Name;
+            result["id"] = ID;
+            return result;
+        }
+
+        public string ShortStr() => Name + " (" + ID + ")";
     }
 
     #region Player Controllers

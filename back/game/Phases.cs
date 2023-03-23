@@ -15,7 +15,7 @@ namespace game.core.phases {
             player.Energy = player.MaxEnergy;
 
             // emit turn start effects
-            match.Emit("turn_start", new(){ {"player", player} });
+            match.Emit("turn_start", new(){ {"player", player.ToLuaTable(match.LState)} });
 
             // TODO
             // replenish all units' attacks
@@ -75,7 +75,7 @@ namespace game.core.phases {
         {
             public override void Exec(Match match, Player player)
             {
-                match.Emit("turn_end", new(){ {"player", player} });
+                match.Emit("turn_end", new(){ {"player", player.ToLuaTable(match.LState)} });
 
                 // TODO
                 // discard to hand size
