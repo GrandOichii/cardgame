@@ -183,6 +183,7 @@ namespace game.match {
                             var t = Trigger.FromLua(trigger);
                             if (!t.On.Equals(signal)) continue;
                             if (t.CheckF != null) {
+                                // TODO! add effect owner as argument
                                 var canTrigger = (bool)t.CheckF.Call(emitArgs)[0];
                                 if (!canTrigger) continue;
                             }
