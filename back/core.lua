@@ -112,7 +112,6 @@ end
 -- TODO could need to replace ... with args, don't know yet
 function Common:HasEnoughEnergy( amount )
     return function ( player, ... )
-        -- TODO
         return true
     end
 end
@@ -120,7 +119,8 @@ end
 
 function Common:PayEnergy( amount )
     return function ( player, ... )
-        -- TODO 
+        -- TODO
+        return true 
     end
 end
 
@@ -258,11 +258,12 @@ end
 function CardCreation:InPlay(props)
     local result = CardCreation:CardObject(props)
 
-    local prevPlay = result.Play;
-    function result:Play(player)
-        prevPlay(self, player)
-        -- TODO
-    end
+    -- local prevPlay = result.Play;
+    -- function result:Play(player)
+    --     prevPlay(self, player)
+
+    --     PlaceInZone(self.id, player.id, self.type)
+    -- end
 
     function result:LeavePlay(player)
         Log('Card ' .. result.name .. ', controlled by ' .. player.name .. ', is leaving play')
@@ -300,6 +301,12 @@ end
 
 function CardCreation:Treasure(props)
     local result = CardCreation:Damageable(props)
+
+    local prevPlay = result.Play
+    function result:Play(player)
+        prevPlay(self, player)
+        PlaceInTreasures(self.id, player.id)
+    end
 
     return result
 end

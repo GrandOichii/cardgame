@@ -61,5 +61,15 @@ namespace game.scripts
             player.Discard.AddToBack(card);
         }
 
+
+        [LuaCommand]
+        public void PlaceInTreasures(string cID, int pID) {
+            var card = GetCard(cID);
+            var player = GetPlayer(pID);
+            if (card.Original.Type != "Treasure") throw new Exception("Player" + player.ShortStr() + "tried to place a non-treasure card " + card.ShortStr() + " into treasure zone");
+            
+            Logger.Instance.Log("ScriptMaster", "Card " + card.ShortStr() + " is put into " + player.ShortStr() + "'s treasure zone");
+            player.Treasures.AddToBack(new TreasureW(card));
+        }
     }
 }

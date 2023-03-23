@@ -157,6 +157,10 @@ namespace game.cards {
         public HasMarkedDamage(CardW card) {
             if (card.Original.Type != requiredCardType) throw new Exception("Tried to create a UnitW out of non-unit card " + card.Original.Name);
             Card = card;
+
+
+            // check that has life
+            GetLife();
         }
 
         public long ProcessDamage(long damage)
@@ -185,6 +189,8 @@ namespace game.cards {
         protected override string requiredCardType => "Unit";
         public UnitW(CardW card) : base(card)
         {
+            // check that it has power
+            GetPower();
         }
 
         public long GetPower() {
@@ -198,7 +204,7 @@ namespace game.cards {
 
     class TreasureW : HasMarkedDamage
     {
-        protected override string requiredCardType => "Tresure";
+        protected override string requiredCardType => "Treasure";
         public TreasureW(CardW card) : base(card)
         {
         }

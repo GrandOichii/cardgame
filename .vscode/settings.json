@@ -1,14 +1,7 @@
 {
     "Lua.diagnostics.globals": [
-        "TestCommand",
-        "PlayerByID",
         "PlaceIntoDiscard",
-        "PlaceIntoZone",
-        "PlaceIntoPlay",
-        "TakeEnergy",
-        "IncreaseMaxEnergy",
-        "GetController",
-        "GainLife",
-        "Log"
+        "Log",
+        "PlaceInTreasures"
     ]
 }

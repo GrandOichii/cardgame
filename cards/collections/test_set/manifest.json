@@ -2,6 +2,7 @@
     "name": "test_set",
     "cards": [
         "cards/Source",
+        "cards/Old_Junk",
         "cards/Basic_Bond",
         "cards/New_Recruit"
     ],
