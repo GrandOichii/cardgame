@@ -81,8 +81,10 @@ namespace game.cards.loaders {
         public override Card Load(string cName, string colName)
         {
             
-            // TODO
-            throw new NotImplementedException();
+            // TODO not tested
+            var name = FmtCard(cName, colName);
+            if (!_cardIndex.ContainsKey(name)) throw new Exception("Card " + name + " is not present in card loader");
+            return new Card();
         }
     }
     #endregion
