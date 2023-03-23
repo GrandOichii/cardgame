@@ -35,4 +35,16 @@ namespace game.util {
             return result;
         }
     }
+    
+    class Logger {
+        static public Logger Instance { get; private set; }=new();
+        
+        private Logger() {
+
+        }
+
+        public void Log(string prefix, string message) {
+            System.Console.WriteLine("[{0}]: {1}", prefix, message);
+        }
+    }
 }

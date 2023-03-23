@@ -1,6 +1,6 @@
 ﻿using NLua;
 
-// using game.core;
+using game.core;
 // using game.deck;
 // using game.match;
 // using game.player;
@@ -30,7 +30,8 @@
 class Program {
     static void Main(string[] args)
     {
-        Lua state = new();
-        state.DoFile("core.lua");       
+        var g = new Game("../cards");
+        // Lua state = new();
+        // state.DoFile("core.lua");       
     }
 }

@@ -2,16 +2,58 @@ using NLua;
 
 using game.core;
 using game.util;
+using game.cards.loaders;
 
 namespace game.cards {
 
-    class CardMaster {
-        public void Load(string cName, string colName) {
+    
 
+    class CardMaster {
+        private CardLoader _loader;
+        private Dictionary<string, Card> _cardIndex;
+        private Dictionary<string, int> _refCount;
+        public void Load(string cName, string colName) {
+            var name = FmtCard(cName, colName);
+            Logger.Instance.Log("CardMaster", "Requested to load card " + name);
+            if (!_cardIndex.ContainsKey(name)) {
+                Logger.Instance.Log("CardMaster", "Card not present, loading...");
+                
+                // TODO load card
+                _refCount.Add(name, 0);
+            }
+
+            _refCount[name]++;
+            Logger.Instance.Log("CardMaster", "Increasing reference counter of card " + name + " to " + _refCount[name]);
         }
 
         public void Unload(string cName, string colName) {
-            
+            var name = FmtCard(cName, colName);
+            Logger.Instance.Log("CardMaster", "Requested to unload card " + name);
+            if (!_cardIndex.ContainsKey(name)) throw new Exception("Tried to unload a card that is not loaded: " + name);
+            _refCount[name]--;
+            if (_refCount[name] > 0) return;
+            Logger.Instance.Log("CardMaster", "Reference counter of  " + name + " reached 0, removing it");
+
+            // remove card from memory
+            _cardIndex.Remove(name);
+            _refCount.Remove(name);
+
+            Logger.Instance.Log("CardMaster", "Card  " + name + " was removed from CardMaster");
+        }
+
+        public Card Get(string cName, string colName) {
+            var name = FmtCard(cName, colName);
+            Logger.Instance.Log("CardMaster", "Requested to get card  " + name);
+            if (!_cardIndex.ContainsKey(name)) throw new Exception("Tried to get a card that is not loaded in Card Master: " + name);
+            return _cardIndex[name]; 
+        }
+
+        private string FmtCard(string cName, string colName) => cName + ":" + colName;
+
+        public CardMaster(CardLoader loader) {
+            _loader = loader;
+            _cardIndex = new();
+            _refCount = new();
         }
     }
 

@@ -1,6 +1,8 @@
 
 
 using game.match;
+using game.cards;
+using game.cards.loaders;
 
 namespace game.core {
     interface Damageable {
@@ -13,7 +15,8 @@ namespace game.core {
 
         public Game(string collectionsPath) {
             MatchPool = new();
-            CardMaster = new(collectionsPath);
+            // TODO replace with DB when implemented
+            CardMaster = new(new FileCardLoader(collectionsPath));
         }
     }
 }
