@@ -149,6 +149,11 @@ namespace game.match {
 
             Logger.Instance.Log("Match", "Finished emitting " + signal);
         }
+
+        public Player OpponentOf(Player player) {
+            if (Players[0] == player) return Players[1];
+            return Players[0];
+        }
     }
 
     class MatchPool {

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using NLua;
 
 using game.match;
 using game.player;
@@ -70,6 +71,65 @@ namespace game.scripts
             
             Logger.Instance.Log("ScriptMaster", "Card " + card.ShortStr() + " is put into " + player.ShortStr() + "'s treasure zone");
             player.Treasures.AddToBack(new TreasureW(card));
+        }
+
+        
+        [LuaCommand]
+        public void IncreaseMaxEnergy(int pID, int amount) {
+            var player = GetPlayer(pID);
+            player.MaxEnergy += amount;
+            player.Energy += amount;
+            Logger.Instance.Log("ScriptMaster", "Increased max amount of energy of player " + player.ShortStr() + " by " + amount);
+        }
+
+
+        [LuaCommand]
+        public void PayEnergy(int pID, int amount) {
+            var player = GetPlayer(pID);
+            player.Energy -= amount;
+        }
+
+
+        [LuaCommand]
+        public LuaTable OpponentOf(int pID) {
+            var player = GetPlayer(pID);
+            return _match.OpponentOf(player).ToLuaTable(_match.LState);
+        }
+
+
+        [LuaCommand]
+        public int LoseLife(int pID, int amount) {
+            // !!! NOT DAMAGE, just life loss
+            
+            var player = GetPlayer(pID);
+
+            if (amount < 0) {
+                Logger.Instance.Log("WARN", "Player " + player.ShortStr() + " tried to lose " + amount + " life, setting it to 0");
+                amount = 0;
+            }
+
+            var prevLife = player.Life;
+            player.Life -= amount;
+            var result = prevLife - player.Life;
+            Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " lost " + result + " life");
+            return result;
+        }
+
+
+        [LuaCommand]
+        public int GainLife(int pID, int amount) {
+            var player = GetPlayer(pID);
+
+            if (amount < 0) {
+                Logger.Instance.Log("WARN", "Player " + player.ShortStr() + " tried to gain " + amount + " life, setting it to 0");
+                amount = 0;
+            }
+
+            var prevLife = player.Life;
+            player.Life += amount;
+            var result = player.Life - prevLife;
+            Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " gained " + result + " life");
+            return result;
         }
     }
 }

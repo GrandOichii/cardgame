@@ -2,6 +2,11 @@
     "Lua.diagnostics.globals": [
         "PlaceIntoDiscard",
         "Log",
-        "PlaceInTreasures"
+        "PlaceInTreasures",
+        "IncreaseMaxEnergy",
+        "PayEnergy",
+        "OpponentOf",
+        "LoseLife",
+        "GainLife"
     ]
 }

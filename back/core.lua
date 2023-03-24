@@ -109,25 +109,24 @@ function Common:AlwaysFalse( ... )
 end
 
 
--- TODO could need to replace ... with args, don't know yet
 function Common:HasEnoughEnergy( amount )
     return function ( player, ... )
-        return true
+        return player.energy >= amount
     end
 end
 
 
 function Common:PayEnergy( amount )
     return function ( player, ... )
-        -- TODO
-        return true 
+        PayEnergy(player.id, amount)
+        return true
     end
 end
 
 
 function Common:EnoughCardsInHand( amount )
     return function (player, ...)
-        -- TODO
+        return #player.hand >= amount
     end
 end
 
@@ -237,16 +236,16 @@ function CardCreation:Source(props)
     local result = CardCreation:Spell(props)
 
     function result:Effect(player)
-        -- TODO
+        IncreaseMaxEnergy(player.id, 1)
     end
 
     function result:CanPlay(player)
-        -- TODO
+        -- TODO check if source count is more than zero
         return true
     end
 
     function result:PayCosts(player)
-        -- TODO
+        -- TODO decrease source count by 1
         return true
     end
 
@@ -257,13 +256,6 @@ end
 
 function CardCreation:InPlay(props)
     local result = CardCreation:CardObject(props)
-
-    -- local prevPlay = result.Play;
-    -- function result:Play(player)
-    --     prevPlay(self, player)
-
-    --     PlaceInZone(self.id, player.id, self.type)
-    -- end
 
     function result:LeavePlay(player)
         Log('Card ' .. result.name .. ', controlled by ' .. player.name .. ', is leaving play')

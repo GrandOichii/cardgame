@@ -1,0 +1,6 @@
+{
+    "name": "Life Drain",
+    "type": "Spell",
+    "text": "Your opponent loses 3 life and you gain 3 life.",
+    "script": "script.lua"
+}

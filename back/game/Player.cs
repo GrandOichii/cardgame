@@ -22,8 +22,7 @@ namespace game.player {
 
         public int ID { get; }
 
-        private string _name;
-        public string Name { get => _name; }
+        public string Name { get; private set; }
 
         private int _maxEnergy = 0;
         public int MaxEnergy {
@@ -46,13 +45,14 @@ namespace game.player {
         public int Life { get; set; }
 
         #region Card Zones
-        public CardW Bond { get; }
+        public CardW Bond { get; private set; }
 
-        public Zone<CardW> Hand { get; }
+        public Zone<CardW> Hand { get; private set; }
         public UnitW[] Lanes { get; private set; }
-        public Zone<CardW> Deck { get; }
-        public Zone<CardW> Discard { get; }
-        public Zone<TreasureW> Treasures { get; set; }
+        public Zone<CardW> Deck { get; private set; }
+        public Zone<CardW> Discard { get; private set; }
+        public Zone<TreasureW> Treasures { get; private set; }
+        public Zone<CardW> Burned { get; private set; }
 
         private Match _match;
 
@@ -71,7 +71,7 @@ namespace game.player {
 
             Controller = controller;
 
-            _name = name;
+            Name = name;
 
             Logger.Instance.Log("Player", "Creating bond");
             Bond = deck.CreateBond(match.LState);
@@ -82,6 +82,7 @@ namespace game.player {
             Hand = new(new());
             Discard = new(new());
             Treasures = new(new());
+            Burned = new(new());
 
             Lanes = new UnitW[match.Config.LaneCount];
 
@@ -107,6 +108,8 @@ namespace game.player {
             var result = Utility.CreateTable(lState);
             result["name"] = Name;
             result["id"] = ID;
+            result["energy"] = Energy;
+            result["hand"] = Hand.ToLuaTable(lState);
             return result;
         }
 
@@ -121,26 +124,26 @@ namespace game.player {
 
     class TerminalPlayerController : PlayerController {
         private void PrintCardsInZone<T>(Zone<T> zone, string zoneName) where T : IHasCardW {
-            System.Console.WriteLine("=== Cards in " + zoneName + " ===");
+            System.Console.WriteLine("\t=== Cards in " + zoneName + " ===");
             foreach (var card in zone.Cards)
-                System.Console.WriteLine(card.GetCardWrapper().ID + ": " + card.GetCardWrapper().Original.Name);
+                System.Console.WriteLine("\t" + card.GetCardWrapper().ID + ": " + card.GetCardWrapper().Original.Name);
 
         }
 
         public override string PromptAction(Player player, Match match)
         {
-            System.Console.WriteLine("Life: " + player.Life);
-            System.Console.WriteLine("Energy: " + player.Energy);
+            System.Console.WriteLine("\tLife: " + player.Life);
+            System.Console.WriteLine("\tEnergy: " + player.Energy);
             for (int i = 0; i < player.Lanes.Length; i++) {
                 var unit = player.Lanes[i];
                 var addMessage = "None";
                 if (unit is not null) addMessage = unit.ToShortStr();
-                System.Console.WriteLine("Lane " + i + ": " + addMessage);
+                System.Console.WriteLine("\tLane " + i + ": " + addMessage);
             }
             PrintCardsInZone(player.Treasures, "treasures");
             PrintCardsInZone(player.Hand, "hand");
             PrintCardsInZone(player.Discard, "discard");
-            System.Console.Write("Enter action for " + player.Name + ": ");
+            System.Console.Write("\tEnter action for " + player.Name + ": ");
             string? result = null;
             while (result is null)
                 result = Console.ReadLine();

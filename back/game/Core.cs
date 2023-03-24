@@ -1,4 +1,4 @@
-
+using NLua;
 
 using game.match;
 using game.cards;
@@ -36,24 +36,23 @@ namespace game.core {
     }
 
     class Zone<T> where T : IHasCardW {
-        private List<T> _cards;
-        public List<T> Cards { get => _cards; }
+        public List<T> Cards { get; private set; }
 
         public T? this[string cardID]
         {
-            get => _cards.Find(card => card.GetCardWrapper().ID == cardID);
+            get => Cards.Find(card => card.GetCardWrapper().ID == cardID);
         }
 
         public Zone(List<T> cards) {
-            _cards = cards;
+            Cards = cards;
         }
 
         public void Shuffle() {
-            _cards = Utility.Shuffled(Cards);
+            Cards = Utility.Shuffled(Cards);
         }
 
         public List<T> PopTop(int amount) {
-            if (amount > _cards.Count) amount = _cards.Count;
+            if (amount > Cards.Count) amount = Cards.Count;
             var result = Cards.GetRange(0, amount);
             Cards.RemoveRange(0, amount);
             return result;
@@ -65,7 +64,14 @@ namespace game.core {
         }
 
         public void AddToBack(T card) {
-            _cards.Add(card);
+            Cards.Add(card);
+        }
+    
+        public LuaTable ToLuaTable(Lua lState) {
+            var result = Utility.CreateTable(lState);
+            for (int i = 0; i < Cards.Count; i++)
+                result[i+1] = Cards[i].GetCardWrapper().Info;
+            return result;
         }
     }
 
