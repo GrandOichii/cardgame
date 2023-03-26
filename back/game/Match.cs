@@ -27,6 +27,7 @@ namespace game.match {
     }
 
     struct MatchConfig {
+        [JsonPropertyName("base_source_per_turn")]  public int BaseSourcePerTurn { get; set; }
         [JsonPropertyName("lane_count")]            public int LaneCount { get; set; }
         [JsonPropertyName("starting_energy")]       public int StartingEnergy { get; set; }
         [JsonPropertyName("starting_life")]         public int StartingLifeTotal { get; set; }

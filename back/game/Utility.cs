@@ -28,6 +28,20 @@ namespace game.util {
             return (long)f;
         }
 
+        static public int GetInt(LuaTable table, string name) {
+            var f = table[name] as int?;
+            if (f is null) throw new GLuaTableException(table, "Failed to get int " + name + " from Lua table ");
+            // TODO bad cast?
+            return (int)f;
+        }
+
+        // static public T TableGet<T>(LuaTable table, string name) {
+        //     var f = table[name] as T;
+        //     if (f is null) throw new GLuaTableException(table, "Failed to get T " + name + " from Lua table ");
+        //     // TODO bad cast?
+        //     return (T)f;
+        // }
+
         static public LuaTable CreateTable(Lua lState) {
             lState.NewTable("_table");
             return lState.GetTable("_table");

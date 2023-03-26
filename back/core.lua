@@ -240,12 +240,11 @@ function CardCreation:Source(props)
     end
 
     function result:CanPlay(player)
-        -- TODO check if source count is more than zero
-        return true
+        return player.shared.sourceCount > 0
     end
 
     function result:PayCosts(player)
-        -- TODO decrease source count by 1
+        player.shared.sourceCount = player.shared.sourceCount - 1
         return true
     end
 

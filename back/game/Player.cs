@@ -58,13 +58,27 @@ namespace game.player {
 
         #endregion
 
+        public LuaTable Shared { get; private set; }
+
+
+        // TODO replace with a lua function
+        public int MaxSourcePerTurn { get; }
+        public long SourceCount { 
+            get => Utility.GetLong(Shared, "sourceCount");
+            set => Shared["sourceCount"] = value;
+        }
+
 
         public PlayerController Controller { get; set; }
 
 
         public Player(Match match, string name, Deck deck, PlayerController controller) {
+            var lState = match.LState;
+            MaxSourcePerTurn = match.Config.BaseSourcePerTurn;
+
             LastPid++;
             ID = LastPid;
+            Shared = Utility.CreateTable(lState);
 
             _match = match;
             Logger.Instance.Log("Player", "Creating player " + name);
@@ -74,9 +88,9 @@ namespace game.player {
             Name = name;
 
             Logger.Instance.Log("Player", "Creating bond");
-            Bond = deck.CreateBond(match.LState);
+            Bond = deck.CreateBond(lState);
             Logger.Instance.Log("Player", "Creating deck");
-            Deck = deck.ToDeckZone(match.LState);
+            Deck = deck.ToDeckZone(lState);
             Deck.Shuffle();
 
             Hand = new(new());
@@ -110,6 +124,7 @@ namespace game.player {
             result["id"] = ID;
             result["energy"] = Energy;
             result["hand"] = Hand.ToLuaTable(lState);
+            result["shared"] = Shared;
             return result;
         }
 

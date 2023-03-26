@@ -11,6 +11,10 @@ namespace game.core.phases {
     {
         public override void Exec(Match match, Player player)
         {
+            // replenish source count
+            player.SourceCount = player.MaxSourcePerTurn;
+            System.Console.WriteLine(player.Name + "  " + player.SourceCount);
+
             // replenish energy
             player.Energy = player.MaxEnergy;
 
