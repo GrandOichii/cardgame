@@ -138,7 +138,7 @@ namespace game.player {
                 result.Add(card, Zones.HAND);
             foreach (var unit in Lanes) {
                 if (unit is null) continue;
-                result.Add(unit.GetCardWrapper(), Zones.LANES);
+                result.Add(unit.GetCardWrapper(), Zones.UNITS);
             }
             foreach (var card in Deck.Cards)
                 result.Add(card, Zones.DECK);
@@ -163,6 +163,7 @@ namespace game.player {
     #region Player Controllers
     abstract class PlayerController {
         abstract public string PromptAction(Player controlledPlayer, Match match);
+        abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
     }
 
 
@@ -193,6 +194,17 @@ namespace game.player {
                 result = Console.ReadLine();
             System.Console.WriteLine();
             return result;
+        }
+
+        public override int PromptLane(string prompt, Player controlledPlayer, Match match)
+        {
+            string? result;
+            do {
+                System.Console.Write(prompt + ": ");
+                result = Console.ReadLine();
+            } while (result is null || result.Length == 0);
+            
+            return int.Parse(result);
         }
     }
     #endregion

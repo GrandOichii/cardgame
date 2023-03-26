@@ -1,10 +1,13 @@
 TRIGGERS = {
+    LIFE_GAIN = 'life_gain',
     TURN_START = 'turn_start',
     TURN_END = 'turn_end',
 }
 
 ZONES = {
-    TREASURES = 'treasures'
+    UNITS = 'units',
+    TREASURES = 'treasures',
+    BOND = 'bond'
 }
 
 -- main effect creation object
@@ -334,6 +337,12 @@ function CardCreation:Unit(props)
     local result = CardCreation:Damageable(props)
 
     result.power = props.power
+
+    local prevPlay = result.Play
+    function result:Play(player)
+        prevPlay(self, player)
+        PlaceInUnits(self.id, player.id)
+    end
 
     return result
 end

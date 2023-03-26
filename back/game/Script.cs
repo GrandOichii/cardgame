@@ -129,6 +129,7 @@ namespace game.scripts
             player.Life += amount;
             var result = player.Life - prevLife;
             Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " gained " + result + " life");
+            _match.Emit("life_gain", new(){{"player", player.ToLuaTable(_match.LState)}, {"amount", amount}});
             return result;
         }
 
@@ -149,6 +150,41 @@ namespace game.scripts
             var result = target.ProcessDamage(_match, amount);
             Logger.Instance.Log("ScriptMaster", "Card " + target.GetCardWrapper().ShortStr() + " was dealt " + result + " damage");
             return result;
+        }
+
+
+        [LuaCommand]
+        public int DrawCards(int pID, int amount) {
+            var player = GetPlayer(pID);
+            var original = player.Hand.Cards.Count;
+            player.DrawCards(amount);
+            return player.Hand.Cards.Count - original;
+        }
+
+
+        [LuaCommand]
+        public void PlaceInUnits(string cID, int pID) {
+            var player = GetPlayer(pID);
+            var card = GetCard(cID);
+            var cName = card.GetCardWrapper().Original.Name;
+            if (card.GetCardWrapper().Original.Type != "Unit") throw new Exception("Player " + player.ShortStr() + " tried to place a non-unit card " + card.ShortStr() + " into a lane");
+            var result = player.Controller.PromptLane("Choose where to place " + cName, player, _match);
+
+            // TODO replace with simple re-request
+            if (result >= _match.Config.LaneCount) throw new Exception("Player " + player.ShortStr() + " tried to place unit " + card.ShortStr() + " in lane " + result);
+
+            // replace unit if present
+            UnitW? replaced = null;
+            var lanes = player.Lanes;
+            if (lanes[result] is not null) {
+                replaced = lanes[result];
+                player.PlaceIntoDiscard(replaced);
+            }
+
+            lanes[result] = new UnitW(card);
+            if (replaced is null) return;
+
+            _match.Emit("unit_replaced", new(){{"unit", replaced.Card.Info}}); 
         }
     }
 }

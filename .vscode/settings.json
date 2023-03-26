@@ -9,6 +9,8 @@
         "LoseLife",
         "GainLife",
         "GetController",
-        "DealDamage"
+        "DealDamage",
+        "DrawCards",
+        "PlaceInUnits"
     ]
 }

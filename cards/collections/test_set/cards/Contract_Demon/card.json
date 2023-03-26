@@ -1,0 +1,6 @@
+{
+    "name": "Contract Demon",
+    "type": "Unit",
+    "text": "When you gain life, [Contract Demon] deals that much damage to you, then draw that many cards.",
+    "script": "script.lua"    
+}

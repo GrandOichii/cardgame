@@ -226,16 +226,20 @@ namespace game.cards {
         {
             var result = base.ProcessDamage(match, damage);
             if (Life == 0) {
-                match.Emit("treasure_destroyed", new(){{"treasure", Card.Info}});
-
-                var owner = match.OwnerOf(Card.ID);
-                Logger.Instance.Log("TreasureW", "Treasure card " + Card.ShortStr() + " of player " + owner.ShortStr() + " was destroyed");
-
-                owner.Treasures.Cards.Remove(this);
-                owner.PlaceIntoDiscard(this);
+                Destroy(match);
             }
 
             return result;
+        }
+
+        public void Destroy(Match match) {
+            match.Emit("treasure_destroyed", new(){{"treasure", Card.Info}});
+
+            var owner = match.OwnerOf(Card.ID);
+            Logger.Instance.Log("TreasureW", "Treasure card " + Card.ShortStr() + " of player " + owner.ShortStr() + " was destroyed");
+
+            owner.Treasures.Cards.Remove(this);
+            owner.PlaceIntoDiscard(this);
         }
     }
 

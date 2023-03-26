@@ -1,0 +1,6 @@
+{
+    "name": "Healer's Gift",
+    "type": "Bond",
+    "text": "At the start of your turn, gain 1 life.",
+    "script": "script.lua"
+}

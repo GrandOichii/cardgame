@@ -81,7 +81,7 @@ namespace game.core {
         static public readonly string BURNED = "burned";
         static public readonly string DISCARD = "discard";
         static public readonly string DECK = "deck";
-        static public readonly string LANES = "lanes";
+        static public readonly string UNITS = "units";
         static public readonly string HAND = "hand";
         static public readonly string BOND = "bond";
     }
