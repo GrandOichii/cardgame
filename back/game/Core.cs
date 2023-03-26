@@ -21,7 +21,7 @@ namespace game.core {
     }
 
     interface IDamageable {
-        public long ProcessDamage(long damage);
+        public long ProcessDamage(Match match, long damage);
     }
 
     class Game {

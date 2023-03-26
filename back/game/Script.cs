@@ -135,13 +135,20 @@ namespace game.scripts
 
         [LuaCommand]
         public LuaTable GetController(string cID) {
-            foreach (var player in _match.Players) {
-                var cards = player.GetAllCards();
-                var result = cards.Keys.ToList().Find(card => card.ID == cID);
-                if (result is null) continue;
-                return player.ToLuaTable(_match.LState);
-            }
-            throw new Exception("Failed to find owner of card with ID:" + cID);
+            return _match.OwnerOf(cID).ToLuaTable(_match.LState);
+        }
+
+
+        [LuaCommand]
+        public long DealDamage(string sourceID, string targetID, long amount) {
+            // TODO? need source id
+            var source = _match.AllCards[sourceID];
+            var cards = _match.GetDamageableCards();
+            var target = cards.Find(card => card.GetCardWrapper().ID == targetID);
+            if (target is null) throw new Exception("Failed to get damageable card in play with id " + targetID);
+            var result = target.ProcessDamage(_match, amount);
+            Logger.Instance.Log("ScriptMaster", "Card " + target.GetCardWrapper().ShortStr() + " was dealt " + result + " damage");
+            return result;
         }
     }
 }

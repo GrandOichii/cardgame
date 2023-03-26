@@ -103,7 +103,7 @@ namespace game.player {
             Logger.Instance.Log("Player", "Finished creating player " + name);
         }
 
-        public long ProcessDamage(long damage)
+        public long ProcessDamage(Match match, long damage)
         {
             // TODO
             throw new NotImplementedException();
@@ -151,6 +151,13 @@ namespace game.player {
                 
             return result;
         }
+    
+        public void PlaceIntoDiscard(IHasCardW card) {
+            var cw = card.GetCardWrapper();
+            _match.Emit("placed_into_discard", new(){{"card", cw.Info}});
+
+            Discard.AddToBack(cw);
+        }
     }
 
     #region Player Controllers
@@ -163,7 +170,7 @@ namespace game.player {
         private void PrintCardsInZone<T>(Zone<T> zone, string zoneName) where T : IHasCardW {
             System.Console.WriteLine("\t=== Cards in " + zoneName + " ===");
             foreach (var card in zone.Cards)
-                System.Console.WriteLine("\t" + card.GetCardWrapper().ID + ": " + card.GetCardWrapper().Original.Name);
+                System.Console.WriteLine("\t" + card.GetCardWrapper().ID + ": " + card.GetCardWrapper().Original.Name + "  (" + card.InfoStr() + ")");
 
         }
 

@@ -8,6 +8,7 @@
         "OpponentOf",
         "LoseLife",
         "GainLife",
-        "GetController"
+        "GetController",
+        "DealDamage"
     ]
 }

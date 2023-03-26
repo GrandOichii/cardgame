@@ -190,6 +190,29 @@ namespace game.match {
             if (Players[0] == player) return Players[1];
             return Players[0];
         }
+    
+        public List<HasMarkedDamage> GetDamageableCards() {
+            var result = new List<HasMarkedDamage>();
+            foreach (var player in Players) {
+                foreach (var unit in player.Lanes) {
+                    if (unit is null) continue;
+                    result.Add(unit);
+                }
+                foreach (var treasure in player.Treasures.Cards)
+                    result.Add(treasure);
+            }
+            return result;
+        }
+
+        public Player OwnerOf(string cID) {
+            foreach (var player in Players) {
+                var cards = player.GetAllCards();
+                var result = cards.Keys.ToList().Find(card => card.ID == cID);
+                if (result is null) continue;
+                return player;
+            }
+            throw new Exception("Failed to find owner of card with ID:" + cID);
+        }
     }
 
     class MatchPool {

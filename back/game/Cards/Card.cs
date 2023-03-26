@@ -2,6 +2,7 @@ using NLua;
 
 using game.core;
 using game.util;
+using game.match;
 using game.cards.loaders;
 
 namespace game.cards {
@@ -109,6 +110,8 @@ namespace game.cards {
 
     interface IHasCardW {
         public CardW GetCardWrapper();
+
+        public string InfoStr();
     }
 
     // card wrapper object
@@ -143,6 +146,11 @@ namespace game.cards {
             var result = Utility.GetReturnAsBool(results);
             return result;
         }
+
+        public string InfoStr()
+        {
+            return "";
+        }
     }
 
 
@@ -151,35 +159,41 @@ namespace game.cards {
         protected virtual string requiredCardType { get; }
         public CardW Card { get; private set; }
 
-        public long MarkedDamage { get; private set; }
-
         public HasMarkedDamage(CardW card) {
             if (card.Original.Type != requiredCardType) throw new Exception("Tried to create a UnitW out of non-unit card " + card.Original.Name);
             Card = card;
 
 
             // check that has life
-            GetLife();
+            var _ = Life;
         }
 
-        public long ProcessDamage(long damage)
+        public virtual long ProcessDamage(Match match, long damage)
         {
-            long original = MarkedDamage;
-            MarkedDamage += damage;
-            var l = GetLife();
-            if (MarkedDamage > l) MarkedDamage = l;
+            var l = Life;
+            if (damage > l) damage = l;
+            Life -= damage;
 
             // TODO emit that card is destroyed
-            return MarkedDamage - original; 
+            return l - Life; 
         }
 
-        public long GetLife() {
-            var t = Card.Info;
-            var life = Utility.GetLong(t, "life");
-            return life;
+        public long Life
+        {
+            get =>  Utility.GetLong(Card.Info, "life");
+            set {
+                if (value < 0) value = 0;
+                Card.Info["life"] = value;
+            }
         }
+        
 
         public CardW GetCardWrapper() => Card;
+
+        public string InfoStr()
+        {
+            return "Life: " + Life;
+        }
     }
 
 
@@ -197,7 +211,7 @@ namespace game.cards {
         }
 
         public string ToShortStr() {
-            return Card.Original.Name + ": " + GetPower() + "/" + GetLife();
+            return Card.Original.Name + ": " + GetPower() + "/" + Life;
         }
     }
 
@@ -206,6 +220,22 @@ namespace game.cards {
         protected override string requiredCardType => "Treasure";
         public TreasureW(CardW card) : base(card)
         {
+        }
+
+        public override long ProcessDamage(Match match, long damage)
+        {
+            var result = base.ProcessDamage(match, damage);
+            if (Life == 0) {
+                match.Emit("treasure_destroyed", new(){{"treasure", Card.Info}});
+
+                var owner = match.OwnerOf(Card.ID);
+                Logger.Instance.Log("TreasureW", "Treasure card " + Card.ShortStr() + " of player " + owner.ShortStr() + " was destroyed");
+
+                owner.Treasures.Cards.Remove(this);
+                owner.PlaceIntoDiscard(this);
+            }
+
+            return result;
         }
     }
 
