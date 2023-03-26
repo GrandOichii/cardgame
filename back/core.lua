@@ -1,4 +1,5 @@
 TRIGGERS = {
+    CARD_DRAW = 'card_draw',
     LIFE_GAIN = 'life_gain',
     TURN_START = 'turn_start',
     TURN_END = 'turn_end',

@@ -1,0 +1,6 @@
+{
+    "name": "Demon's Horn",
+    "type": "Treasure",
+    "text": "When an opponent draws a card, they lose 1 life.",
+    "script": "script.lua"
+}

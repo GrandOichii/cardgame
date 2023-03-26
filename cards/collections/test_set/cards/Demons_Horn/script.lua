@@ -1,21 +1,16 @@
 
-
+-- TODO not tested
 function _CreateCard(props)
-    props.cost = 6
-    props.power = 6
-    props.life = 6
-
-    local result = CardCreation:Unit(props)
-
+    props.cost = 5
+    local result = CardCreation:Treasure(props)
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
         :Check(Common.AlwaysTrue)
         :IsSilent(false)
-        :On(TRIGGERS.LIFE_GAIN)
-        :Zone(ZONES.UNITS)
+        :On(TRIGGERS.CARD_DRAW)
+        :Zone(ZONES.TREASURES)
         :Cost(Common:NoCost())
         :Effect(function (player, args)
-            LoseLife(player.id, args.amount)
-            DrawCards(player.id, args.amount)
+            LoseLife(args.player.id, args.amount)
         end)
         :Build()
 

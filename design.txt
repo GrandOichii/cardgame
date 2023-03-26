@@ -558,6 +558,15 @@ Text:
     When a player gains life, if they have a unit in this lane, that player's opponent loses that much life.
 
 
+    [Voracious Ghoul]
+Type: Unit
+Cost: 3
+Power: 5
+Life: 4
+Text:
+    At the start of your turn, burn a card in your discard. If you can't, destroy [CARDNAME].
+
+
 == Keywords ==
 {Good} - When you cast a {Good} card, summon a [Healing Light] card into your hand.
 {Evil} - When you cast a {Evil} card, summon a [Corrupting Darkness] card into your hand.

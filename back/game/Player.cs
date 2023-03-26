@@ -129,6 +129,19 @@ namespace game.player {
             result["energy"] = Energy;
             result["hand"] = Hand.ToLuaTable(lState);
             result["shared"] = Shared;
+
+            var cards = GetAllCards();
+            var discard = new List<object>();
+            var units = new List<object>();
+            foreach (var pair in cards) {
+                if (pair.Value == Zones.DISCARD)
+                    discard.Add(pair.Key);
+                if (pair.Value == Zones.UNITS)
+                    units.Add(pair.Key);
+            }
+
+            result["discard"] = Utility.CreateTable(lState, discard);
+            result["units"] = Utility.CreateTable(lState, units);
             return result;
         }
 
