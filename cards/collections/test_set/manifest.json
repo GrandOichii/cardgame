@@ -2,6 +2,7 @@
     "name": "test_set",
     "cards": [
         "cards/Source",
+        "cards/Healer",
         "cards/Old_Junk",
         "cards/Basic_Bond",
         "cards/Healers_Gift",

@@ -43,4 +43,58 @@ namespace game.core.actions {
         }
     }
 
+    class AttackAction : GameAction
+    {
+        public override void Exec(Match match, Player player, string[] args)
+        {
+            if (args.Length < 2 || args.Length > 3) throw new Exception("Incorrect number of arguments for attack action");
+
+            var lane = int.Parse(args[1]);
+            var lanes = player.Lanes;
+            var attacker = lanes[lane];
+
+            // TODO ingore action
+            if (attacker is null) throw new Exception("Player " + player.ShortStr() + " tried to attack in lane " + lane + ", where they don't have a unit");
+
+            // TODO ignore action
+            if (attacker.AvailableAttacks == 0) throw new Exception("Player " + player.ShortStr() + " tried to attack with " + attacker.Card.ShortStr() + ", which can't attack");
+            attacker.AvailableAttacks--;
+
+            var opponent = match.OpponentOf(player);
+            IDamageable? target = opponent.Lanes[lane];
+            var defender = opponent.Lanes[lane];
+            long dealt;
+
+            // TODO ignore action
+            if (defender is not null) {
+                if (args.Length == 3)
+                    throw new Exception("Player " + player.ShortStr() + " tried to attack in lane " + lane + " treasure with id " + args[2] + ", while opponent has a unit in that lane");
+                // deal damage to attacker
+                target = defender;
+                dealt = attacker.ProcessDamage(match, defender.GetPower());
+                Logger.Instance.Log("Attack", "Unit " + defender.ToShortStr() + " dealt " + dealt + " damage to " + attacker.ToShortStr());
+            }
+
+            if (target is null) {
+                target = opponent;
+                if (args.Length == 3) {
+                    var tID = args[2];
+                    // attack treasure
+                    foreach (var treasure in opponent.Treasures.Cards){
+                        if (treasure.Card.ID == tID) {
+                            target = treasure;
+                            break;
+                        }
+                    }
+                    // TODO ingore action
+                    if (target == opponent) throw new Exception("Player tried to attack treasure with ID " + tID);
+                }
+            }
+
+            // deal damage to defender/target
+            dealt = target.ProcessDamage(match, attacker.GetPower());
+            Logger.Instance.Log("Attack", "Unit " + attacker.ToShortStr() + " dealt " + dealt + " damage");
+        }
+    }
+
 }

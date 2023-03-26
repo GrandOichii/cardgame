@@ -98,7 +98,7 @@ namespace game.scripts
 
 
         [LuaCommand]
-        public int LoseLife(int pID, int amount) {
+        public long LoseLife(int pID, long amount) {
             // !!! NOT DAMAGE, just life loss
             
             var player = GetPlayer(pID);
@@ -117,7 +117,7 @@ namespace game.scripts
 
 
         [LuaCommand]
-        public int GainLife(int pID, int amount) {
+        public long GainLife(int pID, long amount) {
             var player = GetPlayer(pID);
 
             if (amount < 0) {
@@ -174,14 +174,13 @@ namespace game.scripts
             if (result >= _match.Config.LaneCount) throw new Exception("Player " + player.ShortStr() + " tried to place unit " + card.ShortStr() + " in lane " + result);
 
             // replace unit if present
-            UnitW? replaced = null;
             var lanes = player.Lanes;
-            if (lanes[result] is not null) {
-                replaced = lanes[result];
+            UnitW? replaced = lanes[result];
+            if (replaced is not null)
                 player.PlaceIntoDiscard(replaced);
-            }
 
             lanes[result] = new UnitW(card);
+            Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " placed unit " + card.ShortStr() + " into lane " + result + (replaced is not null ? ", replacing unit " + replaced.Card.ShortStr() : ""));
             if (replaced is null) return;
 
             _match.Emit("unit_replaced", new(){{"unit", replaced.Card.Info}}); 

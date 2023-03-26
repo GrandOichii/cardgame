@@ -234,7 +234,7 @@ function CardCreation:CardObject(props)
     end
 
     function result:Play(player)
-        Log(player.name .. ' player card ' .. self.name)
+        Log('Player '..player.name .. ' played card ' .. self.name)
     end
 
     return result

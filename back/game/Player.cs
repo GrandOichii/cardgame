@@ -42,13 +42,13 @@ namespace game.player {
             set => _energy = value;
         }
 
-        public int Life { get; set; }
+        public long Life { get; set; }
 
         #region Card Zones
         public CardW Bond { get; private set; }
 
         public Zone<CardW> Hand { get; private set; }
-        public UnitW[] Lanes { get; private set; }
+        public UnitW?[] Lanes { get; private set; }
         public Zone<CardW> Deck { get; private set; }
         public Zone<CardW> Discard { get; private set; }
         public Zone<TreasureW> Treasures { get; private set; }
@@ -105,8 +105,12 @@ namespace game.player {
 
         public long ProcessDamage(Match match, long damage)
         {
-            // TODO
-            throw new NotImplementedException();
+            Life -= damage;
+            if (Life <= 0) {
+                var opponent = match.OpponentOf(this);
+                match.Winner = opponent;
+            }
+            return damage;
         }
     
         public void DrawCards(int amount) {
@@ -134,18 +138,19 @@ namespace game.player {
             var result = new Dictionary<CardW, string>();
 
             result.Add(Bond, Zones.BOND);
-            foreach (var card in Hand.Cards)
-                result.Add(card, Zones.HAND);
             foreach (var unit in Lanes) {
                 if (unit is null) continue;
                 result.Add(unit.GetCardWrapper(), Zones.UNITS);
             }
+            foreach (var treasure in Treasures.Cards)
+                result.Add(treasure.GetCardWrapper(), Zones.TREASURES);
+
+            foreach (var card in Hand.Cards)
+                result.Add(card, Zones.HAND);
             foreach (var card in Deck.Cards)
                 result.Add(card, Zones.DECK);
             foreach (var card in Discard.Cards)
                 result.Add(card, Zones.DISCARD);
-            foreach (var treasure in Treasures.Cards)
-                result.Add(treasure.GetCardWrapper(), Zones.TREASURES);
             foreach (var card in Burned.Cards)
                 result.Add(card, Zones.BURNED);
                 

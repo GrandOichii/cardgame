@@ -17,6 +17,12 @@ namespace game.core.phases {
             // replenish energy
             player.Energy = player.MaxEnergy;
 
+            // replenish attacks
+            foreach (var unit in player.Lanes) {
+                if (unit is null) continue;
+                unit.ResetAvailableAttacks();
+            }
+
             // emit turn start effects
             match.Emit("turn_start", new(){ {"player", player.ToLuaTable(match.LState)} });
 
@@ -38,7 +44,7 @@ namespace game.core.phases {
             private static readonly Dictionary<string, actions.GameAction> ACTION_MAP =
             new(){
                 { "play", new PlayCardAction() },
-                // { "attack", new actions.AttackAction() }
+                { "attack", new AttackAction() }
             };
 
             public override void Exec(Match match, Player player)
@@ -62,9 +68,8 @@ namespace game.core.phases {
                     if (!ACTION_MAP.ContainsKey(actionWord)) throw new Exception("Unknown action from player " + player.Name + ": " + actionWord);
 
                     ACTION_MAP[actionWord].Exec(match, player, words);
-                    
+                    if (!match.Active) break;                    
                 }
-                // TODO
             }
 
             private string PromptAction(Match match, Player player)

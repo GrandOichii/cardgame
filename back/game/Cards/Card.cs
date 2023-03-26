@@ -200,8 +200,11 @@ namespace game.cards {
     class UnitW : HasMarkedDamage
     {
         protected override string requiredCardType => "Unit";
+
+        public int AvailableAttacks { get; set; }
         public UnitW(CardW card) : base(card)
         {
+            AvailableAttacks = 0;
             // check that it has power
             GetPower();
         }
@@ -212,6 +215,39 @@ namespace game.cards {
 
         public string ToShortStr() {
             return Card.Original.Name + ": " + GetPower() + "/" + Life;
+        }
+
+        public void ResetAvailableAttacks() {
+            // TODO change if units will be able to attack multiple times
+            AvailableAttacks = 1;
+        }
+
+        public override long ProcessDamage(Match match, long damage)
+        {
+            var result = base.ProcessDamage(match, damage);
+            if (Life == 0) {
+                Destroy(match);
+            }
+
+            return result;
+        }
+
+        public void Destroy(Match match) {
+            match.Emit("unit_destroyed", new(){{"unit", Card.Info}});
+
+            var owner = match.OwnerOf(Card.ID);
+            Logger.Instance.Log("UnitW", "Unit card " + Card.ShortStr() + " of player " + owner.ShortStr() + " was destroyed");
+
+            bool removed = false;
+            for (int i = 0; i < owner.Lanes.Length; i++){
+                var lane = owner.Lanes[i];
+                if (lane is not null && lane == this) {
+                    removed = true;
+                    owner.Lanes[i] = null;
+                }
+            }
+            if (!removed) throw new Exception("Failed to remove card " + Card.ShortStr() + " of player " + owner.ShortStr() + ": can't find it in any lane");
+            owner.PlaceIntoDiscard(this);
         }
     }
 

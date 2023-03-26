@@ -127,13 +127,16 @@ namespace game.match {
                 foreach (var phase in _phases) {
                     phase.Exec(this, cPlayer);
 
-                    if (!Active) return;
+                    if (!Active) break;
                 }
                 _curPlayerI++;
                 if (_curPlayerI >= Players.Count)
                     _curPlayerI = 0;
             }
-           Logger.Instance.Log("Match", "Finished turns loop");
+
+            // TODO should always be true
+            if (Winner is not null) Logger.Instance.Log("Match", "Winner is " + Winner.ShortStr());
+            Logger.Instance.Log("Match", "Finished turns loop");
         }
 
         private void End() {

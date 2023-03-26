@@ -6,16 +6,14 @@ function _CreateCard(props)
     props.cost = 2
     local result = CardCreation:Unit(props)
 
-    result.triggers[#result.triggers+1] = EffectCreation.TriggerBuilder:Create()
-        :CheckF(function (args)
-            return args.player.id == GetController(result.id).id
-        end)
+    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
+        :Check(Common:IsOwnersTurn(result))
+        :Cost(Common:NoCost())
         :IsSilent(false)
         :On(TRIGGERS.TURN_END)
-        :Zone(ZONES.IN_PLAY)
-        :EffectF(function (args)
-            print('TRIGGERED')
-            GainLife(args.player.id, 1)
+        :Zone(ZONES.UNITS)
+        :Effect(function (player, args)
+            GainLife(player.id, 1)
         end)
         :Build()
 
