@@ -3,7 +3,7 @@
     "starting_hand_size": 3,
     "max_hand_size": 3,
     "turn_start_card_draw": 2,
-    "starting_energy": 0,
+    "starting_energy": 5,
     "lane_count": 3,
     "base_source_per_turn": 1,
 

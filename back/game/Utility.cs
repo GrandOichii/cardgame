@@ -15,11 +15,11 @@ namespace game.util {
             return f;
         } 
 
-        static public LuaFunction GetF(LuaTable table, string fName) {
-            var f = table[fName] as LuaFunction;
-            if (f is null) throw new GLuaTableException(table, "Failed to get function " + fName + " from Lua table ");
-            return f;
-        }
+        // static public LuaFunction GetF(LuaTable table, string fName) {
+        //     var f = table[fName] as LuaFunction;
+        //     if (f is null) throw new GLuaTableException(table, "Failed to get function " + fName + " from Lua table ");
+        //     return f;
+        // }
 
         static public long GetLong(LuaTable table, string name) {
             var f = table[name] as long?;
@@ -35,16 +35,47 @@ namespace game.util {
             return (int)f;
         }
 
-        // static public T TableGet<T>(LuaTable table, string name) {
-        //     var f = table[name] as T;
-        //     if (f is null) throw new GLuaTableException(table, "Failed to get T " + name + " from Lua table ");
+
+        static public bool GetBool(LuaTable table, string name) {
+            var f = table[name] as bool?;
+            if (f is null) throw new GLuaTableException(table, "Failed to get bool " + name + " from Lua table ");
+            // TODO bad cast?
+            return (bool)f;
+        }
+
+
+        // static public LuaTable GetTable(LuaTable table, string name) {
+        //     var f = table[name] as LuaTable;
+        //     if (f is null) throw new GLuaTableException(table, "Failed to get LuaTable " + name + " from Lua table ");
         //     // TODO bad cast?
-        //     return (T)f;
+        //     return f;
         // }
+
+        
+        static public T TableGet<T>(LuaTable table, string name) where T : class {
+            var f = table[name] as T;
+            if (f is null) throw new GLuaTableException(table, "Failed to get T " + name + " from Lua table ");
+            // TODO bad cast?
+            return (T)f;
+        }
 
         static public LuaTable CreateTable(Lua lState) {
             lState.NewTable("_table");
             return lState.GetTable("_table");
+        }
+
+        static public LuaTable CreateTable(Lua lState, Dictionary<string, object> args) {
+            var result = CreateTable(lState);
+            foreach (var pair in args)
+                result[pair.Key] = pair.Value;
+            return result;
+        }
+
+        static public LuaTable CreateTable(Lua lState, List<object> args) {
+            var result = CreateTable(lState);
+            for (int i = 0; i < args.Count; i++)
+                result[i++] = args[i];
+            return result;
         }
 
         static void CheckIndex(object[] returned, int index) {

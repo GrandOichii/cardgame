@@ -134,13 +134,12 @@ namespace game.cards {
         public CardW GetCardWrapper() => this;
 
         public object[] ExecFunc(string fName, params object[] args) {
-            var f = Utility.GetF(Info, fName);
+            var f = Utility.TableGet<LuaFunction>(Info, fName);
             return f.Call(args);
         }
 
         public bool ExecCheckerFunc(string fName, params object[] args) {
-            var f = Utility.GetF(Info, fName);
-            var results = f.Call(args);
+            var results = ExecFunc(fName, args);
             var result = Utility.GetReturnAsBool(results);
             return result;
         }

@@ -113,7 +113,7 @@ namespace game.player {
             // TODO replace with draw cards call to lua state
             var cards = Deck.PopTop(amount);
 
-            _match.Emit("card_draw", new(){{"player", ToLuaTable(_match.LState)}});
+            _match.Emit("card_draw", new(){{"player", ToLuaTable(_match.LState)}, {"amount", amount}});
 
             Hand.AddToBack(cards);
         }
@@ -129,6 +129,28 @@ namespace game.player {
         }
 
         public string ShortStr() => Name + " (" + ID + ")";
+
+        public Dictionary<CardW, string> GetAllCards() {
+            var result = new Dictionary<CardW, string>();
+
+            result.Add(Bond, Zones.BOND);
+            foreach (var card in Hand.Cards)
+                result.Add(card, Zones.HAND);
+            foreach (var unit in Lanes) {
+                if (unit is null) continue;
+                result.Add(unit.GetCardWrapper(), Zones.LANES);
+            }
+            foreach (var card in Deck.Cards)
+                result.Add(card, Zones.DECK);
+            foreach (var card in Discard.Cards)
+                result.Add(card, Zones.DISCARD);
+            foreach (var treasure in Treasures.Cards)
+                result.Add(treasure.GetCardWrapper(), Zones.TREASURES);
+            foreach (var card in Burned.Cards)
+                result.Add(card, Zones.BURNED);
+                
+            return result;
+        }
     }
 
     #region Player Controllers

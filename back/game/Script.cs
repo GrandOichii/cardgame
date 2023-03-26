@@ -131,5 +131,17 @@ namespace game.scripts
             Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " gained " + result + " life");
             return result;
         }
+
+
+        [LuaCommand]
+        public LuaTable GetController(string cID) {
+            foreach (var player in _match.Players) {
+                var cards = player.GetAllCards();
+                var result = cards.Keys.ToList().Find(card => card.ID == cID);
+                if (result is null) continue;
+                return player.ToLuaTable(_match.LState);
+            }
+            throw new Exception("Failed to find owner of card with ID:" + cID);
+        }
     }
 }

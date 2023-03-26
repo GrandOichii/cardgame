@@ -7,6 +7,7 @@ using game.player;
 using game.cards;
 using game.scripts;
 using game.core.phases;
+using game.core.effects;
 
 namespace game.match {
     class CardManager
@@ -146,7 +147,41 @@ namespace game.match {
             foreach (var pair in args) logMessage += pair.Key + ":" + pair.Value.ToString() + " ";
             Logger.Instance.Log("Match", logMessage);
 
-            // TODO
+            foreach (var player in Players) {
+                var cards = player.GetAllCards();
+                foreach (var pair in cards) {
+                    var zone = pair.Value;
+                    var card = pair.Key;
+                    var triggers = Utility.TableGet<LuaTable>(card.Info, "triggers");
+                    foreach (var triggerO in triggers.Values) {
+                        var triggerRaw = triggerO as LuaTable;
+                        if (triggerRaw is null) throw new Exception("Trigger of card " + card.ShortStr() + " is somehow value " + triggerO + " (not LuaTable)");
+                        var z = Utility.TableGet<string>(triggerRaw, "zone");
+                        if (z != zone) continue;
+                        var on = Utility.TableGet<string>(triggerRaw, "on");
+                        if (on != signal) continue;
+
+                        var trigger = new Trigger(triggerRaw);
+                        // TODO something else
+                        Logger.Instance.Log("Match", "Card " + card.ShortStr() + " in zone " + zone + " of player " + player.ShortStr() + " has a potential trigger");
+
+                        var triggered = trigger.ExecCheck(LState, player, args);
+                        if (!triggered) {
+                            Logger.Instance.Log("Match", "Card " + card.ShortStr() + " in zone " + zone + " of player " + player.ShortStr() + " failed to trigger");
+                            return;
+                        }
+
+                        var payed = trigger.ExecCosts(LState, player, args);
+                        if (!payed) {
+                            Logger.Instance.Log("Match", "Player " + player.ShortStr() + " did not pay cost of triggered ability of card " + card.ShortStr() + " in zone " + zone);
+                            return;
+                        }
+
+                        Logger.Instance.Log("Match", "Card " + card.ShortStr() + " in zone " + zone + " of player " + player.ShortStr() + " triggers");
+                        trigger.ExecEffect(LState, player, args);
+                    }
+                }
+            }
 
             Logger.Instance.Log("Match", "Finished emitting " + signal);
         }

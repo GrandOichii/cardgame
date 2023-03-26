@@ -36,6 +36,7 @@ namespace game.core {
     }
 
     class Zone<T> where T : IHasCardW {
+
         public List<T> Cards { get; private set; }
 
         public T? this[string cardID]
@@ -73,6 +74,16 @@ namespace game.core {
                 result[i+1] = Cards[i].GetCardWrapper().Info;
             return result;
         }
+    }
+
+    static class Zones {
+        static public readonly string TREASURES = "treasures";
+        static public readonly string BURNED = "burned";
+        static public readonly string DISCARD = "discard";
+        static public readonly string DECK = "deck";
+        static public readonly string LANES = "lanes";
+        static public readonly string HAND = "hand";
+        static public readonly string BOND = "bond";
     }
 
 }

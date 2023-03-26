@@ -1,3 +1,12 @@
+TRIGGERS = {
+    TURN_START = 'turn_start',
+    TURN_END = 'turn_end',
+}
+
+ZONES = {
+    TREASURES = 'treasures'
+}
+
 -- main effect creation object
 EffectCreation = {}
 
@@ -99,6 +108,14 @@ function Common:RequireField(table, fieldName)
 end
 
 
+-- TODO not tested
+function Common:NoCost()
+    return function (...)
+        return true
+    end
+end
+
+
 function Common:AlwaysTrue(...)
     return true
 end
@@ -134,6 +151,13 @@ end
 function Common:CostDiscard( amount )
     return function (player, ...)
         -- TODO
+    end
+end
+
+
+function Common:IsOwnersTurn(card)
+    return function (player, args)
+        return args.player.id == GetController(card.id).id
     end
 end
 
@@ -174,7 +198,7 @@ end
 --     :On('destroyed')
 --     :Check(Common:EnoughCardsInHand(1))
 --     :Cost(Common:CostDiscard(1))
---     :Effect(function (player)
+--     :Effect(function (player, args)
 --         print('Player ' .. player.name .. ' has a triggered effect!')
 --     end)
 --     :Build()
@@ -196,6 +220,7 @@ function CardCreation:CardObject(props)
     result.name = props.name
     result.type = props.type
     result.cost = props.cost
+    result.triggers = {}
 
     function result:CanPlay(player)
         return Common:HasEnoughEnergy(self.cost)(player)

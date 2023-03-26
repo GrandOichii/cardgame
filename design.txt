@@ -538,10 +538,18 @@ Life: 2
 Text: 
 
 
-    [Repentace]
+    [Repentance]
 Type: Bond
 Text:
     As long as you have 7 or lower life, TODO
+
+
+    [TODO Confusion]
+Type: Spell
+Cost: 4
+Text:
+    Exchange control of units on this lane.
+
 
 == Keywords ==
 {Good} - When you cast a {Good} card, summon a [Healing Light] card into your hand.

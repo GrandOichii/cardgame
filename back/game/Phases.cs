@@ -13,7 +13,6 @@ namespace game.core.phases {
         {
             // replenish source count
             player.SourceCount = player.MaxSourcePerTurn;
-            System.Console.WriteLine(player.Name + "  " + player.SourceCount);
 
             // replenish energy
             player.Energy = player.MaxEnergy;
