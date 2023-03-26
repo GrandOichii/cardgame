@@ -171,13 +171,13 @@ namespace game.match {
                         var triggered = trigger.ExecCheck(LState, player, args);
                         if (!triggered) {
                             Logger.Instance.Log("Match", "Card " + card.ShortStr() + " in zone " + zone + " of player " + player.ShortStr() + " failed to trigger");
-                            return;
+                            continue;
                         }
 
                         var payed = trigger.ExecCosts(LState, player, args);
                         if (!payed) {
                             Logger.Instance.Log("Match", "Player " + player.ShortStr() + " did not pay cost of triggered ability of card " + card.ShortStr() + " in zone " + zone);
-                            return;
+                            continue;
                         }
 
                         Logger.Instance.Log("Match", "Card " + card.ShortStr() + " in zone " + zone + " of player " + player.ShortStr() + " triggers");

@@ -5,6 +5,7 @@ TRIGGERS = {
 }
 
 ZONES = {
+    DISCARD = 'discard',
     UNITS = 'units',
     TREASURES = 'treasures',
     BOND = 'bond'

@@ -185,5 +185,24 @@ namespace game.scripts
 
             _match.Emit("unit_replaced", new(){{"unit", replaced.Card.Info}}); 
         }
+
+
+        [LuaCommand]
+        public void RemoveFromDiscard(string cID, int pID) {
+            var card = GetCard(cID);
+            var player = GetPlayer(pID);
+            var removed = player.Discard.Cards.Remove(card);
+            if (removed) return;
+
+            throw new Exception("Tried to remove card " + card.ShortStr() + " from " + player.Name + "'s discard, which is not there");
+        }
+
+
+        [LuaCommand]
+        public void PlaceIntoHand(string cID, int pID) {
+            var card = GetCard(cID);
+            var player = GetPlayer(pID);
+            player.Hand.AddToBack(card);            
+        }
     }
 }

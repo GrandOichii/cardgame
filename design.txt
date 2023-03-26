@@ -551,6 +551,13 @@ Text:
     Exchange control of units on this lane.
 
 
+    [Gang Wars] // TODO change name, should be something that implies stealing
+Type: Charm
+Cost: 3
+Text:
+    When a player gains life, if they have a unit in this lane, that player's opponent loses that much life.
+
+
 == Keywords ==
 {Good} - When you cast a {Good} card, summon a [Healing Light] card into your hand.
 {Evil} - When you cast a {Evil} card, summon a [Corrupting Darkness] card into your hand.
