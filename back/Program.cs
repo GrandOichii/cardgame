@@ -12,6 +12,7 @@ using game.core;
 using game.player;
 using game.decks;
 
+using Shared;
 
 class Program {
 
@@ -73,19 +74,22 @@ class TCPPlayerController : PlayerController
 
     private void Write(string message) {
         var data = Encoding.UTF8.GetBytes(message);
-        _handler.GetStream().Write(data);
+        var handler = _handler.GetStream();
+        NetUtil.Write(handler, message);
+        // _handler.GetStream().Write(data);
         Logger.Instance.Log("TCPPlayerController", "Sent message " + message);
     }
 
     private string Read() {
         var stream = _handler.GetStream();
-        var result = "";
-        int received;
-        // while ((received = stream.Read(buffer)) != 0) {
-        //     result += Encoding.UTF8.GetString(buffer, 0, received);
-        // }
-        received = stream.Read(buffer);
-        result += Encoding.UTF8.GetString(buffer, 0, received);
+        // var result = "";
+        // int received;
+        // // while ((received = stream.Read(buffer)) != 0) {
+        // //     result += Encoding.UTF8.GetString(buffer, 0, received);
+        // // }
+        // received = stream.Read(buffer);
+        // result += Encoding.UTF8.GetString(buffer, 0, received);
+        var result = NetUtil.Read(stream);
         return result;
     }
 
