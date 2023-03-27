@@ -68,7 +68,7 @@ namespace game.match {
         public bool Active { get => Winner is null; }
         public List<Player> Players { get; private set; }
         public Player? PlayerByID(int pid) => Players.Find(player => player.ID == pid);
-        private int _curPlayerI;
+        public int CurPlayerI { get; private set; }
 
         public CardManager AllCards { get; private set; }
 
@@ -123,15 +123,15 @@ namespace game.match {
         private void Turns() {
             Logger.Instance.Log("Match", "Started turns loop");
             while(Active) {
-                var cPlayer = Players[_curPlayerI];
+                var cPlayer = Players[CurPlayerI];
                 foreach (var phase in _phases) {
                     phase.Exec(this, cPlayer);
 
                     if (!Active) break;
                 }
-                _curPlayerI++;
-                if (_curPlayerI >= Players.Count)
-                    _curPlayerI = 0;
+                CurPlayerI++;
+                if (CurPlayerI >= Players.Count)
+                    CurPlayerI = 0;
             }
 
             // TODO should always be true

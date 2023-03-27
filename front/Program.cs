@@ -4,6 +4,8 @@ using System.Text;
 
 class Client {
     static TcpClient client = new TcpClient();
+    static byte[] buffer = new byte[4096];
+
 
     static void Main(string[] args)
     {
@@ -26,7 +28,6 @@ class Client {
 
     static string Read() {
         var stream = client.GetStream();
-        var buffer = new byte[1024];
         var message = "";
         int received;
         // while ((received = stream.Read(buffer)) != 0) {
