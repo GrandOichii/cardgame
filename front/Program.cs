@@ -20,9 +20,11 @@ class Client {
         var stream = client.GetStream();
         while (true) {
             System.Console.WriteLine("Reading message");
-            var message = Read();
-            System.Console.WriteLine("Received: " + message);
-            if (message == null || message == "") break;
+            var prompt = Read();
+            var stateJ = Read();
+            var state = MatchState.From(stateJ);
+            System.Console.WriteLine("Received: " + prompt);
+            if (prompt == null || prompt == "") break;
             Write();
         }
         client.Close();
