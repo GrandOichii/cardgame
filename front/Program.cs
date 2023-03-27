@@ -7,7 +7,9 @@ class Client {
 
     static void Main(string[] args)
     {
-        var endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
+        var host = "127.0.0.1";
+        if (args.Length == 1) host = args[0];
+        var endpoint = new IPEndPoint(IPAddress.Parse(host), 8080);
 
         System.Console.WriteLine("Connected");
         client.Connect(endpoint);
