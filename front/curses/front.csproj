@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\shared\shared.csproj" />
+    <ProjectReference Include="..\..\shared\shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotnet-curses" Version="1.0.2" />
   </ItemGroup>
 
   <PropertyGroup>

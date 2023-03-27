@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
+using Mindmagma.Curses;
 using Shared;
 
 class Client {
@@ -16,19 +16,30 @@ class Client {
         if (args.Length == 1) host = args[0];
         var endpoint = new IPEndPoint(IPAddress.Parse(host), 8080);
         client.Connect(endpoint);
-        System.Console.WriteLine("Connected");
+        // System.Console.WriteLine("Connected");
         var stream = client.GetStream();
+
+        var Screen = NCurses.InitScreen();
+        NCurses.InitScreen();
+        NCurses.NoDelay(Screen, true);
+        NCurses.NoEcho();
+
         while (true) {
-            System.Console.WriteLine("Reading message");
+            // System.Console.WriteLine("Reading message");
             var prompt = Read();
             if (prompt == null || prompt == "") break;
-            System.Console.WriteLine("Received: " + prompt);
+            NCurses.MoveAddString(1, 1, $"Prompt: {prompt}");
             var stateJ = Read();
             var state = MatchState.From(stateJ);
-            System.Console.WriteLine("State parsed");
+            NCurses.MoveAddString(2, 1, "Enter response: ");
+            NCurses.Refresh();
+
+            // System.Console.WriteLine("State parsed");
             Write();
+            NCurses.Clear();
         }
         client.Close();
+        NCurses.EndWin();
     }
 
     static string Read() {
@@ -46,7 +57,7 @@ class Client {
     }
 
     static void Write() {
-        System.Console.Write("> ");
+        // System.Console.Write("> ");
         var stream = client.GetStream();
         var message = Console.ReadLine();
         if (message is null) message = "";
