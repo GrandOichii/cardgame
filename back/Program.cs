@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using NLua;
 
 using game.match;
@@ -97,4 +99,17 @@ class TCPPlayerController : PlayerController
         Write(prompt);
         return int.Parse(Read());
     }
+}
+
+struct MatchData {
+
+    static public void From(Player player, Match match) {
+
+    }
+
+    public string ToJson() {
+        var result = JsonSerializer.Serialize<MatchData>(this);
+        return result;
+    }
+
 }

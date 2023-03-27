@@ -11,15 +11,15 @@ class Client {
         if (args.Length == 1) host = args[0];
         var endpoint = new IPEndPoint(IPAddress.Parse(host), 8080);
 
-        System.Console.WriteLine("Connected");
         client.Connect(endpoint);
+        System.Console.WriteLine("Connected");
         var stream = client.GetStream();
         while (true) {
             System.Console.WriteLine("Reading message");
             var message = Read();
             System.Console.WriteLine("Received: " + message);
+            if (message == null || message == "") break;
             Write();
-            if (message == "quit") break;
         }
         client.Close();
     }
