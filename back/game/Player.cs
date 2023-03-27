@@ -182,30 +182,37 @@ namespace game.player {
     abstract class PlayerController {
         abstract public string PromptAction(Player controlledPlayer, Match match);
         abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
-    }
-
-
-    class TerminalPlayerController : PlayerController {
-        private void PrintCardsInZone<T>(Zone<T> zone, string zoneName) where T : IHasCardW {
-            System.Console.WriteLine("\t=== Cards in " + zoneName + " ===");
-            foreach (var card in zone.Cards)
-                System.Console.WriteLine("\t" + card.GetCardWrapper().ID + ": " + card.GetCardWrapper().Original.Name + "  (" + card.InfoStr() + ")");
-
-        }
-
-        public override string PromptAction(Player player, Match match)
-        {
-            System.Console.WriteLine("\tLife: " + player.Life);
-            System.Console.WriteLine("\tEnergy: " + player.Energy);
+        protected string ShortInfo(Player player) {
+            var result = "";
+            result += "\tLife: " + player.Life + "\n";
+            result += "\tEnergy: " + player.Energy + "\n";
             for (int i = 0; i < player.Lanes.Length; i++) {
                 var unit = player.Lanes[i];
                 var addMessage = "None";
                 if (unit is not null) addMessage = unit.ToShortStr();
-                System.Console.WriteLine("\tLane " + i + ": " + addMessage);
+                result += "\tLane " + i + ": " + addMessage + "\n";
             }
-            PrintCardsInZone(player.Treasures, "treasures");
-            PrintCardsInZone(player.Hand, "hand");
-            PrintCardsInZone(player.Discard, "discard");
+            result += CardsInZoneToString(player.Treasures, "treasures");
+            result += CardsInZoneToString(player.Hand, "hand");
+            result += CardsInZoneToString(player.Discard, "discard");
+            return result;
+        }
+
+        private string CardsInZoneToString<T>(Zone<T> zone, string zoneName) where T : IHasCardW {
+            var result = "";
+            result += "\t=== Cards in " + zoneName + " ===\n";
+            foreach (var card in zone.Cards)
+                result += "\t" + card.GetCardWrapper().ID + ": " + card.GetCardWrapper().Original.Name + "  (" + card.InfoStr() + ")\n";
+            return result;
+        }
+    }
+
+
+    class TerminalPlayerController : PlayerController {
+
+        public override string PromptAction(Player player, Match match)
+        {
+            System.Console.WriteLine(ShortInfo(player));
             System.Console.Write("\tEnter action for " + player.Name + ": ");
             string? result = null;
             while (result is null)
@@ -225,5 +232,7 @@ namespace game.player {
             return int.Parse(result);
         }
     }
+
+    
     #endregion
 }

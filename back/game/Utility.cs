@@ -74,7 +74,7 @@ namespace game.util {
         static public LuaTable CreateTable(Lua lState, List<object> args) {
             var result = CreateTable(lState);
             for (int i = 0; i < args.Count; i++)
-                result[i++] = args[i];
+                result[i+1] = args[i];
             return result;
         }
 

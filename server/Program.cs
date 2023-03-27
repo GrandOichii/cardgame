@@ -1,32 +1,22 @@
-﻿using System;
-using WebSocketSharp;
-using WebSocketSharp.Server;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Text;
 
-namespace Example
-{
-  public class Laputa : WebSocketBehavior
-  {
-    protected override void OnMessage (MessageEventArgs e)
-    {
-      var msg = e.Data == "BALUS"
-                ? "Are you kidding?"
-                : "I'm not available now.";
+class Server {
+	static void Main(string[] args)
+	{
+        var endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9090);
+        var listener = new TcpListener(endpoint);
+        listener.Start();
 
-      Send (msg);
-    }
-  }
+        var handler = listener.AcceptTcpClient();
+        var stream = handler.GetStream();
 
-  public class Program
-  {
-    public static void Main (string[] args)
-    {
-      var wssv = new WebSocketServer ("ws://localhost:8080");
+        var message = "Hello, world";
+        var data = Encoding.UTF8.GetBytes(message);
+        stream.Write(data);
+        System.Console.WriteLine("Wrote: " + message);
 
-      wssv.AddWebSocketService<Laputa> ("/Laputa");
-      wssv.Start();
-      System.Console.WriteLine("Server started");
-      Console.ReadKey(true);
-      wssv.Stop();
-    }
-  }
+        listener.Stop();
+	}
 }
