@@ -16,7 +16,7 @@ using Shared;
 
 class Program {
 
-    static private IPAddress ADDRESS = IPAddress.Parse("127.0.0.1");
+    static private IPAddress ADDRESS = IPAddress.Any;
     static private int PORT = 8080;
 
     static private TcpListener listener = new TcpListener(new IPEndPoint(ADDRESS, PORT));
@@ -59,6 +59,7 @@ class Program {
     }
 }
 
+
 class TCPPlayerController : PlayerController
 {
     byte[] buffer = new byte[1024];
@@ -90,6 +91,7 @@ class TCPPlayerController : PlayerController
         // received = stream.Read(buffer);
         // result += Encoding.UTF8.GetString(buffer, 0, received);
         var result = NetUtil.Read(stream);
+        System.Console.WriteLine("Read: " + result);
         return result;
     }
 

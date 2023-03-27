@@ -21,10 +21,11 @@ class Client {
         while (true) {
             System.Console.WriteLine("Reading message");
             var prompt = Read();
+            if (prompt == null || prompt == "") break;
+            System.Console.WriteLine("Received: " + prompt);
             var stateJ = Read();
             var state = MatchState.From(stateJ);
-            System.Console.WriteLine("Received: " + prompt);
-            if (prompt == null || prompt == "") break;
+            System.Console.WriteLine("State parsed");
             Write();
         }
         client.Close();
