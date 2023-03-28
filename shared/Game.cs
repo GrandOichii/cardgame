@@ -35,6 +35,8 @@ public struct MyState {
 }
 
 public struct PlayerState {
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
     [JsonPropertyName("handCount")]
     public int HandCount { get; set; }
     [JsonPropertyName("deckCount")]
@@ -45,6 +47,8 @@ public struct PlayerState {
     public int Energy { get; set; }
 
 
+    [JsonPropertyName("bond")]
+    public CardState Bond { get; set; }
     [JsonPropertyName("discard")]
     public CardState[] Discard { get; set; }
     [JsonPropertyName("burned")]

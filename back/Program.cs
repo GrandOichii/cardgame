@@ -141,10 +141,13 @@ class TCPPlayerController : PlayerController
     static public PlayerState PlayerStateFrom(Player player) {
         var result = new PlayerState();
 
+        result.Name = player.Name;
         result.HandCount = player.Hand.Cards.Count;
         result.DeckCount = player.Deck.Cards.Count;
         result.Life = player.Life;
         result.Energy = player.Energy;
+
+        result.Bond = CardStateFrom(player.Bond);
         
         result.Discard = new CardState[player.Discard.Cards.Count];
         for (int i = 0; i < player.Discard.Cards.Count; i++) {
