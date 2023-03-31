@@ -286,6 +286,7 @@ end
 function CardCreation:InPlay(props)
     local result = CardCreation:CardObject(props)
 
+    -- TODO not currently in use by engine
     function result:LeavePlay(player)
         Log('Card ' .. result.name .. ', controlled by ' .. player.name .. ', is leaving play')
     end
@@ -339,11 +340,18 @@ function CardCreation:Unit(props)
     local result = CardCreation:Damageable(props)
 
     result.power = props.power
+    result.basePower = props.basePower
 
     local prevPlay = result.Play
     function result:Play(player)
         prevPlay(self, player)
         PlaceInUnits(self.id, player.id)
+    end
+
+    local prevLeave = result.LeavePlay
+    function result:LeavePlay(player)
+        prevLeave(self, player)
+        self.power = self.basePower
     end
 
     return result

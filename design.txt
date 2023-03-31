@@ -349,7 +349,7 @@ Cost: 5
 Power: 3
 Life: 5
 Text:
-    When [Mechanical Engineer] enters play, {Power Up} all your treasures.
+    When [CARDNAME] enters play, {Power Up} all your treasures.
 
 
     [Earth Elemental]
@@ -358,7 +358,7 @@ Cost: 4
 Power: 6
 Life: 6
 Text:
-    When [Earth Elemental] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
+    When [CARDNAME] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
 
 
     [Earthling]
@@ -377,7 +377,7 @@ Power: 8
 Life: 8
 Text:
     {Fast}
-    At the start of your turn, [Fire Elementals] power becomes half of it's power, and it's life becomes half of it's life. Round down each time.
+    At the start of your turn, [CARDNAME]s power becomes half of it's power, and it's life becomes half of it's life. Round down each time.
 
 
     [Goblin Provocateurs]
@@ -442,7 +442,7 @@ Cost: 3
 Life: 5
 Text:
     Units you control have +2 power.
-    At the start of your turn, {Power Down} [Powerstone]. If (0/ 3 /10) is equal to 0, destroy [Powerstone].
+    At the start of your turn, {Power Down} [CARDNAME]. If (0/ 3 /10) is equal to 0, destroy [CARDNAME].
 
 
     [Remember the old times]
@@ -458,7 +458,7 @@ Cost: 2
 Power: 1
 Life: 2
 Text:
-    When [Old Mentor] enters play, {Power Up} a card in your hand.
+    When [CARDNAME] enters play, {Power Up} a card in your hand.
 
 
     [Gain Knowledge]
@@ -486,7 +486,7 @@ Type: Treasure
 Life: 5
 Text:
     At the start of your turn, all your units gain +1 life.
-    When [Shawarma Stand] is destroyed, summon an [Angry Cook] into play.
+    When [CARDNAME] is destroyed, summon an [Angry Cook] into play.
 
 
 (Summoned)
@@ -511,7 +511,7 @@ Type: Treasure
 Cost: 4
 Life: 5
 Text:
-    Discard a [Throw Rock] card: [Rock Launcher] deals (2/ 2 /4) damage to target unit.
+    Discard a [Throw Rock] card: [CARDNAME] deals (2/ 2 /4) damage to target unit.
 
 
     [Rock Smelter]
@@ -565,6 +565,33 @@ Power: 5
 Life: 4
 Text:
     At the start of your turn, burn a card in your discard. If you can't, destroy [CARDNAME].
+
+
+    [Fire Mage Apprentice]
+Type: Unit
+Cost: 2
+Power: 0
+Life: 4
+Text:
+    When you cast a spell, [CARDNAME] deals (0/ 1 /2) damage to your opponent.
+
+
+    [Powerstone Crafter]
+Type: Unit
+Cost: 4
+Power: 1
+Life: 3
+Text:
+    At the start of your turn, {Power down} [CARDNAME]. Then if (0/ 3 /3) is greater than 0, summon a [Weakened Powerstone] treasure card into your treasures.
+
+
+(Summoned)
+    [Weakened Powerstone]
+Type: Treasure
+Life: 2
+Text:
+    Units you control have +2 power.
+    At the start of your turn, {Power Down} [CARDNAME]. If (0/ 2 /3) is equal to 0, destroy [CARDNAME].
 
 
 == Keywords ==

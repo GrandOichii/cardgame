@@ -29,41 +29,23 @@ class CursesClient {
     private nint _screen;
     private int SHeight { get; }
     private int SWidth { get; }
-    private MatchState _lastState = MatchState.From(File.ReadAllText("state_test.json"));
-
-    private float HOR_RATIO = 0.75f;
-
-    private int _cardHeight;
+    private MatchState _lastState;
 
 
-    private PlayerInfoTab _topInfoTab;
-    private Tab[] _topTabs;
-
-    private PlayerInfoTab _bottomInfoTab;
-    private Tab[] _bottomTabs;
-
+    private List<Tab> Tabs = new();
     private int _curTabI = 0;
-
-    bool _topOrBottom = false;
-    public bool TopOrBottom { 
-        get => _topOrBottom; 
-        set {
-            _curTabI = 0;
-            _topOrBottom = value;
-        } 
-    }
 
 
     public CursesClient(string host, int port) {
-        _topInfoTab = new(this, "Info", true);
-        _topTabs = new Tab[] {
-            _topInfoTab,
-        };
+        // _topInfoTab = new(this, "Info", true);
+        // _topTabs = new Tab[] {
+        //     _topInfoTab,
+        // };
 
-        _bottomInfoTab = new(this, "Info", false);
-        _bottomTabs = new Tab[] {
-            _bottomInfoTab,
-        };
+        // _bottomInfoTab = new(this, "Info", false);
+        // _bottomTabs = new Tab[] {
+        //     _bottomInfoTab,
+        // };
         // var endpoint = new IPEndPoint(IPAddress.Parse(host), 8080);
         // _client = new TcpClient();
 
@@ -75,11 +57,13 @@ class CursesClient {
         NCurses.GetMaxYX(_screen, out sy, out sx);
         SHeight = sy;
         SWidth = sx;
-        _cardHeight = SHeight / 2 - 1;
+        // _cardHeight = SHeight / 2 - 1;
         NCurses.InitScreen();
-        // NCurses.NoDelay(_screen, true);
         NCurses.NoEcho();
         NCurses.SetCursor(0);
+
+        CreateFirstPlayerTabs();
+        CreateSecondPlayerTabs();
     }
 
     public void Start() {
@@ -94,6 +78,8 @@ class CursesClient {
                 // NCurses.MoveAddString(1, 1, $"Prompt: {prompt}");
                 // var stateJ = Read();
                 // var state = MatchState.From(stateJ);
+                _lastState = MatchState.From(File.ReadAllText("state_test.json"));
+                LoadState();
                 
                 // NCurses.MoveAddString(2, 1, "Enter response: ");
                 // NCurses.Refresh();
@@ -130,6 +116,10 @@ class CursesClient {
         if (message is null) message = "";
 
         // NetUtil.Write(stream, message);
+    }
+
+    void LoadState() {
+        // pass the payload to each respective tab cluster
     }
 
     void Draw() {
@@ -169,41 +159,135 @@ class CursesClient {
         CUtil.Box(y - 1 + diff, x, 3, TOP_CARD_BOX_WIDTH);
         NCurses.MoveAddString(y + diff, x + 1, card.Name);
     }
-}
 
-abstract class Tab {
-    public CursesClient Parent { get; }
-    public string Title { get; set; }
+    private void CreateFirstPlayerTabs() {
 
-    public Tab(CursesClient parent, string title) {
-        Title = title;
-        Parent = parent;
     }
 
-    abstract public void Draw(PlayerState state, int x, int y, bool selected);
-}
+    private void CreateSecondPlayerTabs() {
 
-class PlayerInfoTab : Tab
-{  
-    private bool _reverse;
-    public PlayerInfoTab(CursesClient client, string title, bool reverse) : base(client, title)
-    {
-        _reverse = reverse;
     }
 
-    public override void Draw(PlayerState player, int y, int x, bool selected)
+}
+
+// abstract class Tab {
+//     public CursesClient Parent { get; }
+//     public string Title { get; set; }
+
+//     public Tab(CursesClient parent, string title) {
+//         Title = title;
+//         Parent = parent;
+//     }
+
+//     abstract public void Draw(PlayerState state, int x, int y, bool selected);
+// }
+
+// class PlayerInfoTab : Tab
+// {  
+//     private bool _reverse;
+//     public PlayerInfoTab(CursesClient client, string title, bool reverse) : base(client, title)
+//     {
+//         _reverse = reverse;
+//     }
+
+//     public override void Draw(PlayerState player, int y, int x, bool selected)
+//     {
+//         var diff = _reverse ? -1 : 1;
+//         Parent.DrawTopCard(player.Bond, y, x, false, diff);
+//         y += 3*diff;
+//         NCurses.MoveAddString(y, x, player.Name);
+//         y += diff;
+//         NCurses.MoveAddString(y, x, $"Life: {player.Life}");
+//         y += diff;
+//         NCurses.MoveAddString(y, x, $"Energy: {player.Energy}");
+//         y += diff;
+//         NCurses.MoveAddString(y, x, $"Deck count: {player.DeckCount}");
+//         y += diff;
+//         NCurses.MoveAddString(y, x, $"Hand count: {player.HandCount}");
+//     }
+// }
+
+abstract class IDrawable {
+    protected int _y;
+    protected int _x;
+    protected int _height;
+    protected int _width;
+
+    public IDrawable(int y, int x, int height, int width) {
+        
+        _x = x;
+        _y = y;
+        _width = width;
+        _height = height;
+
+    }
+
+    abstract public void ProcessInput(int input);
+
+    abstract public void Draw(bool selected);
+}
+
+abstract class Tab : IDrawable {
+    private string _title;
+    
+    public Tab(string title, int y, int x, int height, int width) : base(y, x, height, width) {
+        _title = title;
+    }
+
+    public override void Draw(bool selected)
     {
-        var diff = _reverse ? -1 : 1;
-        Parent.DrawTopCard(player.Bond, y, x, false, diff);
-        y += 3*diff;
-        NCurses.MoveAddString(y, x, player.Name);
-        y += diff;
-        NCurses.MoveAddString(y, x, $"Life: {player.Life}");
-        y += diff;
-        NCurses.MoveAddString(y, x, $"Energy: {player.Energy}");
-        y += diff;
-        NCurses.MoveAddString(y, x, $"Deck count: {player.DeckCount}");
-        y += diff;
-        NCurses.MoveAddString(y, x, $"Hand count: {player.HandCount}");
+        // draw outline
+        CUtil.Box(_y, _x, _height, _width);
+        // draw title
+        NCurses.MoveAddString(_y, _x + 1, _title);
+        // draw insides
+        DrawInsides();
+    }
+
+    abstract public void DrawInsides();
+}
+
+
+class TabCluster : IDrawable {
+    private static int NEXT_TAB_KEY = CursesKey.BTAB;
+    private static int PREV_TAB_KEY = CursesKey.STAB;
+
+    public List<Tab> Tabs { get; }=new();
+    private int _curTabI=0;
+    public int CurTabI {
+        get => _curTabI;
+        set {
+            _curTabI = value;
+            if (_curTabI >= Tabs.Count) _curTabI = 0;
+            if (_curTabI < 0) _curTabI = Tabs.Count - 1;
+        }
+    }
+
+    public TabCluster(int y, int x, int height, int width) : base(y, x, height, width) {
+
+    }
+
+    public void Draw() {
+
+    }
+
+    public override void ProcessInput(int input)
+    {
+        if (input == NEXT_TAB_KEY) {
+            CurTabI++;
+            return;
+        }
+        
+        if (input == PREV_TAB_KEY) {
+            CurTabI--;
+            return;
+        }
+
+        // INPUT NOT RECOGNIZED
+    }
+
+    public override void Draw(bool selected)
+    {
+        throw new NotImplementedException();
     }
 }
