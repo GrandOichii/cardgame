@@ -35,6 +35,10 @@ class CursesClient {
     private List<Tab> Tabs = new();
     private int _curTabI = 0;
 
+    private TabCluster TopTabs;
+    private TabCluster BottomTabs;
+    private bool _topSelected = false;
+
 
     public CursesClient(string host, int port) {
         // _topInfoTab = new(this, "Info", true);
@@ -62,15 +66,16 @@ class CursesClient {
         NCurses.NoEcho();
         NCurses.SetCursor(0);
 
-        CreateFirstPlayerTabs();
-        CreateSecondPlayerTabs();
+        var half = SHeight/2;
+
+        TopTabs = new(half, SWidth);
+        // TopTabs.Tabs.Add(new TestTab("Test", 0, 0, ))
+        BottomTabs = new(half, SWidth);
     }
 
     public void Start() {
         try {
             while (_active) {
-                Draw();
-                Input();
                 // System.Console.WriteLine("Reading message");
                 // var prompt = Read();
                 // if (prompt == null || prompt == "") break;
@@ -78,8 +83,12 @@ class CursesClient {
                 // NCurses.MoveAddString(1, 1, $"Prompt: {prompt}");
                 // var stateJ = Read();
                 // var state = MatchState.From(stateJ);
-                _lastState = MatchState.From(File.ReadAllText("state_test.json"));
+
+                _lastState = MatchState.From(File.ReadAllText("../state_test.json"));
                 LoadState();
+                Draw();
+                Input();
+
                 
                 // NCurses.MoveAddString(2, 1, "Enter response: ");
                 // NCurses.Refresh();
@@ -123,18 +132,12 @@ class CursesClient {
     }
 
     void Draw() {
-        DrawPlayArea();
-        DrawSelectedCard();
-        DrawLog();
-    }
+        // DrawPlayArea();
+        // DrawSelectedCard();
+        // DrawLog();
 
-    void DrawPlayArea() {
-        // TODO cant place in right bottom corner
-        int width = (int)Math.Ceiling(SWidth * HOR_RATIO);
-        CUtil.Box(0, 0, SHeight-1, width);
-        CUtil.HorBoxLine(SHeight/2, 0, width);
-        _topInfoTab.Draw(_lastState.Players[0], SHeight / 2-1, 1, false);
-        _bottomInfoTab.Draw(_lastState.Players[0], SHeight / 2+1, 1, false);
+        // TopTabs.Draw(_topSelected);
+        // BottomTabs.Draw(!_topSelected);
     }
 
     void DrawSelectedCard() {
@@ -152,20 +155,20 @@ class CursesClient {
             _active = false;
             return;
         }
+        if (key == ' ') {
+            _topSelected = !_topSelected;
+            return;
+        }
+        if (_topSelected)
+            TopTabs.ProcessInput(key);
+        else BottomTabs.ProcessInput(key);
     }
 
     static int TOP_CARD_BOX_WIDTH = 15;
+
     public void DrawTopCard(CardState card, int y, int x, bool drawCost, int diff) {
         CUtil.Box(y - 1 + diff, x, 3, TOP_CARD_BOX_WIDTH);
         NCurses.MoveAddString(y + diff, x + 1, card.Name);
-    }
-
-    private void CreateFirstPlayerTabs() {
-
-    }
-
-    private void CreateSecondPlayerTabs() {
-
     }
 
 }
@@ -208,15 +211,11 @@ class CursesClient {
 // }
 
 abstract class IDrawable {
-    protected int _y;
-    protected int _x;
     protected int _height;
     protected int _width;
 
-    public IDrawable(int y, int x, int height, int width) {
+    public IDrawable(int height, int width) {
         
-        _x = x;
-        _y = y;
         _width = width;
         _height = height;
 
@@ -224,27 +223,50 @@ abstract class IDrawable {
 
     abstract public void ProcessInput(int input);
 
-    abstract public void Draw(bool selected);
+    abstract public void Draw(int y, int x, bool selected);
 }
 
 abstract class Tab : IDrawable {
     private string _title;
+
+    // public int BorderColor { get; set; }=CursesColor.
     
-    public Tab(string title, int y, int x, int height, int width) : base(y, x, height, width) {
+    public Tab(string title, int height, int width) : base(height, width) {
         _title = title;
     }
 
-    public override void Draw(bool selected)
+    public override void Draw(int y, int x, bool selected)
     {
         // draw outline
-        CUtil.Box(_y, _x, _height, _width);
+        CUtil.Box(y, x, _height, _width);
         // draw title
-        NCurses.MoveAddString(_y, _x + 1, _title);
+        if (selected)
+            NCurses.AttributeOn(CursesAttribute.BOLD);
+        NCurses.MoveAddString(y, x + 1, _title);
+        NCurses.AttributeOff(CursesAttribute.BOLD);
         // draw insides
-        DrawInsides();
+        DrawInsides(y, x);
     }
 
-    abstract public void DrawInsides();
+    abstract public void DrawInsides(int y, int x);
+}
+
+
+class TestTab : Tab
+{
+    public TestTab(string title, int height, int width) : base(title, height, width)
+    {
+    }
+
+    public override void DrawInsides(int y, int x)
+    {
+        // throw new NotImplementedException();
+    }
+
+    public override void ProcessInput(int input)
+    {
+        // throw new NotImplementedException();
+    }
 }
 
 
@@ -263,12 +285,7 @@ class TabCluster : IDrawable {
         }
     }
 
-    public TabCluster(int y, int x, int height, int width) : base(y, x, height, width) {
-
-    }
-
-    public void Draw() {
-
+    public TabCluster(int height, int width) : base(height, width) {
     }
 
     public override void ProcessInput(int input)
@@ -286,8 +303,9 @@ class TabCluster : IDrawable {
         // INPUT NOT RECOGNIZED
     }
 
-    public override void Draw(bool selected)
+    public override void Draw(int y, int x, bool selected)
     {
-        throw new NotImplementedException();
+        for (int i = 0; i < Tabs.Count; i++)
+            Tabs[i].Draw(y, x, i == CurTabI);
     }
 }

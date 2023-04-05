@@ -468,12 +468,6 @@ Text:
     Draw (2/ 3 /5) cards.
 
 
-    [Power Engine]
-Type: Bond
-Text:
-    While (0/ 3 /10) is equal to 10, units you control have +8 power.
-
-
     [Lifegem]
 Type: Treasure
 Life: 5
@@ -567,15 +561,6 @@ Text:
     At the start of your turn, burn a card in your discard. If you can't, destroy [CARDNAME].
 
 
-    [Fire Mage Apprentice]
-Type: Unit
-Cost: 2
-Power: 0
-Life: 4
-Text:
-    When you cast a spell, [CARDNAME] deals (0/ 1 /2) damage to your opponent.
-
-
     [Powerstone Crafter]
 Type: Unit
 Cost: 4
@@ -594,8 +579,26 @@ Text:
     At the start of your turn, {Power Down} [CARDNAME]. If (0/ 2 /3) is equal to 0, destroy [CARDNAME].
 
 
+[A Critical Flaw]
+    Type: Spell
+    Cost: 7
+    Text:
+        Destroy all treasures.
+
+
+[Hot Springs]
+    Type: Charm
+    Cost: 2
+    Text:
+        At the TODO
+
+
+
+// Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)
+
 == Keywords ==
 {Good} - When you cast a {Good} card, summon a [Healing Light] card into your hand.
 {Evil} - When you cast a {Evil} card, summon a [Corrupting Darkness] card into your hand.
 {Power Up} - Increment all bracketed numbers in the card.
 {Power Down} - Decrement all bracketed numbers in the card.
+{Take Root} - At the start of your turn, {Power Up} [CARDNAME]. Your opponent can't replace this charm with charms that cost less than (0/ 0 /5). // Only for charms, TODO figure out what max value is optimal.

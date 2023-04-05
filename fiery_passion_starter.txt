@@ -1,0 +1,130 @@
+//
+// Deck 2 - Fiery Passion
+//
+// A burn deck, utilizes some cards that {Burn} cards in discard / hand.
+
+testers::Pyromania
+18 testers::Source
+3 testers::Lava Bomb
+2 testers::Pyromania
+1 testers::Fire Archmage
+3 testers::Burning Touch
+3 testers::Archivist
+1 testers::Fiery Outburst
+3 testers::Wild Elemental
+3 testers::Spark of Imagination
+2 testers::Burning Passion
+2 testers::Wise Mentor
+2 testers::Recurring Lesson
+= 43
+
+[Pyromania]
+    Type: Bond
+    Text:
+    At the start of your turn, {Burn} 2 cards in your discard and deal (2/ 2 /3) damage to your opponent. If you can't, deal (2/ 2 /3) damage to yourself.
+
+
+[Ritualistic Burnings]
+    Type: Spell
+    Cost: 3
+    Text:
+    Deal 3 damage to target Treasure and to it's controller.
+
+
+[Lava Bomb]
+    Type: Spell
+    Cost: 4
+    Text:
+        [CARDAME] deals 5 damage to your opponent.
+
+
+[Fire Mage Apprentice]
+    Type: Unit
+    Cost: 2
+    Power: 0
+    Life: 4
+    Text:
+        When you cast a spell, [CARDNAME] deals (0/ 1 /2) damage to your opponent.
+
+
+[Wildfires]
+    Type: Charm
+    Cost: 3
+    Text:
+        {Take Root}
+        At the end of your turn, [CARDNAME] deals 2 damage to your opponent and 2 damage to your opponent's unit in this lane.
+        When [CARDNAME] is replaced, [CARDNAME] deals 2 damage to your opponent.
+
+
+[Fire Archmage]
+    Type: Unit
+    Cost: 6
+    Power: 6
+    Life: 5
+    Text:
+        When you cast a spell, [CARDNAME] deals 4 damage to target Treasure or Unit.
+
+
+[Burning Touch]
+    Type: Spell
+    Cost: 1
+    Text:
+        Deal (2/ 2 /3) damage to any target.
+
+
+[Archivist]
+    Type: Unit
+    Cost: 3
+    Power: 3
+    Life: 3
+    Text:
+        When [CARDNAME] enters play, return a Spell card from your graveyard to your hand.
+
+
+[Fiery Outburst]
+    Type: Spell
+    Cost: 8
+    Text:
+        {Burn} all cards in your discard. [CARDNAME] deals damage to your opponent and all Treasures and Units equal to the total cost of cards {Burned} this way.
+
+    
+[Wild Elemental]
+    Type: Unit
+    Cost: 2
+    Power: 2
+    Life: 3
+    Text:
+        When you cast a spell, [CARNDAME] gains +1 power and +1 life.
+
+
+[Spark of Imagination]
+    Type: Spell
+    Cost: 3
+    Text:
+        Draw 2 cards.
+
+
+[Burning Passion]
+    Type: Spell
+    Cost: 1
+    Text:
+        Deal (1/ 1 /2) damage to target Treasure or Unit. If it kills it, draw a card.
+
+
+[Wise Mentor]
+    Type: Unit
+    Cost: 3
+    Power: 1
+    Life: 3
+    Text:
+        When [CARDNAME] enters play, {Power Up} all cards in your hand.
+
+
+[Recurring Lesson]
+    Type: Spell
+    Cost: 2
+    Text:
+        Draw a card.
+        Whenever a Spell you control deals damage to your opponent, you may discard a card. If you do, return [CARDNAME] from your discard to your hand.
+
+
