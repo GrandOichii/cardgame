@@ -140,6 +140,11 @@ class PlayerBoard(Board):
         self.info = InfoBoard(INFO_WIDTH, height)
         self.boards += [self.info]
 
+    def player_draw(self, surface: pg.Surface, current: bool):
+        super().draw(surface)
+
+        if not current: return
+        pg.draw.rect(surface, colors.RED, (0, 0, 10, 10))
 
     def load(self, state):
         self.info.load(state)

@@ -1,6 +1,6 @@
 {
     "name": "Reinforce",
     "type": "Spell",
-    "text": "All of your unit's get +3 power and +3 life.",
+    "text": "All of your units get +3 power and +3 life.",
     "script": "script.lua"
 }

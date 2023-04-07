@@ -26,6 +26,8 @@ class Client:
     INSTANCE: 'Client'
 
     def __init__(self):
+        self.last_state = None
+        
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         pg.init()
 
@@ -104,12 +106,11 @@ class Client:
             self.clock.tick(FPS)
 
             # check for new data
-            prompt = self.read_msg()
-            if prompt != '':
-                print(prompt + '\n===')
-                statej = self.read_msg()
-                print(statej + '\n===')
-                self.load(parse_state(statej))
+            statej = self.read_msg()
+            if statej != '':
+                parsed = parse_state(statej)
+                print(f'Request: {parsed.request}')
+                self.load(parsed)
             
             # events
             for event in pg.event.get():
@@ -117,14 +118,17 @@ class Client:
                     self.running = False
                 if event.type == pg.MOUSEBUTTONDOWN:
                     self.clicked = True
+                if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                    self.send_msg('pass')
 
             # update sprites
             # self.all_sprites.update()
 
             # draw
             self.screen.fill(colors.WHITE)
-            self.first_player.draw(self.screen)
-            self.second_player.draw(self.screen)
+            if self.last_state is not None:
+                self.first_player.player_draw(self.screen, self.last_state.curPlayerI == 0)
+                self.second_player.player_draw(self.screen, self.last_state.curPlayerI == 1)
             self.hand.draw(self.screen)
             # self.all_sprites.draw(self.screen)
             

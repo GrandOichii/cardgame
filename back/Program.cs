@@ -95,22 +95,22 @@ class TCPPlayerController : PlayerController
 
     public override string PromptAction(Player controlledPlayer, Match match)
     {
-        Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
-        Write(CreateMState(controlledPlayer, match).ToJson());
+        // Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
+        Write(CreateMState(controlledPlayer, match, "Enter command").ToJson());
         return Read();
     }
 
     public override int PromptLane(string prompt, Player controlledPlayer, Match match)
     {
-        Write(prompt);
-        Write(CreateMState(controlledPlayer, match).ToJson());
+        // Write(prompt);
+        Write(CreateMState(controlledPlayer, match, "pick lane").ToJson());
         return int.Parse(Read());
     }
 
 
     #region Parsers
 
-    static public MatchState CreateMState(Player player, Match match) {
+    static public MatchState CreateMState(Player player, Match match, string request) {
         var result = new MatchState();
         result.Players = new PlayerState[match.Players.Count];
         for (int i = 0; i < match.Players.Count; i++) {
@@ -121,6 +121,8 @@ class TCPPlayerController : PlayerController
         result.CurrentPlayerI = match.CurPlayerI;
 
         result.My = MyStateFrom(player);
+
+        result.Request = request;
         return result;
     }
 
