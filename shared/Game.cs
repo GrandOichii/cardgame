@@ -61,6 +61,9 @@ public struct PlayerState {
 }
 
 public struct CardState {
+
+    [JsonPropertyName("id")]
+    public string ID { get; set; }
     [JsonPropertyName("name")]
     public string Name { get; set; }
     [JsonPropertyName("type")]
@@ -71,7 +74,8 @@ public struct CardState {
     public long Life { get; set; }
     [JsonPropertyName("power")]
     public long Power { get; set; }
-
+    [JsonPropertyName("cost")]
+    public long Cost { get; set; }
 }
 
 public struct UnitState {

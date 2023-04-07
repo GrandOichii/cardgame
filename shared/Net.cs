@@ -20,6 +20,9 @@ static public class NetUtil
     static public void Write(NetworkStream stream, string message) {
         byte[] buffer = Encoding.UTF8.GetBytes(message);
         byte[] lengthBuffer = BitConverter.GetBytes(buffer.Length);
+        System.Console.WriteLine("MESSAGE LENGTH: " + buffer.Length);
+        foreach (var b in lengthBuffer)
+            System.Console.WriteLine(b);
         stream.Write(lengthBuffer, 0, lengthBuffer.Length);
         stream.Write(buffer, 0, buffer.Length);
     }

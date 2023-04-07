@@ -24,7 +24,7 @@ class Client {
 
 
 class CursesClient {
-    // private TcpClient _client;
+    private TcpClient _client;
     private bool _active = true;
     private nint _screen;
     private int SHeight { get; }
@@ -50,11 +50,11 @@ class CursesClient {
         // _bottomTabs = new Tab[] {
         //     _bottomInfoTab,
         // };
-        // var endpoint = new IPEndPoint(IPAddress.Parse(host), 8080);
-        // _client = new TcpClient();
+        var endpoint = new IPEndPoint(IPAddress.Parse(host), 8080);
+        _client = new TcpClient();
 
-        // _client.Connect(endpoint);
-        // var stream = _client.GetStream();
+        _client.Connect(endpoint);
+        var stream = _client.GetStream();
 
         _screen = NCurses.InitScreen();
         int sy, sx;
@@ -76,25 +76,25 @@ class CursesClient {
     public void Start() {
         try {
             while (_active) {
-                // System.Console.WriteLine("Reading message");
-                // var prompt = Read();
-                // if (prompt == null || prompt == "") break;
+                System.Console.WriteLine("Reading message");
+                var prompt = Read();
+                if (prompt == null || prompt == "") break;
                 // NCurses.MoveAddString(0, 0, $"Size: {_sHeight} {_sWidth}");
-                // NCurses.MoveAddString(1, 1, $"Prompt: {prompt}");
-                // var stateJ = Read();
-                // var state = MatchState.From(stateJ);
+                NCurses.MoveAddString(1, 1, $"Prompt: {prompt}");
+                var stateJ = Read();
+                var state = MatchState.From(stateJ);
 
-                _lastState = MatchState.From(File.ReadAllText("../state_test.json"));
-                LoadState();
-                Draw();
-                Input();
+                // _lastState = MatchState.From(File.ReadAllText("../state_test.json"));
+                // LoadState();
+                // Draw();
+                // Input();
 
                 
-                // NCurses.MoveAddString(2, 1, "Enter response: ");
-                // NCurses.Refresh();
+                NCurses.MoveAddString(2, 1, "Enter response: ");
+                NCurses.Refresh();
 
-                // // System.Console.WriteLine("State parsed");
-                // Write();
+                // System.Console.WriteLine("State parsed");
+                Write();
                 NCurses.Clear();
             }
         } catch (Exception ex) {

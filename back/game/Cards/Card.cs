@@ -151,6 +151,11 @@ namespace game.cards {
         {
             return "";
         }
+
+        public long GetCost() {
+            return Utility.GetLong(this.Info, "cost");
+        }
+
     }
 
 

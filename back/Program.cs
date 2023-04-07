@@ -35,6 +35,7 @@ class Program {
         var m = g.MatchPool.NewMatch(MatchConfig.FromText(File.ReadAllText(configPath)));
 
         var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
+        // var p1 = new Player(m, "Igor", deck1, new TerminalPlayerController());
         var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener));
 
         var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
@@ -83,15 +84,12 @@ class TCPPlayerController : PlayerController
 
     private string Read() {
         var stream = _handler.GetStream();
-        // var result = "";
-        // int received;
-        // // while ((received = stream.Read(buffer)) != 0) {
-        // //     result += Encoding.UTF8.GetString(buffer, 0, received);
-        // // }
-        // received = stream.Read(buffer);
-        // result += Encoding.UTF8.GetString(buffer, 0, received);
         var result = NetUtil.Read(stream);
         System.Console.WriteLine("Read: " + result);
+        // string? result = null;
+        //     while (result is null)
+        //         result = Console.ReadLine();
+        //     System.Console.WriteLine();
         return result;
     }
 
@@ -182,9 +180,11 @@ class TCPPlayerController : PlayerController
     static public CardState CardStateFrom(CardW card) {
         var result = new CardState();
 
+        result.ID = card.ID;
         result.Name = card.Original.Name;
         result.Type = card.Original.Type;
         result.Text = card.Original.Text;
+        result.Cost = card.GetCost();
         if (result.Type == "Unit")
             result.Power = Utility.GetLong(card.Info, "power");
         if (result.Type == "Unit" || result.Type == "Treasure")
