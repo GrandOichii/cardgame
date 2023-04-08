@@ -13,6 +13,8 @@
         "DrawCards",
         "PlaceInUnits",
         "RemoveFromDiscard",
-        "PlaceIntoHand"
+        "PlaceIntoHand",
+        "PickLane",
+        "GetPlayers"
     ]
 }

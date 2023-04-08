@@ -206,5 +206,22 @@ namespace game.scripts
             var player = GetPlayer(pID);
             player.Hand.AddToBack(card);            
         }
+    
+    
+        [LuaCommand]
+        public int PickLane(int pID) {
+            var player = GetPlayer(pID);
+            var laneI = player.Controller.PromptLane("pick", player, _match);
+            return laneI;
+        }
+
+
+        [LuaCommand]
+        public LuaTable GetPlayers() {
+            var result = new List<object?>();
+            foreach (var player in _match.Players)
+                result.Add(player.ToLuaTable(_match.LState));
+            return Utility.CreateTable(_match.LState, result);
+        }
     }
 }

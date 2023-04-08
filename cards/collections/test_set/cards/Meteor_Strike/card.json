@@ -1,0 +1,6 @@
+{
+    "name": "Meteor Strike",
+    "type": "Spell",
+    "text": "Deal 4 damage to each unit on target lane.",
+    "script": "script.lua"
+}

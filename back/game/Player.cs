@@ -131,8 +131,8 @@ namespace game.player {
             result["shared"] = Shared;
 
             var cards = GetAllCards();
-            var discard = new List<object>();
-            var units = new List<object>();
+            var discard = new List<object?>();
+            var units = new List<object?>();
             foreach (var pair in cards) {
                 if (pair.Value == Zones.DISCARD)
                     discard.Add(pair.Key);
@@ -142,6 +142,26 @@ namespace game.player {
 
             result["discard"] = Utility.CreateTable(lState, discard);
             result["units"] = Utility.CreateTable(lState, units);
+
+            var lanes = Utility.CreateTable(lState);
+            for (int i = 0; i < Lanes.Length; i++) {
+                var t = Utility.CreateTable(lState);
+                var l = Lanes[i];
+                t["isSet"] = false;
+                t["unit"] = null;
+                if (l is null) {
+                    lanes[i+1] = t;
+                    continue;
+                }
+
+                t["isSet"] = true;
+                t["unit"] = l.Card.Info;
+
+                lanes[i+1] = t;
+            }
+
+            result["lanes"] = lanes;
+
             return result;
         }
 

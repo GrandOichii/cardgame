@@ -71,13 +71,13 @@ namespace game.util {
             return result;
         }
 
-        static public LuaTable CreateTable(Lua lState, List<object> args) {
+        static public LuaTable CreateTable(Lua lState, List<object?> args) {
             var result = CreateTable(lState);
             for (int i = 0; i < args.Count; i++)
                 result[i+1] = args[i];
             return result;
         }
-
+        
         static void CheckIndex(object[] returned, int index) {
             if (index < returned.Length) return;
 
