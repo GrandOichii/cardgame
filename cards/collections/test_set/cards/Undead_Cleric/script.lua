@@ -7,7 +7,9 @@ function _CreateCard(props)
     local result = CardCreation:Unit(props)
     
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
-        :Check(Common.AlwaysTrue)
+        :Check(function (owner, args)
+            return owner.id == args.player.id
+        end)
         :IsSilent(false)
         :On(TRIGGERS.LIFE_GAIN)
         :Zone(ZONES.DISCARD)

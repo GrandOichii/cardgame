@@ -31,6 +31,8 @@ public struct MatchState {
 }
 
 public struct MyState {
+    [JsonPropertyName("playerI")]
+    public int PlayerI { get; set; }
     [JsonPropertyName("hand")]
     public CardState[] Hand { get; set; }
 

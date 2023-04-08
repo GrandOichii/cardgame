@@ -60,8 +60,8 @@ class Client:
     def load(self, state):
         self.last_state = state
 
-        self.first_player.load(state.players[0])
-        self.second_player.load(state.players[1])
+        self.first_player.load(state.players[1 - state.myData.playerI])
+        self.second_player.load(state.players[state.myData.playerI])
 
         self.hand.load(state.myData.hand)
 
@@ -81,9 +81,9 @@ class Client:
         message = ''
         try :
             message_length_bytes = self.sock.recv(4)
-            print(message_length_bytes)
+            # print(message_length_bytes)
             message_length = int.from_bytes(message_length_bytes, byteorder='little')
-            print(f'Message length: {message_length}')
+            # print(f'Message length: {message_length}')
 
             # Receive the message itself
             message_bytes = self.sock.recv(message_length)
@@ -106,7 +106,7 @@ class Client:
         self.sock.connect((HOST, PORT))
         # read server config
         sconfig = parse_state(self.read_msg())
-        print(sconfig)
+        # print(sconfig)
         self.configure_lanes(sconfig.lane_count)
         self.sock.settimeout(.1)
         # self.sock.setblocking(0)
@@ -129,7 +129,7 @@ class Client:
                     self.running = False
                 if event.type == pg.MOUSEBUTTONDOWN:
                     self.clicked = True
-                if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.last_state.request == 'enter command':
                     self.send_msg('pass')
 
             # update sprites

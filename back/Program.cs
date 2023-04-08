@@ -31,7 +31,8 @@ class Program {
         #endregion
 
         #region Match Creation
-        string configPath = "../match_configs/test_match.json";
+        // string configPath = "../match_configs/test_match.json";
+        string configPath = "../match_configs/normal.json";
         var config = MatchConfig.FromText(File.ReadAllText(configPath));
         var m = g.MatchPool.NewMatch(config);
 
@@ -39,7 +40,8 @@ class Program {
         var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener, config));
 
         var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
-        var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
+        // var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
+        var p2 = new Player(m, "Nastya", deck2, new TCPPlayerController(listener, config));
         
         g.CardMaster.LogContents();
 
@@ -122,13 +124,13 @@ class TCPPlayerController : PlayerController
 
         result.CurrentPlayerI = match.CurPlayerI;
 
-        result.My = MyStateFrom(player);
+        result.My = MyStateFrom(match, player);
 
         result.Request = request;
         return result;
     }
 
-    static public MyState MyStateFrom(Player player) {
+    static public MyState MyStateFrom(Match match, Player player) {
         var result = new MyState();
         
         result.Hand = new CardState[player.Hand.Cards.Count];
@@ -137,6 +139,7 @@ class TCPPlayerController : PlayerController
             result.Hand[i] = cData;
         }
         
+        result.PlayerI = match.Players.IndexOf(player);
         return result;
     }
 

@@ -117,7 +117,19 @@ namespace game.match {
                 player.Life = Config.StartingLifeTotal;
 
                 // fill hand
-                player.Hand.AddToBack(player.Deck.PopTop(Config.StartingHandSize));
+                // player.Hand.AddToBack(player.Deck.PopTop(Config.StartingHandSize));
+
+                // TODO remove, for testing without redraws only
+                while (true) {
+                    player.Hand.AddToBack(player.Deck.PopTop(Config.StartingHandSize));
+                    var count = 0;
+                    foreach (var card in player.Hand.Cards)
+                        if (card.Original.Name == "Source")
+                            count++;
+                    if (count >= 2) break;
+                    player.Deck.AddToBack(player.Hand.PopTop(Config.StartingHandSize));
+                    player.Deck.Shuffle();
+                }
             }
             Logger.Instance.Log("Match", "Setup concluded");
         }

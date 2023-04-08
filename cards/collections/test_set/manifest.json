@@ -13,7 +13,9 @@
         "cards/Undead_Cleric",
         "cards/Risen_Dead",
         "cards/Life_Drain",
-        "cards/New_Recruit"
+        "cards/New_Recruit",
+        "cards/Shieldmate",
+        "cards/Brute"
     ],
     "cards1": [
         "cards/Good_Cleric",

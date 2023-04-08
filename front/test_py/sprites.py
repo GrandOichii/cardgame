@@ -184,8 +184,6 @@ class PlayerBoard(Board):
     def draw(self, surface: pg.Surface):
         super().draw(surface)
 
-        print('DRAW')
-
 
 SELECT_COLOR = colors.GREEN
 
@@ -217,7 +215,6 @@ class ClickableGroup:
         pass
 
     def draw(self, surface):
-        print(f'A: {len(self.elements)}')
         mpos = pg.mouse.get_pos()
         # surface_blit = surface.blit
         for sprite in self.elements:
@@ -257,7 +254,6 @@ class ClickableSpriteGroup(ClickableGroup):
 class ClickableBoardGroup(ClickableGroup):
 
     def draw_el(self, surface, el):
-        print(el)
         el.draw(surface)
 
     def get_rect(self, el):
@@ -391,9 +387,7 @@ class LaneBoard(Board):
         c.rect.x = self.x + (self.width - c.rect.width) // 2
         c.rect.y = self.y + (self.height - c.rect.height) // 2
 
-
         self.sprites.add(c)
-        print(c.rect)
 
 
 

@@ -1,0 +1,20 @@
+{
+    "starting_life": 20,
+    "starting_hand_size": 3,
+    "max_hand_size": 3,
+    "turn_start_card_draw": 1,
+    "starting_energy": 0,
+    "lane_count": 3,
+    "base_source_per_turn": 1,
+
+
+    "comment": "NOT IMPLEMENTED",
+    "players": [
+        {
+            "deck": "../decks/test.deck"
+        },
+        {
+            "deck": "../decks/test.deck"
+        }
+    ]
+}

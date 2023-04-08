@@ -176,8 +176,10 @@ namespace game.scripts
             // replace unit if present
             var lanes = player.Lanes;
             UnitW? replaced = lanes[result];
-            if (replaced is not null)
+            if (replaced is not null) {
                 player.PlaceIntoDiscard(replaced);
+                replaced.Card.ExecFunc("LeavePlay", replaced.Card.Info, player.ToLuaTable(_match.LState));
+            }
 
             lanes[result] = new UnitW(card);
             Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " placed unit " + card.ShortStr() + " into lane " + result + (replaced is not null ? ", replacing unit " + replaced.Card.ShortStr() : ""));

@@ -288,7 +288,9 @@ function CardCreation:InPlay(props)
 
     -- TODO not currently in use by engine
     function result:LeavePlay(player)
-        Log('Card ' .. result.name .. ', controlled by ' .. player.name .. ', is leaving play')
+        -- print(Utility:TableToStr(self))
+        -- print(player)
+        Log('Card ' .. self.name .. ', controlled by ' .. player.name .. ', is leaving play')
     end
 
     return result
@@ -340,7 +342,7 @@ function CardCreation:Unit(props)
     local result = CardCreation:Damageable(props)
 
     result.power = props.power
-    result.basePower = props.basePower
+    result.basePower = props.power
 
     local prevPlay = result.Play
     function result:Play(player)

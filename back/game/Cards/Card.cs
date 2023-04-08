@@ -252,7 +252,9 @@ namespace game.cards {
                 }
             }
             if (!removed) throw new Exception("Failed to remove card " + Card.ShortStr() + " of player " + owner.ShortStr() + ": can't find it in any lane");
+            Card.ExecFunc("LeavePlay", Card.Info, owner.ToLuaTable(match.LState));
             owner.PlaceIntoDiscard(this);
+            
         }
     }
 
@@ -280,6 +282,8 @@ namespace game.cards {
             Logger.Instance.Log("TreasureW", "Treasure card " + Card.ShortStr() + " of player " + owner.ShortStr() + " was destroyed");
 
             owner.Treasures.Cards.Remove(this);
+            // TODO not tested
+            Card.ExecFunc("LeavePlay", Card.Info, owner.ToLuaTable(match.LState));
             owner.PlaceIntoDiscard(this);
         }
     }
