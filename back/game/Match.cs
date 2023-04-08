@@ -53,6 +53,8 @@ namespace game.match {
             result["starting_energy"] = StartingEnergy;
             return result;
         }
+    
+        public string ToJson() => JsonSerializer.Serialize<MatchConfig>(this);
     }
 
     class Match {
@@ -215,6 +217,11 @@ namespace game.match {
                 return player;
             }
             throw new Exception("Failed to find owner of card with ID:" + cID);
+        }
+    
+        public void UpdateOpponent() {
+            var op = OpponentOf(Players[CurPlayerI]);
+            op.Controller.Update(op, this);
         }
     }
 

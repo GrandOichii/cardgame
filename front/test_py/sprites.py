@@ -34,7 +34,10 @@ INFO_WIDTH = CARD_WIDTH + 20
 
 
 class Board:
-    def __init__(self):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
         self.sprites = pg.sprite.Group()
 
         self.boards: list[Board] = []
@@ -68,10 +71,7 @@ class Board:
 class InfoBoard(Board):
 
     def __init__(self, width: int, height: int):
-        super().__init__()
-
-        self.width = width
-        self.height = height
+        super().__init__(width, height)
 
         self.lines = [
             [('s:name', colors.BLACK)],
@@ -81,7 +81,6 @@ class InfoBoard(Board):
             [('Hand: ', colors.BLACK), ('s:handCount', colors.GRAY)],
             [('Deck: ', colors.BLACK), ('s:deckCount', colors.GRAY)],
         ]
-        # "name":"","handCount":5,"deckCount":27,
         
         self.font = pg.font.SysFont(None, 24)
 
@@ -130,60 +129,154 @@ class InfoBoard(Board):
             y += lh
 
 
-class PlayerBoard(Board):
-    def __init__(self, wwidth: int, height: int):
-        super().__init__()
+CHARM_HEIGHT = 40
 
-        bg = BoxSprite(wwidth, height)
+
+class PlayerBoard(Board):
+    def __init__(self, width: int, height: int):
+        super().__init__(width, height)
+
+        bg = BoxSprite(width, height)
         self.sprites.add(bg)
 
         self.info = InfoBoard(INFO_WIDTH, height)
         self.boards += [self.info]
 
+        self.lanes = ClickableBoardGroup([
+            ClickConfig (
+                lambda element: client.Client.INSTANCE.last_state.request == 'pick lane',
+                lambda element: f'{element.lane_i}'
+            ),
+            ClickConfig (
+                lambda element: element.unit is not None and element.unit.attacksLeft > 0 and client.Client.INSTANCE.last_state.request == 'enter command',
+                # TODO make more complex
+                lambda element: f'attack {element.lane_i}'
+            )
+        ])
+
     def player_draw(self, surface: pg.Surface, current: bool):
         super().draw(surface)
+        self.lanes.draw(surface)
 
         if not current: return
-        pg.draw.rect(surface, colors.RED, (0, 0, 10, 10))
+        pg.draw.rect(surface, colors.RED, (self.x, self.y, 10, 10))
 
     def load(self, state):
         self.info.load(state)
+        for lane in self.lanes:
+            lane.load(state)
         return super().load(state)
+
+    def create_lanes(self, lane_count: int):
+        hch = CHARM_HEIGHT // 2
+        lane_width = (self.width - INFO_WIDTH) / lane_count
+        x = self.x + INFO_WIDTH - 1
+        y = self.y
+        for i in range(lane_count):
+            lane = LaneBoard(lane_width - 2, self.height - 2, i)
+            lane.set_pos((x + 1, y + 1))
+            x += lane_width
+            # self.boards += [lane]
+
+            self.lanes.add(lane)
+
+
+    def draw(self, surface: pg.Surface):
+        super().draw(surface)
+
+        print('DRAW')
 
 
 SELECT_COLOR = colors.GREEN
 
 
-class SelectableCardSpriteGroup(pg.sprite.Group):
+class ClickConfig:
+    def __init__(self, checker, prefix_constructor) -> None:
+        self.checker = checker
+        self.prefix_constructor = prefix_constructor
+
+
+class ClickableGroup:
+
+    def __init__(self, configs: list[ClickConfig]):
+        super().__init__()
+
+        self.configs = configs
+        self.elements = []
+
+    def add(self, el):
+        self.elements += [el]
+
+    def __getitem__(self, key):
+        return self.elements[key]
+
+    def draw_el(self, surface, el):
+        pass
+
+    def get_rect(self, el):
+        pass
 
     def draw(self, surface):
+        print(f'A: {len(self.elements)}')
         mpos = pg.mouse.get_pos()
-        sprites = self.sprites()
-        surface_blit = surface.blit
-        for spr in sprites:
+        # surface_blit = surface.blit
+        for sprite in self.elements:
 
-            if spr.rect.collidepoint(mpos):
-                pg.draw.rect(surface, colors.GREEN, (spr.rect.x-1, spr.rect.y-1, spr.rect.width+2, spr.rect.height+2))
-                if client.Client.INSTANCE.clicked:
-                    msg = f'play {spr.card.id}'
-                    print(msg)
+            rect = self.get_rect(sprite)
+
+            # print(rect)
+            clicked = client.Client.INSTANCE.clicked
+            if rect.collidepoint(mpos):
+                for config in self.configs:
+                    if not config.checker(sprite): continue
+                    pg.draw.rect(surface, colors.GREEN, (rect.x-1, rect.y-1, rect.width+2, rect.height+2))
+                    if not clicked: continue
+                    msg = config.prefix_constructor(sprite)
                     client.Client.INSTANCE.send_msg(msg)
+                    break
+            self.draw_el(surface, sprite)
 
-            self.spritedict[spr] = surface_blit(spr.image, spr.rect)
-            # pg.draw.rect(surface, colors.WHITE, (spr.rect.topleft, (0, 0)))
+            # pg.draw.rect(surface, colors.RED, rect)
 
         self.lostsprites = []
+
+    def empty(self):
+        self.elements = []
+
+
+class ClickableSpriteGroup(ClickableGroup):
+
+    def draw_el(self, surface, el):
+        surface.blit(el.image, el.rect)
+
+    def get_rect(self, el):
+        return el.rect
+
+
+
+class ClickableBoardGroup(ClickableGroup):
+
+    def draw_el(self, surface, el):
+        print(el)
+        el.draw(surface)
+
+    def get_rect(self, el):
+        return pg.Rect(el.x, el.y, el.width, el.height)
 
 
 BETWEEN_CARDS = 10
 
+
 class HandBoard(Board):
     def __init__(self, width: int, height: int):
-        super().__init__()
-
-        self.sprites = SelectableCardSpriteGroup()
-        self.height = height
-
+        super().__init__(width, height)
+        
+        self.sprites = ClickableSpriteGroup([
+            ClickConfig(
+                lambda element: client.Client.INSTANCE.last_state.request == 'enter command',
+                lambda element: f'play {element.card.id}'
+            )
+        ])
 
     def load(self, state):
         super().load(state)
@@ -265,3 +358,50 @@ class CardSprite(pg.sprite.Sprite):
             self.image.blit(img, (r.x, r.y))
 
         util.blit_text(self.image, card_state.text, (1, CARD_NAME_OFFSET*2 + 3), CardSprite.FONT, colors.BLACK)
+
+
+class UnitCardSprite(CardSprite):
+    def __init__(self, unit):
+        super().__init__(unit.card)
+        self.unit = unit
+
+
+class LaneBoard(Board):
+    def __init__(self, width: int, height: int, lane_i: int):
+        super().__init__(width, height)
+
+        self.unit = None
+        self.lane_i = lane_i
+
+        self.bg = BoxSprite(width, height)
+        self.sprites.add(self.bg)
+
+
+    def load(self, state):
+        super().load(state)
+        self.sprites.empty()
+
+        self.sprites.add(self.bg)
+
+        self.unit = state.units[self.lane_i]
+        if self.unit is None: return
+
+        # print(self.unit)
+        c = UnitCardSprite(self.unit)
+        c.rect.x = self.x + (self.width - c.rect.width) // 2
+        c.rect.y = self.y + (self.height - c.rect.height) // 2
+
+
+        self.sprites.add(c)
+        print(c.rect)
+
+
+
+# class LanesBoard(Board):
+#     def __init__(self, lane_count: int, width: int, height: int):
+#         super().__init__()
+
+#         self.lane_count = lane_count
+
+#         bg = BoxSprite(width, height)
+#         self.sprites.add(bg)

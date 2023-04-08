@@ -35,6 +35,8 @@ namespace game.core.phases {
 
             // draw for the turn
             player.DrawCards(match.Config.TurnStartCardDraw);
+
+            match.UpdateOpponent();
         }
     }
 
@@ -68,6 +70,7 @@ namespace game.core.phases {
                     if (!ACTION_MAP.ContainsKey(actionWord)) throw new Exception("Unknown action from player " + player.Name + ": " + actionWord);
 
                     ACTION_MAP[actionWord].Exec(match, player, words);
+                    match.UpdateOpponent();
                     if (!match.Active) break;                    
                 }
             }
@@ -84,6 +87,7 @@ namespace game.core.phases {
             public override void Exec(Match match, Player player)
             {
                 match.Emit("turn_end", new(){ {"player", player.ToLuaTable(match.LState)} });
+                match.UpdateOpponent();
 
                 // TODO
                 // discard to hand size

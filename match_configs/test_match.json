@@ -1,19 +1,19 @@
 {
-    "starting_life": 20,
-    "starting_hand_size": 3,
-    "max_hand_size": 3,
-    "turn_start_card_draw": 1,
-    "starting_energy": 0,
-    "lane_count": 3,
-    "base_source_per_turn": 1,
-
     "_starting_life": 20,
     "_starting_hand_size": 3,
     "_max_hand_size": 3,
-    "_turn_start_card_draw": 2,
-    "_starting_energy": 10,
+    "_turn_start_card_draw": 1,
+    "_starting_energy": 0,
     "_lane_count": 3,
     "_base_source_per_turn": 1,
+
+    "starting_life": 20,
+    "starting_hand_size": 3,
+    "max_hand_size": 3,
+    "turn_start_card_draw": 2,
+    "starting_energy": 10,
+    "lane_count": 3,
+    "base_source_per_turn": 1,
 
     "comment": "NOT IMPLEMENTED",
     "players": [

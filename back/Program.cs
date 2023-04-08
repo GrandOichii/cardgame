@@ -32,14 +32,15 @@ class Program {
 
         #region Match Creation
         string configPath = "../match_configs/test_match.json";
-        var m = g.MatchPool.NewMatch(MatchConfig.FromText(File.ReadAllText(configPath)));
+        var config = MatchConfig.FromText(File.ReadAllText(configPath));
+        var m = g.MatchPool.NewMatch(config);
 
         var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
-        // var p1 = new Player(m, "Igor", deck1, new TerminalPlayerController());
-        var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener));
+        var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener, config));
 
         var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
         var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
+        
         g.CardMaster.LogContents();
 
         m.AddPlayer(p1);
@@ -66,12 +67,13 @@ class TCPPlayerController : PlayerController
     byte[] buffer = new byte[1024];
     private TcpClient _handler;
 
-    public TCPPlayerController(TcpListener listener) {
+    public TCPPlayerController(TcpListener listener, MatchConfig config) {
         Logger.Instance.Log("TCPPlayerController", "Waiting for connection");
 
         _handler = listener.AcceptTcpClient();
         
-        Logger.Instance.Log("TCPPlayerController", "Connection established");
+        Logger.Instance.Log("TCPPlayerController", "Connection established, sending match config");
+        Write(config.ToJson());
     }
 
     private void Write(string message) {
@@ -96,7 +98,7 @@ class TCPPlayerController : PlayerController
     public override string PromptAction(Player controlledPlayer, Match match)
     {
         // Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
-        Write(CreateMState(controlledPlayer, match, "Enter command").ToJson());
+        Write(CreateMState(controlledPlayer, match, "enter command").ToJson());
         return Read();
     }
 
@@ -201,6 +203,11 @@ class TCPPlayerController : PlayerController
         result.Card = CardStateFrom(card.Card);
 
         return result;
+    }
+
+    public override void Update(Player controlledPlayer, Match match)
+    {
+        Write(CreateMState(controlledPlayer, match, "update").ToJson());
     }
 
 

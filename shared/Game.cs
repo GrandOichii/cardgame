@@ -3,6 +3,7 @@ namespace Shared;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+
 public struct MatchState {
     [JsonPropertyName("request")]
     public string Request { get; set; }

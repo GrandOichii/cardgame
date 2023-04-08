@@ -26,6 +26,7 @@ class Client:
     INSTANCE: 'Client'
 
     def __init__(self):
+        self.lanes_board = None
         self.last_state = None
         
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -66,7 +67,13 @@ class Client:
 
         # card1 = CardSprite(state.players[0].bond)
         # self.all_sprites.add(card1)
-        
+
+    
+    def configure_lanes(self, lane_count):
+        # self.lanes_board = sprites.LanesBoard(lane_count, )
+        self.first_player.create_lanes(lane_count)
+        self.second_player.create_lanes(lane_count)
+
 
     def read_msg(self):
         # ready = select.select([self.sock], [], [], .1)
@@ -97,6 +104,10 @@ class Client:
 
     def start(self):
         self.sock.connect((HOST, PORT))
+        # read server config
+        sconfig = parse_state(self.read_msg())
+        print(sconfig)
+        self.configure_lanes(sconfig.lane_count)
         self.sock.settimeout(.1)
         # self.sock.setblocking(0)
 

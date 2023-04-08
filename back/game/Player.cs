@@ -182,6 +182,7 @@ namespace game.player {
     abstract class PlayerController {
         abstract public string PromptAction(Player controlledPlayer, Match match);
         abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
+        abstract public void Update(Player controlledPlayer, Match match);
         protected string ShortInfo(Player player) {
             var result = "";
             result += "\tLife: " + player.Life + "\n";
@@ -230,6 +231,11 @@ namespace game.player {
             } while (result is null || result.Length == 0);
             
             return int.Parse(result);
+        }
+
+        public override void Update(Player controlledPlayer, Match match)
+        {
+            // throw new NotImplementedException();
         }
     }
 
