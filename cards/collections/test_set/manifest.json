@@ -13,9 +13,14 @@
         "cards/Undead_Cleric",
         "cards/Risen_Dead",
         "cards/Life_Drain",
+        "cards/Root_Elemental",
         "cards/New_Recruit",
         "cards/Shieldmate",
         "cards/Meteor_Strike",
+        "cards/Growth_Chant",
+        "cards/Inspiration",
+        "cards/Young_Sphinx",
+        "cards/First_Aid",
         "cards/Brute"
     ],
     "cards1": [

@@ -177,8 +177,8 @@ namespace game.scripts
             var lanes = player.Lanes;
             UnitW? replaced = lanes[result];
             if (replaced is not null) {
-                player.PlaceIntoDiscard(replaced);
                 replaced.Card.ExecFunc("LeavePlay", replaced.Card.Info, player.ToLuaTable(_match.LState));
+                player.PlaceIntoDiscard(replaced);
             }
 
             lanes[result] = new UnitW(card);

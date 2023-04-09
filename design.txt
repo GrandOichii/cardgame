@@ -593,6 +593,54 @@ Text:
         At the TODO
 
 
+[The Mage of the Five Colors]
+    Type: Unit
+    Cost: 10
+    Power: 7
+    Life: 7
+    Text:
+        When [CARDNAME] enters play, summon a [Healing Touch], a [Progenitor Knowledge], a [Gloomy Rite], a [Bolt Burn] and a [Wild Evolution] cards into your hand.
+
+
+(Summoned)
+[Healing Touch] // [White Touch]
+    Type: Spell
+    Cost: 1
+    Text:
+        Gain 3 life.
+
+
+(Summoned)
+[Progenitor Knowledge] // [Blue Knowledge]
+    Type: Spell
+    Cost: 1
+    Text:
+        Draw 3 cards.
+
+
+(Summoned)
+[Gloomy Rite] // [Black Rite]
+    Type: Spell
+    Cost: 1
+    Text:
+        Gain 3 temporary energy.
+
+
+(Summoned)
+[Bolt Burn] // [Red Bolt]
+    Type: Spell
+    Cost: 1
+    Text:
+        Deal 3 damage to any target.
+
+
+(Summoned)
+[Wild Evolution] // [Green Evolution]
+    Type: Spell
+    Cost: 1
+    Text:
+        Target Unit gains +3 power and +3 life.
+
 
 // Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)
 

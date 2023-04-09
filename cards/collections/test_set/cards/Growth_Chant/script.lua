@@ -1,24 +1,20 @@
 
 
 function _CreateCard(props)
-    props.cost = 4
+    props.cost = 2
 
     local result = CardCreation:Spell(props)
-
     local prevEffect = result.Effect
     function result:Effect(player)
         prevEffect(self, player)
 
-        local laneI = PickLane(player.id)
-        local players = GetPlayers()
-        for _, p in ipairs(players) do
-            local lane = p.lanes[laneI+1]
-            
+        local lanes = player.lanes
+        for _, lane in ipairs(lanes) do
             if lane.isSet then
-                DealDamage(self.id, lane.unit.id, 4)
+                lane.unit.power = lane.unit.power + 1
+                lane.unit.life = lane.unit.life + 1
             end
         end
     end
-    
     return result
 end

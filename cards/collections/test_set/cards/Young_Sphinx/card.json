@@ -1,0 +1,6 @@
+{
+    "name": "Young Sphinx",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, draw 2 cards.",
+    "script": "script.lua"
+}

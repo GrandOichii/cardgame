@@ -1,0 +1,6 @@
+{
+    "name": "Growth Chant",
+    "type": "Spell",
+    "text": "All your Units gain +1 power and +1 life",
+    "script": "script.lua"
+}
