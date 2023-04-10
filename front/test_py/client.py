@@ -109,10 +109,13 @@ class Client:
         self.sock.connect((HOST, PORT))
         # read server config
         sconfig = parse_state(self.read_msg())
-        # print(sconfig)
+        # class C:
+        #     def __init__(self) -> None:
+        #         self.lane_count = 0
+        # sconfig = C()
+        # sconfig.lane_count = 3
         self.configure_lanes(sconfig.lane_count)
         self.sock.settimeout(.1)
-        # self.sock.setblocking(0)
 
         self.running = True
         while self.running:
@@ -125,7 +128,8 @@ class Client:
                 parsed = parse_state(statej)
                 print(f'Request: {parsed.request}')
                 self.load(parsed)
-            
+            # self.load(test_state())
+
             # events
             for event in pg.event.get():
                 if event.type == pg.QUIT:

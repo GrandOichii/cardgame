@@ -642,6 +642,21 @@ Text:
         Target Unit gains +3 power and +3 life.
 
 
+[Infestation]
+    Type: Spell
+    Cost: 6
+    Text:
+        On each of your lanes, summon a [Invasive Critter] card.
+
+
+(Summoned)
+[Invasive Critter]
+    Type: Unit
+    Cost: 2
+    Life: 2
+    Power: 2
+    Text: 
+
 // Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)
 
 == Keywords ==

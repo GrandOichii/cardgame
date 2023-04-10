@@ -170,11 +170,11 @@ class PlayerBoard(Board):
     def create_lanes(self, lane_count: int):
         hch = CHARM_HEIGHT // 2
         lane_width = (self.width - INFO_WIDTH) / lane_count
-        x = self.x + INFO_WIDTH - 1
+        x = self.x + INFO_WIDTH
         y = self.y
         for i in range(lane_count):
-            lane = LaneBoard(lane_width - 2, self.height - 2, i)
-            lane.set_pos((x + 1, y + 1))
+            lane = LaneBoard(lane_width - 2, self.height - 5, i)
+            lane.set_pos((x + 1, y + 2))
             x += lane_width
             # self.boards += [lane]
 
