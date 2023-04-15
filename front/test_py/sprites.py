@@ -302,8 +302,9 @@ class CardSprite(pg.sprite.Sprite):
     def __init__(self, card_state):
         if not CardSprite.FONT:
             CardSprite.FONT = pg.font.Font('fonts/Montserrat-Thin.ttf', 12)
-
         super().__init__()
+
+        
         self.card = card_state
 
         self.image = pg.Surface((CARD_WIDTH, CARD_HEIGHT))
@@ -357,7 +358,15 @@ class CardSprite(pg.sprite.Sprite):
             r.x = CARD_WIDTH - r.width - 1
             self.image.blit(img, (r.x, r.y))
 
-        util.blit_text(self.image, card_state.text, (1, CARD_NAME_OFFSET*2 + 3), CardSprite.FONT, colors.BLACK)
+        text = str(card_state.text)
+        # print(card_state.mutable)
+        m = card_state.mutable.__dict__
+        for pair in m.items():
+            key = pair[0]
+            value = pair[1]
+            text = card_state.text.replace(f'[{key}]', str(value.current))
+
+        util.blit_text(self.image, text, (1, CARD_NAME_OFFSET*2 + 3), CardSprite.FONT, colors.BLACK)
 
 
 class UnitCardSprite(CardSprite):

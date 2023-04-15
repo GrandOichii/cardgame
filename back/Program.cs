@@ -207,6 +207,13 @@ class TCPPlayerController : PlayerController
             result.Power = Utility.GetLong(card.Info, "power");
         if (result.Type == "Unit" || result.Type == "Treasure")
             result.Life = Utility.GetLong(card.Info, "life");
+        result.Mutable = new();
+        var mutable = Utility.TableGet<LuaTable>(card.Info, "mutable");
+        foreach (var key in mutable.Keys) {
+            var sKey = key as string;
+            if (sKey is null) throw new Exception("Key " + key + " is not string");
+            result.Mutable.Add(sKey, MutableStateFrom(mutable[key]));
+        }
         return result;
     }
 
@@ -219,11 +226,25 @@ class TCPPlayerController : PlayerController
         return result;
     }
 
+    static public MutableState MutableStateFrom(object o)
+    {
+        var table = o as LuaTable;
+        if (table is null) throw new Exception("Object " + o + " is not a table");
+
+        var result = new MutableState();
+        result.Current = Utility.GetLong(table, "current");
+        result.Min = Utility.GetLong(table, "min");
+        result.Max= Utility.GetLong(table, "max");
+        return result;
+    }
+
+
+
+
+    #endregion
+
     public override void Update(Player controlledPlayer, Match match)
     {
         Write(CreateMState(controlledPlayer, match, "update", new()).ToJson());
     }
-
-
-    #endregion
 }

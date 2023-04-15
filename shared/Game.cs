@@ -67,6 +67,15 @@ public struct PlayerState {
 
 }
 
+public struct MutableState {
+    [JsonPropertyName("current")]
+    public long Current { get; set; }
+    [JsonPropertyName("min")]
+    public long Min { get; set; }
+    [JsonPropertyName("max")]
+    public long Max { get; set; }
+}
+
 public struct CardState {
 
     [JsonPropertyName("id")]
@@ -83,6 +92,8 @@ public struct CardState {
     public long Power { get; set; }
     [JsonPropertyName("cost")]
     public long Cost { get; set; }
+    [JsonPropertyName("mutable")]
+    public Dictionary<string, MutableState> Mutable { get; set; }
 }
 
 public struct UnitState {
