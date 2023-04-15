@@ -234,6 +234,7 @@ CardCreation = {}
 
 function CardCreation:CardObject(props)
     local result = {}
+    result.mutable = {} -- Things that power up the card
     
     Common:RequireField(props, 'name')
     Common:RequireField(props, 'type')
@@ -255,6 +256,30 @@ function CardCreation:CardObject(props)
 
     function result:Play(player)
         Log('Player '..player.name .. ' played card ' .. self.name)
+    end
+
+    function result:PowerUp()
+        Log('Powering up '..self.id)
+        for key, value in pairs(self.mutable) do
+            local new = value.current + 1
+            if new <= value.max then
+                self.mutable[key].current = new
+            else
+                Log('Did not power up value '..key..': '..value.current..' is the max')
+            end
+        end
+    end
+
+    function result:PowerDown()
+        Log('Powering up '..self.id)
+        for key, value in pairs(self.mutable) do
+            local new = value.current - 1
+            if new >= value.min then
+                self.mutable[key].current = new
+            else
+                Log('Did not power down value '..key..': '..value.current..' is the min')
+            end
+        end
     end
 
     return result

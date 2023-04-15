@@ -1,5 +1,6 @@
 {
     "collections": [
+        "collections/starters",
         "collections/test_set"
     ]
 }

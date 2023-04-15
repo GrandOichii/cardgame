@@ -1,7 +1,7 @@
 {
     "name": "test_set",
     "cards": [
-        "cards/Source",
+        "../_common/Source",
         "cards/Healer",
         "cards/Old_Junk",
         "cards/Basic_Bond",
@@ -22,6 +22,7 @@
         "cards/Inspiration",
         "cards/Young_Sphinx",
         "cards/First_Aid",
+        "cards/Power_Tester",
         "cards/Brute"
     ],
     "cards1": [

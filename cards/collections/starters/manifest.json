@@ -1,0 +1,14 @@
+{
+    "name": "starters",
+    "cards": [
+        "../_common/Source",
+        "cards/Assembled_Monstrocity",
+        "cards/Lava_Bomb",
+        "cards/Spark_of_Imagination",
+        "cards/Hired_Thug"
+        
+    ],
+    "cards1": [
+
+    ]
+}
