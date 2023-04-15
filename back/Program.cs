@@ -116,7 +116,7 @@ class TCPPlayerController : PlayerController
     }
 
     public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match) {
-        Write(CreateMState(controlledPlayer, match, "pick lane", args).ToJson());
+        Write(CreateMState(controlledPlayer, match, prompt, args).ToJson());
         return Read();        
     }
 

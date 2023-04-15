@@ -167,18 +167,21 @@ function Common:IsOwnersTurn(card)
 end
 
 
-function Common:TargetUnit(player)
+function Common:TargetUnit(playerID)
     local args = {}
     local d = {}
     local players = GetPlayers()
     for _, p in ipairs(players) do
         for _, unit in ipairs(p.units) do
-            d[unit.id] = unit
-            args[#args+1] = tostring(unit.id)
+            if unit ~= nil then
+                d[unit.id] = unit
+                args[#args+1] = tostring(unit.id)
+            end
         end
     end
-    local uID = tonumber(PromptPlayer(player.id, 'target_unit', args))
-    return d[uID]
+    local uID = PromptPlayer(playerID, 'target_unit', args)
+    local result = d[uID]
+    return result
 end
 
 

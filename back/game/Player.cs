@@ -135,9 +135,9 @@ namespace game.player {
             var units = new List<object?>();
             foreach (var pair in cards) {
                 if (pair.Value == Zones.DISCARD)
-                    discard.Add(pair.Key);
+                    discard.Add(pair.Key.Info);
                 if (pair.Value == Zones.UNITS)
-                    units.Add(pair.Key);
+                    units.Add(pair.Key.Info);
             }
 
             result["discard"] = Utility.CreateTable(lState, discard);

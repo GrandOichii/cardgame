@@ -151,6 +151,10 @@ class PlayerBoard(Board):
                 lambda element: element.unit is not None and element.unit.attacksLeft > 0 and client.Client.INSTANCE.last_state.request == 'enter command',
                 # TODO make more complex
                 lambda element: f'attack {element.lane_i}'
+            ),
+            ClickConfig (
+                lambda element: element.unit is not None and client.Client.INSTANCE.last_state.request == 'target_unit' and element.unit.card.id in client.Client.INSTANCE.last_state.args,
+                lambda element: f'{element.unit.card.id}'
             )
         ])
 
