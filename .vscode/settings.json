@@ -15,6 +15,7 @@
         "RemoveFromDiscard",
         "PlaceIntoHand",
         "PickLane",
-        "GetPlayers"
+        "GetPlayers",
+        "PromptPlayer"
     ]
 }

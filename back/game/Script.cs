@@ -223,5 +223,18 @@ namespace game.scripts
                 result.Add(player.ToLuaTable(_match.LState));
             return Utility.CreateTable(_match.LState, result);
         }
+
+
+        [LuaCommand]
+        public string PromptPlayer(int pID, string prompt, LuaTable args) {
+            var player = GetPlayer(pID);
+            List<string> aArgs = new();
+            foreach (var a in args) {
+                var n = a as string;
+                if (n is null) throw new Exception("Cannot convert " + a + " to string");
+                aArgs.Add(n);
+            }
+            return player.Controller.Prompt(prompt, aArgs, player, _match);
+        }
     }
 }

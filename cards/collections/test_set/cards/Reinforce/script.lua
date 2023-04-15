@@ -2,14 +2,14 @@
 
 -- TODO untested
 function _CreateCard(props)
-    props.cost = 4
+    props.cost = 5
 
     local result = CardCreation:Spell(props)
 
     function result:Effect(player)
         for _, unit in ipairs(player.units) do
-            unit.power = unit.power + 4
-            unit.life = unit.life + 4
+            unit.power = unit.power + 3
+            unit.life = unit.life + 3
         end
     end
 

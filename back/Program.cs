@@ -100,21 +100,30 @@ class TCPPlayerController : PlayerController
     public override string PromptAction(Player controlledPlayer, Match match)
     {
         // Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
-        Write(CreateMState(controlledPlayer, match, "enter command").ToJson());
+        
+        // TODO? args are available commands
+        Write(CreateMState(controlledPlayer, match, "enter command", new()).ToJson());
         return Read();
     }
 
     public override int PromptLane(string prompt, Player controlledPlayer, Match match)
     {
         // Write(prompt);
-        Write(CreateMState(controlledPlayer, match, "pick lane").ToJson());
+
+        // TODO? args are available lanes
+        Write(CreateMState(controlledPlayer, match, "pick lane", new()).ToJson());
         return int.Parse(Read());
+    }
+
+    public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match) {
+        Write(CreateMState(controlledPlayer, match, "pick lane", args).ToJson());
+        return Read();        
     }
 
 
     #region Parsers
 
-    static public MatchState CreateMState(Player player, Match match, string request) {
+    static public MatchState CreateMState(Player player, Match match, string request, List<string> args) {
         var result = new MatchState();
         result.Players = new PlayerState[match.Players.Count];
         for (int i = 0; i < match.Players.Count; i++) {
@@ -127,6 +136,8 @@ class TCPPlayerController : PlayerController
         result.My = MyStateFrom(match, player);
 
         result.Request = request;
+
+        result.Args = args;
         return result;
     }
 
@@ -210,7 +221,7 @@ class TCPPlayerController : PlayerController
 
     public override void Update(Player controlledPlayer, Match match)
     {
-        Write(CreateMState(controlledPlayer, match, "update").ToJson());
+        Write(CreateMState(controlledPlayer, match, "update", new()).ToJson());
     }
 
 

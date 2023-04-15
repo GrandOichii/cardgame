@@ -203,6 +203,7 @@ namespace game.player {
         abstract public string PromptAction(Player controlledPlayer, Match match);
         abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
         abstract public void Update(Player controlledPlayer, Match match);
+        abstract public string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match);
         protected string ShortInfo(Player player) {
             var result = "";
             result += "\tLife: " + player.Life + "\n";
@@ -251,6 +252,12 @@ namespace game.player {
             } while (result is null || result.Length == 0);
             
             return int.Parse(result);
+        }
+
+        public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match)
+        {
+            return "";
+            // throw new NotImplementedException();
         }
 
         public override void Update(Player controlledPlayer, Match match)

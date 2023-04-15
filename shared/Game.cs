@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 public struct MatchState {
     [JsonPropertyName("request")]
     public string Request { get; set; }
+    [JsonPropertyName("args")]
+    public List<string> Args { get; set; }
 
     // TODO add lane charms
     [JsonPropertyName("curPlayerI")]
