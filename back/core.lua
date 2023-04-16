@@ -211,6 +211,14 @@ function Utility:TableToStr(t)
 end
 
 
+function Utility:TableLength(T)
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+  end
+
+
+
 -- local activated = EffectCreation:ActivatedEffectBuilder()
 --     :Zone('lanes')
 --     :Check(Common:HasEnoughEnergy(2))
@@ -280,7 +288,7 @@ function CardCreation:CardObject(props)
     end
 
     function result:CanPowerUp()
-        return #self.mutable > 0
+        return Utility:TableLength(self.mutable) > 0
     end
 
     function result:PowerDown()
@@ -296,7 +304,7 @@ function CardCreation:CardObject(props)
     end
 
     function result:CanPowerDown()
-        return #self.mutable > 0
+        return Utility:TableLength(self.mutable) > 0
     end
 
     return result

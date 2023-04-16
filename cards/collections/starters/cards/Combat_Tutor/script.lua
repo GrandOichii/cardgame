@@ -11,8 +11,13 @@ function _CreateCard(props)
     function result:OnEnter(player)
         local units = player.units
         for _, unit in ipairs(units) do
-            if unit ~= nil and unit. then
-                
+            if unit ~= nil and unit.id ~= result.id then
+                if unit:CanPowerUp() then
+                    unit:PowerUp()
+                else
+                    unit.life = unit.life + 1
+                    unit.power = unit.power + 1
+                end
             end
         end
     end

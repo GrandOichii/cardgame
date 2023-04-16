@@ -1,7 +1,7 @@
 
 -- TODO untested
 function _CreateCard(props)
-    props.cost = 4
+    props.cost = 3
 
     local result = CardCreation:Spell(props)
 
