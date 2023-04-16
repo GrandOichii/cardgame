@@ -265,5 +265,21 @@ namespace game.scripts
             }
             _match.Emit(signal, aArgs);
         }
+
+
+        [LuaCommand]
+        public void Destroy(string cID) {
+            var cardDict = _match.HasMarkedDamageDict();
+            foreach (var pair in cardDict) {
+                var player = pair.Key;
+                foreach (var card in pair.Value) {
+                    if (card.Card.ID != cID) continue;
+                    card.Destroy(_match);
+                    return;
+                }                
+            }
+            // TODO? remove
+            throw new Exception("Failed to destroy card with id " + cID + ": it's not in play");
+        }
     }
 }

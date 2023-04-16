@@ -235,6 +235,13 @@ namespace game.match {
             var op = OpponentOf(Players[CurPlayerI]);
             op.Controller.Update(op, this);
         }
+
+        public Dictionary<Player, List<HasMarkedDamage>> HasMarkedDamageDict() {
+            var result = new Dictionary<Player, List<HasMarkedDamage>>();
+            foreach (var player in Players)
+                result.Add(player, player.HasMarkedDamageCards());
+            return result;
+        }
     }
 
     class MatchPool {

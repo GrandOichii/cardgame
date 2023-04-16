@@ -1,7 +1,8 @@
 
 -- TODO not tested
 function _CreateCard(props)
-    props.cost = 6
+    props.cost = 1
+    -- props.cost = 6
     props.power = 3
     props.life = 5
 
@@ -11,7 +12,9 @@ function _CreateCard(props)
         prevOnEnter(self, prevOnEnter)
         local treasures = player.treasures
         for _, card in ipairs(treasures) do
-            card:PowerUp()
+            if card:CanPowerDown() then
+                card:PowerDown()
+            end
         end
     end
     return result

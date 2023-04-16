@@ -200,6 +200,15 @@ namespace game.player {
 
             Discard.AddToBack(cw);
         }
+
+        public List<HasMarkedDamage> HasMarkedDamageCards() {
+            var result = new List<HasMarkedDamage>();
+            foreach (var treasure in Treasures.Cards)
+                result.Add(treasure);
+            foreach (var unit in Lanes)
+                if (unit is not null) result.Add(unit);
+            return result;
+        }
     }
 
     #region Player Controllers

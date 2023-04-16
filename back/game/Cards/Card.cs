@@ -199,6 +199,8 @@ namespace game.cards {
         {
             return "Life: " + Life;
         }
+
+        abstract public void Destroy(Match match);
     }
 
 
@@ -237,7 +239,7 @@ namespace game.cards {
             return result;
         }
 
-        public void Destroy(Match match) {
+        public override void Destroy(Match match) {
             match.Emit("unit_destroyed", new(){{"unit", Card.Info}});
 
             var owner = match.OwnerOf(Card.ID);
@@ -275,7 +277,7 @@ namespace game.cards {
             return result;
         }
 
-        public void Destroy(Match match) {
+        public override void Destroy(Match match) {
             match.Emit("treasure_destroyed", new(){{"treasure", Card.Info}});
 
             var owner = match.OwnerOf(Card.ID);

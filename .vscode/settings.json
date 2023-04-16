@@ -18,6 +18,7 @@
         "GetPlayers",
         "PromptPlayer",
         "Emit",
-        "DealDamageToPlayer"
+        "DealDamageToPlayer",
+        "Destroy"
     ]
 }
