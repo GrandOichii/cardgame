@@ -9,7 +9,7 @@ function _CreateCard(props)
     function result:Effect(player)
         prevEffect(self, player)
         local opponent = OpponentOf(player.id)
-        DealDamage(self.id, opponent.id, 5)
+        DealDamageToPlayer(self.id, opponent.id, 5)
     end
 
     return result

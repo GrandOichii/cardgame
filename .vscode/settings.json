@@ -16,6 +16,8 @@
         "PlaceIntoHand",
         "PickLane",
         "GetPlayers",
-        "PromptPlayer"
+        "PromptPlayer",
+        "Emit",
+        "DealDamageToPlayer"
     ]
 }

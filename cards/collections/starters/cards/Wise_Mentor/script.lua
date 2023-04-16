@@ -1,18 +1,22 @@
 
 
+-- TODO not tested
 function _CreateCard(props)
-    props.cost = 5
-    props.power = 3
-    props.life = 2
+    props.cost = 3
+    props.power = 1
+    props.life = 3
 
     local result = CardCreation:Unit(props)
 
-    -- TODO not tested
     local prevOnEnter = result.OnEnter
     function result:OnEnter(player)
         prevOnEnter(self, player)
-        DrawCards(player.id, 2)
+        local hand = player.hand
+        for _, card in ipairs(hand) do
+            card:PowerUp()
+        end
     end
+
 
     return result
 end

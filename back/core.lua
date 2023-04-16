@@ -3,6 +3,7 @@ TRIGGERS = {
     LIFE_GAIN = 'life_gain',
     TURN_START = 'turn_start',
     TURN_END = 'turn_end',
+    SPELL_CAST = 'spell_cast',
 }
 
 ZONES = {
@@ -185,6 +186,14 @@ function Common:TargetUnit(playerID)
 end
 
 
+function Common:IsOwnersSpell(card)
+    return function (spell, args)
+        local owner = GetController(card.id)
+        return args.card.type == 'Spell' and args.caster.id == owner.id
+    end
+end
+
+
 Utility = {}
 
 
@@ -270,6 +279,10 @@ function CardCreation:CardObject(props)
         end
     end
 
+    function result:CanPowerUp()
+        return #self.mutable > 0
+    end
+
     function result:PowerDown()
         Log('Powering up '..self.id)
         for key, value in pairs(self.mutable) do
@@ -280,6 +293,10 @@ function CardCreation:CardObject(props)
                 Log('Did not power down value '..key..': '..value.current..' is the min')
             end
         end
+    end
+
+    function result:CanPowerDown()
+        return #self.mutable > 0
     end
 
     return result
@@ -293,8 +310,13 @@ function CardCreation:Spell(props)
         Log('Spell effect of ' .. result.name .. ', played by ' .. player.name)
     end
 
+    -- TODO not tested
     local prevPlay = result.Play;
     function result:Play(player)
+        Emit(TRIGGERS.SPELL_CAST, {
+            card = self,
+            caster = player
+        })
         prevPlay(self, player)
         result:Effect(player)
         PlaceIntoDiscard(self.id, player.id)
@@ -334,6 +356,10 @@ function CardCreation:InPlay(props)
         -- print(Utility:TableToStr(self))
         -- print(player)
         Log('Card ' .. self.name .. ', controlled by ' .. player.name .. ', is leaving play')
+    end
+
+    function result:OnEnter(player)
+        Log('Called OnEnter func of '..self.name)
     end
 
     return result

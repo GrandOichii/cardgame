@@ -1,0 +1,6 @@
+{
+    "name": "Artifact Engineer",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, {Power Up} all of your Treasures.",
+    "script": "script.lua"
+}

@@ -133,15 +133,19 @@ namespace game.player {
             var cards = GetAllCards();
             var discard = new List<object?>();
             var units = new List<object?>();
+            var treasures = new List<object?>();
             foreach (var pair in cards) {
                 if (pair.Value == Zones.DISCARD)
                     discard.Add(pair.Key.Info);
                 if (pair.Value == Zones.UNITS)
                     units.Add(pair.Key.Info);
+                if (pair.Value == Zones.TREASURES)
+                    treasures.Add(pair.Key.Info);
             }
 
             result["discard"] = Utility.CreateTable(lState, discard);
             result["units"] = Utility.CreateTable(lState, units);
+            result["treasures"] = Utility.CreateTable(lState, treasures);
 
             var lanes = Utility.CreateTable(lState);
             for (int i = 0; i < Lanes.Length; i++) {

@@ -70,6 +70,7 @@ namespace game.scripts
             if (card.Original.Type != "Treasure") throw new Exception("Player" + player.ShortStr() + "tried to place a non-treasure card " + card.ShortStr() + " into treasure zone");
             
             Logger.Instance.Log("ScriptMaster", "Card " + card.ShortStr() + " is put into " + player.ShortStr() + "'s treasure zone");
+            card.ExecFunc("OnEnter", player);
             player.Treasures.AddToBack(new TreasureW(card));
         }
 
@@ -154,6 +155,19 @@ namespace game.scripts
 
 
         [LuaCommand]
+        public long DealDamageToPlayer(string sourceID, int targetID, long amount) {
+            // TODO? need source id
+            var source = _match.AllCards[sourceID];
+            var cards = _match.GetDamageableCards();
+            var target = GetPlayer(targetID);
+            if (target is null) throw new Exception("Failed to get damageable card in play with id " + targetID);
+            var result = target.ProcessDamage(_match, amount);
+            Logger.Instance.Log("ScriptMaster", "Player " + target.ShortStr() + " was dealt " + result + " damage");
+            return result;
+        }
+
+
+        [LuaCommand]
         public int DrawCards(int pID, int amount) {
             var player = GetPlayer(pID);
             var original = player.Hand.Cards.Count;
@@ -183,6 +197,7 @@ namespace game.scripts
 
             lanes[result] = new UnitW(card);
             Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " placed unit " + card.ShortStr() + " into lane " + result + (replaced is not null ? ", replacing unit " + replaced.Card.ShortStr() : ""));
+            card.ExecFunc("OnEnter", card.Info, player.ToLuaTable(_match.LState));
             if (replaced is null) return;
 
             _match.Emit("unit_replaced", new(){{"unit", replaced.Card.Info}}); 
@@ -236,6 +251,19 @@ namespace game.scripts
                 aArgs.Add(n);
             }
             return player.Controller.Prompt(prompt, aArgs, player, _match);
+        }
+
+
+        // TODO not tested
+        [LuaCommand]
+        public void Emit(string signal, LuaTable table) {
+            var aArgs = new Dictionary<string, object>();
+            foreach (var key in table.Keys) {
+                var sKey = key as string;
+                if (sKey is null) throw new Exception("Emit argument key is null");
+                aArgs.Add(sKey, table[key]);
+            }
+            _match.Emit(signal, aArgs);
         }
     }
 }

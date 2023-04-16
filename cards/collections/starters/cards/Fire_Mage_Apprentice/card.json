@@ -1,0 +1,6 @@
+{
+    "name": "Fire Mage Apprentice",
+    "type": "Unit",
+    "text": "When you cast a spell, [CARDNAME] deals [damagePerSpell] damage to your opponent.",
+    "script": "script.lua"
+}

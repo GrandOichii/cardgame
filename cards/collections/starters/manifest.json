@@ -4,9 +4,14 @@
         "../_common/Source",
         "cards/Assembled_Monstrocity",
         "cards/Lava_Bomb",
+        "cards/Wise_Mentor",
         "cards/Spark_of_Imagination",
+        "cards/Artifact_Engineer",
+        "cards/Pet_Robot",
+        "cards/Combat_Tutor",
+        "cards/Fire_Mage_Apprentice",
+        "cards/Wild_Elemental",
         "cards/Hired_Thug"
-        
     ],
     "cards1": [
 
