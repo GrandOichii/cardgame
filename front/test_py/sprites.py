@@ -12,6 +12,9 @@ CARD_WIDTH = CARD_HEIGHT * CARD_RATIO
 
 CARD_NAME_OFFSET = 18
 
+TREASURE_ZONE_CARD_COUNT_X = 3
+BETWEEN_TREASURES = 2
+
 
 def outline_rect(width: int, height: int, color, outline_color=colors.BLACK) -> pg.Surface:
     result = pg.Surface((width, height))
@@ -144,7 +147,7 @@ class PlayerBoard(Board):
 
         self.lanes = ClickableBoardGroup([
             ClickConfig (
-                lambda element: client.Client.INSTANCE.last_state.request == 'pick lane',
+                lambda _: client.Client.INSTANCE.last_state.request == 'pick lane',
                 lambda element: f'{element.lane_i}'
             ),
             ClickConfig (
@@ -158,6 +161,8 @@ class PlayerBoard(Board):
             )
         ])
 
+        # TODO treasure zone
+
     def player_draw(self, surface: pg.Surface, current: bool):
         super().draw(surface)
         self.lanes.draw(surface)
@@ -169,11 +174,13 @@ class PlayerBoard(Board):
         self.info.load(state)
         for lane in self.lanes:
             lane.load(state)
+        self.treasure_board.load(state.treasures)
         return super().load(state)
 
     def create_lanes(self, lane_count: int):
-        hch = CHARM_HEIGHT // 2
-        lane_width = (self.width - INFO_WIDTH) / lane_count
+        # hch = CHARM_HEIGHT // 2
+        treasures_width = TREASURE_ZONE_CARD_COUNT_X * (CARD_WIDTH + BETWEEN_TREASURES) + 1
+        lane_width = (self.width - INFO_WIDTH - treasures_width) / lane_count
         x = self.x + INFO_WIDTH
         y = self.y
         for i in range(lane_count):
@@ -183,7 +190,11 @@ class PlayerBoard(Board):
             # self.boards += [lane]
 
             self.lanes.add(lane)
-
+        
+        # treasure board
+        self.treasure_board = TreasureBoard(treasures_width, self.height)
+        self.treasure_board.set_pos((x, y))
+        self.boards += [self.treasure_board]
 
     def draw(self, surface: pg.Surface):
         super().draw(surface)
@@ -252,7 +263,6 @@ class ClickableSpriteGroup(ClickableGroup):
 
     def get_rect(self, el):
         return el.rect
-
 
 
 class ClickableBoardGroup(ClickableGroup):
@@ -403,7 +413,37 @@ class LaneBoard(Board):
         self.sprites.add(c)
 
 
+class TreasureBoard(Board):
+    def __init__(self, width, height):
+        super().__init__(width, height)
+        # TODO
 
+        self.bg = BoxSprite(width, height)
+        self.sprites.add(self.bg)
+
+    def load(self, state):
+        super().load(state)
+
+        self.sprites.empty()
+        self.sprites.add(self.bg)
+
+        x = self.x
+        y = self.y
+        count = 0
+
+        for card in state:
+            card = CardSprite(card)
+            card.rect.x = x
+            card.rect.y = y
+            x += card.rect.width + BETWEEN_TREASURES
+            self.sprites.add(card)
+            count += 1
+            if count == TREASURE_ZONE_CARD_COUNT_X:
+                count = 0
+                x = self.x
+                y += card.rect.height + BETWEEN_TREASURES
+            
+        
 # class LanesBoard(Board):
 #     def __init__(self, lane_count: int, width: int, height: int):
 #         super().__init__()

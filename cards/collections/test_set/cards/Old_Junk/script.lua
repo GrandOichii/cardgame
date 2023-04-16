@@ -1,7 +1,8 @@
 
 
 function _CreateCard(props)
-    props.cost = 3
+    -- props.cost = 3
+    props.cost = 1
     props.life = 2
 
     local result = CardCreation:Treasure(props)

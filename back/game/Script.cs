@@ -70,7 +70,7 @@ namespace game.scripts
             if (card.Original.Type != "Treasure") throw new Exception("Player" + player.ShortStr() + "tried to place a non-treasure card " + card.ShortStr() + " into treasure zone");
             
             Logger.Instance.Log("ScriptMaster", "Card " + card.ShortStr() + " is put into " + player.ShortStr() + "'s treasure zone");
-            card.ExecFunc("OnEnter", player);
+            card.ExecFunc("OnEnter", card.Info, player.ToLuaTable(_match.LState));
             player.Treasures.AddToBack(new TreasureW(card));
         }
 
