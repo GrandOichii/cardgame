@@ -423,28 +423,39 @@ class TreasureBoard(Board):
         self.bg = BoxSprite(width, height)
         self.sprites.add(self.bg)
 
+        self.cards = ClickableSpriteGroup([
+            ClickConfig(
+                lambda element: element.card is not None and client.Client.INSTANCE.last_state.request == 'target_treasure' and element.card.id in client.Client.INSTANCE.last_state.args,
+                lambda element: f'{element.card.id}'
+            )
+        ])
+        # self.boards += [self.cards]
+
     def load(self, state):
         super().load(state)
 
-        self.sprites.empty()
-        self.sprites.add(self.bg)
+        # self.sprites.empty()
+        # self.sprites.add(self.bg)
 
         x = self.x
         y = self.y
         count = 0
-
+        self.cards.empty()
         for card in state:
             card = CardSprite(card)
             card.rect.x = x
             card.rect.y = y
             x += card.rect.width + BETWEEN_TREASURES
-            self.sprites.add(card)
+            self.cards.add(card)
             count += 1
             if count == TREASURE_ZONE_CARD_COUNT_X:
                 count = 0
                 x = self.x
                 y += card.rect.height + BETWEEN_TREASURES
-            
+
+    def draw(self, surface: pg.Surface):
+        super().draw(surface)
+        self.cards.draw(surface)            
         
 # class LanesBoard(Board):
 #     def __init__(self, lane_count: int, width: int, height: int):

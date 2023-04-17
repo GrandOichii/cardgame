@@ -186,6 +186,22 @@ function Common:TargetUnit(playerID)
 end
 
 
+function Common:TargetTreasure(playerID)
+    local args = {}
+    local d = {}
+    local players = GetPlayers()
+    for _, p in ipairs(players) do
+        for _, treasure in ipairs(p.treasures) do
+            d[treasure.id] = treasure
+            args[#args+1] = tostring(treasure.id)
+        end
+    end
+    local uID = PromptPlayer(playerID, 'target_treasure', args)
+    local result = d[uID]
+    return result
+end
+
+
 function Common:IsOwnersSpell(card)
     return function (spell, args)
         local owner = GetController(card.id)

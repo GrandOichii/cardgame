@@ -1,0 +1,6 @@
+{
+    "name": "Ritualistic Burnings",
+    "type": "Spell",
+    "text": "Deal 3 damage to target Treasure and to it's controller.",
+    "script": "script.lua"
+}

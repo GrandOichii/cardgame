@@ -26,14 +26,14 @@ starters::Power Engine
         While (0/ 3 /10) is equal to 10, units you control have +8 power.
 
 
-[Hired Thug]
+v [Hired Thug]
     Type: Unit
     Cost: 2
     Power: 3
     Life: 2
 
 
-[Power Mine]
+v [Power Mine]
     Type: Treasure
     Cost: 1
     Life: 1
@@ -41,7 +41,7 @@ starters::Power Engine
         When (0/ 0 /1) is equal to 1, destroy [CARDNAME] and deal 3 damage to target Unit.
 
 
-[Wise Mentor]
+v [Wise Mentor]
     Type: Unit
     Cost: 3
     Power: 1
@@ -57,7 +57,7 @@ starters::Power Engine
         {Power Up} target Treasure, Unit or Bond (2/ 3 /5) times.
 
 
-[Artifact Engineer]
+v [Artifact Engineer]
     Type: Unit
     Cost: 6
     Power: 3
@@ -68,12 +68,12 @@ starters::Power Engine
 
 [Rapid Development]
     Type: Charm
-    Cost: 4
+    Cost: 2
     Text:
         At the start of each player's turn, they {Power Up} target Treasure they control.
 
 
-[Pet Robot]
+v [Pet Robot]
     Type: Unit
     Cost: 1
     Power: 1
@@ -105,7 +105,7 @@ starters::Power Engine
         Return (2/ 2 /3) cards from your discard to your hand.
 
 
-[Assembled Monstrosity]
+v [Assembled Monstrosity]
     Type: Unit
     Cost: 5
     Power: 6
