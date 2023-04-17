@@ -162,6 +162,7 @@ class TCPPlayerController : PlayerController
         result.DeckCount = player.Deck.Cards.Count;
         result.Life = player.Life;
         result.Energy = player.Energy;
+        result.MaxEnergy = player.MaxEnergy;
 
         result.Bond = CardStateFrom(player.Bond);
         

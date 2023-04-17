@@ -1,0 +1,6 @@
+{
+    "name": "Deny Existance",
+    "type": "Unit",
+    "text": "Destroy target Unit.",
+    "script": "script.lua"
+}

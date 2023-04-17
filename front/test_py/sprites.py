@@ -80,7 +80,7 @@ class InfoBoard(Board):
             [('s:name', colors.BLACK)],
             [(' ', colors.BLACK)],
             [('Life: ', colors.BLACK), ('s:life', colors.RED)],
-            [('Energy: ', colors.BLACK), ('s:energy', colors.BLUE)],
+            [('Energy: ', colors.BLACK), ('s:energy', colors.BLUE), ('/', colors.BLACK), ('s:maxEnergy', colors.BLUE)],
             [('Hand: ', colors.BLACK), ('s:handCount', colors.GRAY)],
             [('Deck: ', colors.BLACK), ('s:deckCount', colors.GRAY)],
         ]

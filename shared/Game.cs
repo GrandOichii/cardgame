@@ -52,6 +52,8 @@ public struct PlayerState {
     public long Life { get; set; }
     [JsonPropertyName("energy")]
     public int Energy { get; set; }
+    [JsonPropertyName("maxEnergy")]
+    public int MaxEnergy { get; set; }
 
 
     [JsonPropertyName("bond")]
