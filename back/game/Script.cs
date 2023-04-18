@@ -246,7 +246,7 @@ namespace game.scripts
             List<string> aArgs = new();
             foreach (var a in args.Values) {
                 var n = a as string;
-                System.Console.WriteLine(a);
+                // System.Console.WriteLine(a);
                 if (n is null) throw new Exception("Cannot convert " + a + " to string");
                 aArgs.Add(n);
             }

@@ -82,7 +82,6 @@ namespace game.cards.loaders {
                 var cP = Path.Join(colPath, cPath);
 
                 var collection = JCollection.Load(Path.Join(cP, COLLECTION_INFO_FILE));
-                System.Console.WriteLine(collection.Name);
                 foreach (var cardPath in collection.Cards) {
                     var parentPath = Path.Join(cP, cardPath);
                     var path = Path.Join(parentPath, CARD_INFO_FILE);

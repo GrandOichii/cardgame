@@ -90,7 +90,17 @@ end
 -- prompt to choose lane
 function _PromptLane(stateJ)
     local state = stateFromJ(stateJ)
-    -- TODO
+    local me = state.players[state.myData.playerI+1]
+    if state.request == 'pick' then
+        -- TODO
+        return 1
+    end
+    print(common:TableToStr(me.units))
+    for i, unit in ipairs(me.units) do
+        if unit.card == nil then
+            return i - 1
+        end
+    end
     return 1
 end
 

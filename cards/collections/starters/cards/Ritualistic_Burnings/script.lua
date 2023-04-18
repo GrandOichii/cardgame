@@ -8,7 +8,6 @@ function _CreateCard(props)
     function result:Effect(player)
         prevEffect(self, player)
         local target = Common:TargetTreasure(player.id)
-        print(target)
         DealDamage(self.id, target.id, 3)
         DealDamageToPlayer(self.id, GetController(target.id).id, 3)
     end

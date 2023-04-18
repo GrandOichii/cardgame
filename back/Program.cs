@@ -214,7 +214,7 @@ class TCPPlayerController : PlayerController
     private string Read() {
         var stream = _handler.GetStream();
         var result = NetUtil.Read(stream);
-        System.Console.WriteLine("Read: " + result);
+        // System.Console.WriteLine("Read: " + result);
         // string? result = null;
         //     while (result is null)
         //         result = Console.ReadLine();
