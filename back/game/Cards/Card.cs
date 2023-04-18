@@ -81,13 +81,17 @@ namespace game.cards {
         public string Text { get; private set; }
         public string Collection { get; private set; }
         public string ScriptPath { get; private set; }
+        public bool Summoned { get; set; }
+        public List<string> RefCards { get; set; }
 
-        public Card(string name, string type, string text, string collection, string scriptPath) {
+        public Card(string name, string type, string text, string collection, string scriptPath, bool summoned, List<string> refCards) {
             Name = name;
             Type = type;
             Text = text;
             Collection = collection;
             ScriptPath = scriptPath;
+            Summoned = summoned;
+            RefCards = refCards;
         }
 
         public LuaTable GetProps(Lua lState) {

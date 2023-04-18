@@ -31,6 +31,11 @@ namespace game.cards.loaders {
         public string Text { get; set; }="";
         [JsonPropertyName("script")]
         public string ScriptPath { get; set; }="";
+        [JsonPropertyName("summoned")]
+        public bool Summoned { get; set; }=false;
+        [JsonPropertyName("refCards")]
+        public List<string> RefCards { get; set; }=new();
+
         static public JCard Load(string path) {
             var text = File.ReadAllText(path);
             var result = JsonSerializer.Deserialize<JCard>(text);
@@ -107,7 +112,9 @@ namespace game.cards.loaders {
                 template.Type,
                 template.Text,
                 colName,
-                Path.Join(path, template.ScriptPath)
+                Path.Join(path, template.ScriptPath),
+                template.Summoned,
+                template.RefCards
             );
         }
     }

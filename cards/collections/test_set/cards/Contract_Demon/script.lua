@@ -7,6 +7,7 @@ function _CreateCard(props)
 
     local result = CardCreation:Unit(props)
 
+    -- TODO add check that owner gained life
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
         :Check(Common.AlwaysTrue)
         :IsSilent(false)

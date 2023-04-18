@@ -232,6 +232,19 @@ function Common:IsOwnersSpell(card)
 end
 
 
+function Common:AtLeastOneUnitInPlay()
+    local players = GetPlayers()
+    for _, player in ipairs(players) do
+        for _, unit in ipairs(player.units) do
+            if unit ~= nil then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
 Utility = {}
 
 

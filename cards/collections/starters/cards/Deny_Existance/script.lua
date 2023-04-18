@@ -12,5 +12,15 @@ function _CreateCard(props)
         Destroy(target.id)
     end
 
+    local prevCanPlay = result.CanPlay
+    function result:CanPlay(player)
+        local prev = prevCanPlay(self, player)
+        if not prev then
+            return false
+        end
+        return Common:AtLeastOneUnitInPlay()
+    end
+
+
     return result
 end

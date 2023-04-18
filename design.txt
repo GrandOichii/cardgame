@@ -174,7 +174,7 @@ Text:
     {Good}
 
 
-    [Cleanse the Land]
+    [Cleansing the Land]
 Type: Charm
 Cost: TODO
 Text:
@@ -275,7 +275,7 @@ Type: Spell
 Cost: 5
 Text:
     {Evil}
-    Burn up to (2/  3  /4) cards in your opponents discard. Draw a card for each burned card.
+    Burn up to (2/ 3 /4) cards in your opponents discard. Draw a card for each burned card.
 
 
     [Foul Ideas]
@@ -389,13 +389,6 @@ Text:
     All of your enemy units are {Aggresive}.
 
 
-    [Ice Wall]
-Type: Unit
-Cost: 3
-Power: 0
-Life: 8
-
-
     [Heavy Fog]
 Type: Charm
 Cost: 5
@@ -452,14 +445,6 @@ Text:
     {Power Up} a card in your discard 3 times.
 
 
-    [Old Mentor]
-Type: Unit
-Cost: 2
-Power: 1
-Life: 2
-Text:
-    When [CARDNAME] enters play, {Power Up} a card in your hand.
-
 
     [Gain Knowledge]
 Type: Spell
@@ -505,7 +490,7 @@ Type: Treasure
 Cost: 4
 Life: 5
 Text:
-    Discard a [Throw Rock] card: [CARDNAME] deals (2/ 2 /4) damage to target unit.
+    Discard a [Throw Rock] card: [CARDNAME] deals (2/ 2 /4) damage to target Unit.
 
 
     [Rock Smelter]
@@ -524,14 +509,6 @@ Text:
     Discard 2 [Throw Rock] cards: target unit gains +4 power.
 
 
-    [Risen Dead]
-Type: Unit
-Cost: 2
-Power: 2
-Life: 2
-Text: 
-
-
     [Repentance]
 Type: Bond
 Text:
@@ -542,7 +519,7 @@ Text:
 Type: Spell
 Cost: 4
 Text:
-    Exchange control of units on this lane.
+    Exchange control of units on target lane.
 
 
     [Gang Wars] // TODO change name, should be something that implies stealing
@@ -577,13 +554,6 @@ Life: 2
 Text:
     Units you control have +2 power.
     At the start of your turn, {Power Down} [CARDNAME]. If (0/ 2 /3) is equal to 0, destroy [CARDNAME].
-
-
-[A Critical Flaw]
-    Type: Spell
-    Cost: 7
-    Text:
-        Destroy all treasures.
 
 
 [Hot Springs]

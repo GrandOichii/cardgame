@@ -90,6 +90,15 @@ class InfoBoard(Board):
         self.bg = BoxSprite(width, height)
         self.bond = None
 
+        # TODO not tested
+        self.bond_group = ClickableSpriteGroup([
+            ClickConfig(
+                lambda element: client.Client.INSTANCE.last_state.request == 'in_play' and element.card.id in client.Client.INSTANCE.last_state.args,
+                lambda element: f'{element.unit.card.id}'
+            )
+        ])
+        # self.boards += [self.bond_group]
+
         self.load(None)
 
 
@@ -98,19 +107,20 @@ class InfoBoard(Board):
         self.sprites.empty()
 
         self.sprites.add(self.bg)
-        # TODO update bond
 
         if state is None: return
         self.bond = CardSprite(state.bond)
         self.bond.rect.y = self.y + self.height - self.bond.rect.height - 5
         self.bond.rect.centerx = self.width / 2
-        self.sprites.add(self.bond)
+        self.bond_group.add(self.bond)
+        # self.sprites.add(self.bond)
 
         return super().load(state)
     
 
     def draw(self, surface: pg.Surface):
         super().draw(surface)
+        self.bond_group.draw(surface)
 
         if not self.state: return
 

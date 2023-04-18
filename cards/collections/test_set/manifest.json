@@ -16,6 +16,7 @@
         "cards/Root_Elemental",
         "cards/New_Recruit",
         "cards/Shieldmate",
+        "cards/Recruiter",
         "cards/Meteor_Strike",
         "cards/Growth_Chant",
         "cards/Bolt_Shot",
@@ -28,7 +29,6 @@
     "cards1": [
         "cards/Good_Cleric",
         "cards/Source",
-        "cards/Healer",
-        "cards/Old_Wizard"
+        "cards/Healer"
     ]
 }

@@ -54,35 +54,14 @@ function _PromptAction(stateJ)
         return result
     end
 
-    -- -- play a Source card if can
-    -- for _, card in ipairs(state.myData.hand) do
-    --     if card.type == 'Source' then
-    --         local result = 'play '..card.id
-    --         if not (stateJ == lastState and lastAction == result) then
-    --             lastAction = result
-    --             lastState = stateJ
-    --             return result
-    --         end
-    --     end
-    -- end
-
-    -- -- play the most expensive card can cast
-    -- local toBePlayed = nil
-    -- for _, card in ipairs(state.myData.hand) do
-    --     if toBePlayed == nil or
-    --         (card.cost > toBePlayed.cost and
-    --         me.energy >= card.cost and
-    --         not (stateJ == lastState and lastAction == 'play '..card.id))
-    --     then
-    --         toBePlayed = card
-    --     end
-    -- end
-    -- if toBePlayed ~= nil then
-    --     local result = 'play '..toBePlayed.id
-    --     lastAction = result
-    --     lastState = stateJ
-    --     return result
-    -- end
+    for i, unit in ipairs(me.units) do
+        if unit.card ~= nil then
+            if unit.attacksLeft > 0 then
+                local result = 'attack '..(i-1)
+                return result
+            end
+        end
+    end
 
     return 'pass'
 end
