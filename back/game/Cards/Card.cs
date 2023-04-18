@@ -102,7 +102,7 @@ namespace game.cards {
             var creationF = Utility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
             var props = GetProps(lState);
             var returned = creationF.Call(props);
-            var table = Utility.GetReturnAsTable(returned);
+            var table = Utility.GetReturnAs<LuaTable>(returned);
             return new CardW(this, table);
         }
     }

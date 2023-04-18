@@ -92,9 +92,17 @@ namespace game.util {
             return (bool)result;
         }
 
-        static public LuaTable GetReturnAsTable(object[] returned, int index=0) {
+        static public long GetReturnAsLong(object[] returned, int index=0) {
             CheckIndex(returned, index);
-            var result = returned[index] as LuaTable;
+            var result = returned[index] as long?;
+            if (result is null) throw new Exception("Return value in index " + index + " is not a table");
+            // TODO casting is bad
+            return (long)result;
+        }
+
+        static public T GetReturnAs<T>(object[] returned, int index=0) where T : class {
+            CheckIndex(returned, index);
+            var result = returned[index] as T;
             if (result is null) throw new Exception("Return value in index " + index + " is not a table");
             return result;
         }

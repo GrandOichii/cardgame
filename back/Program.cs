@@ -14,6 +14,7 @@ using game.decks;
 
 using Shared;
 
+
 class Program {
 
     static private IPAddress ADDRESS = IPAddress.Any;
@@ -38,10 +39,12 @@ class Program {
 
         var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
         var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener, config));
+        // var p1 = new Player(m, "Igor", deck1, new LuaBotController("../bots/test_bot.lua"));
 
         var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/test.deck"));
         // var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
-        var p2 = new Player(m, "Nastya", deck2, new TCPPlayerController(listener, config));
+        // var p2 = new Player(m, "Nastya", deck2, new TCPPlayerController(listener, config));
+        var p2 = new Player(m, "Nastya", deck2, new LuaBotController("../bots/test_bot.lua"));
         
         g.CardMaster.LogContents();
 
@@ -64,66 +67,8 @@ class Program {
 }
 
 
-class TCPPlayerController : PlayerController
-{
-    byte[] buffer = new byte[1024];
-    private TcpClient _handler;
-
-    public TCPPlayerController(TcpListener listener, MatchConfig config) {
-        Logger.Instance.Log("TCPPlayerController", "Waiting for connection");
-
-        _handler = listener.AcceptTcpClient();
-        
-        Logger.Instance.Log("TCPPlayerController", "Connection established, sending match config");
-        Write(config.ToJson());
-    }
-
-    private void Write(string message) {
-        var data = Encoding.UTF8.GetBytes(message);
-        var handler = _handler.GetStream();
-        NetUtil.Write(handler, message);
-        // _handler.GetStream().Write(data);
-        Logger.Instance.Log("TCPPlayerController", "Sent message " + message);
-    }
-
-    private string Read() {
-        var stream = _handler.GetStream();
-        var result = NetUtil.Read(stream);
-        System.Console.WriteLine("Read: " + result);
-        // string? result = null;
-        //     while (result is null)
-        //         result = Console.ReadLine();
-        //     System.Console.WriteLine();
-        return result;
-    }
-
-    public override string PromptAction(Player controlledPlayer, Match match)
-    {
-        // Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
-        
-        // TODO? args are available commands
-        Write(CreateMState(controlledPlayer, match, "enter command", new()).ToJson());
-        return Read();
-    }
-
-    public override int PromptLane(string prompt, Player controlledPlayer, Match match)
-    {
-        // Write(prompt);
-
-        // TODO? args are available lanes
-        Write(CreateMState(controlledPlayer, match, "pick lane", new()).ToJson());
-        return int.Parse(Read());
-    }
-
-    public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match) {
-        Write(CreateMState(controlledPlayer, match, prompt, args).ToJson());
-        return Read();        
-    }
-
-
-    #region Parsers
-
-    static public MatchState CreateMState(Player player, Match match, string request, List<string> args) {
+static class MatchParsers {
+static public MatchState CreateMState(Player player, Match match, string request, List<string> args) {
         var result = new MatchState();
         result.Players = new PlayerState[match.Players.Count];
         for (int i = 0; i < match.Players.Count; i++) {
@@ -241,11 +186,133 @@ class TCPPlayerController : PlayerController
 
 
 
+}
 
-    #endregion
+
+class TCPPlayerController : PlayerController
+{
+    byte[] buffer = new byte[1024];
+    private TcpClient _handler;
+
+    public TCPPlayerController(TcpListener listener, MatchConfig config) {
+        Logger.Instance.Log("TCPPlayerController", "Waiting for connection");
+
+        _handler = listener.AcceptTcpClient();
+        
+        Logger.Instance.Log("TCPPlayerController", "Connection established, sending match config");
+        Write(config.ToJson());
+    }
+
+    private void Write(string message) {
+        var data = Encoding.UTF8.GetBytes(message);
+        var handler = _handler.GetStream();
+        NetUtil.Write(handler, message);
+        // _handler.GetStream().Write(data);
+        Logger.Instance.Log("TCPPlayerController", "Sent message " + message);
+    }
+
+    private string Read() {
+        var stream = _handler.GetStream();
+        var result = NetUtil.Read(stream);
+        System.Console.WriteLine("Read: " + result);
+        // string? result = null;
+        //     while (result is null)
+        //         result = Console.ReadLine();
+        //     System.Console.WriteLine();
+        return result;
+    }
+
+    public override string PromptAction(Player controlledPlayer, Match match)
+    {
+        // Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
+        
+        // TODO? args are available commands
+        Write(MatchParsers.CreateMState(controlledPlayer, match, "enter command", new()).ToJson());
+        return Read();
+    }
+
+    public override int PromptLane(string prompt, Player controlledPlayer, Match match)
+    {
+        // Write(prompt);
+
+        // TODO? args are available lanes
+        Write(MatchParsers.CreateMState(controlledPlayer, match, "pick lane", new()).ToJson());
+        return int.Parse(Read());
+    }
+
+    public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match) {
+        Write(MatchParsers.CreateMState(controlledPlayer, match, prompt, args).ToJson());
+        return Read();        
+    }
 
     public override void Update(Player controlledPlayer, Match match)
     {
-        Write(CreateMState(controlledPlayer, match, "update", new()).ToJson());
+        Write(MatchParsers.CreateMState(controlledPlayer, match, "update", new()).ToJson());
+    }
+}
+
+
+// static class StateExtensions {
+//     public static LuaTable ToLuaTable(this MatchState state, Lua lState) {
+//         var result = Utility.CreateTable(lState);
+//         foreach (var card )
+//         return result;
+//     }
+
+//     public static LuaTable ToLuaTable(this CardState state, Lua lState) {
+//         var result = Utility.CreateTable(lState);
+
+//         return result;
+
+//     }
+// }
+
+
+class LuaBotController : PlayerController
+{
+    public Lua LState { get; }
+
+    public LuaFunction PromptF { get; }
+    public LuaFunction PromptActionF { get; }
+    public LuaFunction PromptLaneF { get; }
+    public LuaFunction UpdateF { get; }
+
+
+    public LuaBotController(string scriptPath) {
+        LState = new();
+
+        LState.DoFile(scriptPath);
+
+        PromptF = Utility.GetGlobalF(LState, "_Prompt");
+        PromptActionF = Utility.GetGlobalF(LState, "_PromptAction");
+        PromptLaneF = Utility.GetGlobalF(LState, "_PromptLane");
+        UpdateF = Utility.GetGlobalF(LState, "_Update");
+
+    }
+
+
+    public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match)
+    {
+        // TODO change to created luatable
+        var result = PromptF.Call(MatchParsers.CreateMState(controlledPlayer, match, prompt, args).ToJson());
+        return Utility.GetReturnAs<string>(result);
+    }
+
+    public override string PromptAction(Player controlledPlayer, Match match)
+    {
+        var result = PromptActionF.Call(MatchParsers.CreateMState(controlledPlayer, match, "prompt action", new()).ToJson());
+        return Utility.GetReturnAs<string>(result);
+    }
+
+    public override int PromptLane(string prompt, Player controlledPlayer, Match match)
+    {
+        var result = PromptLaneF.Call(MatchParsers.CreateMState(controlledPlayer, match, prompt, new()).ToJson());
+        var rInt = Utility.GetReturnAsLong(result);
+        return (int)rInt;
+    }
+
+    public override void Update(Player controlledPlayer, Match match)
+    {
+        UpdateF.Call(MatchParsers.CreateMState(controlledPlayer, match, "update", new()).ToJson());
     }
 }
