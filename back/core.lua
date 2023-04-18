@@ -168,6 +168,28 @@ function Common:IsOwnersTurn(card)
 end
 
 
+function Common:TargetUnitOrTreasure(playerID)
+    local args = {}
+    local d = {}
+    local players = GetPlayers()
+    for _, p in ipairs(players) do
+        for _, unit in ipairs(p.units) do
+            if unit ~= nil then
+                d[unit.id] = unit
+                args[#args+1] = tostring(unit.id)
+            end
+        end
+        for _, treasure in ipairs(p.treasures) do
+            d[treasure.id] = treasure
+            args[#args+1] = tostring(treasure.id)
+        end
+    end
+    local uID = PromptPlayer(playerID, 'in_play', args)
+    local result = d[uID]
+    return result
+end
+
+
 function Common:TargetUnit(playerID)
     local args = {}
     local d = {}
@@ -180,7 +202,7 @@ function Common:TargetUnit(playerID)
             end
         end
     end
-    local uID = PromptPlayer(playerID, 'target_unit', args)
+    local uID = PromptPlayer(playerID, 'in_play', args)
     local result = d[uID]
     return result
 end
@@ -196,7 +218,7 @@ function Common:TargetTreasure(playerID)
             args[#args+1] = tostring(treasure.id)
         end
     end
-    local uID = PromptPlayer(playerID, 'target_treasure', args)
+    local uID = PromptPlayer(playerID, 'in_play', args)
     local result = d[uID]
     return result
 end

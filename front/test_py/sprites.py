@@ -156,7 +156,7 @@ class PlayerBoard(Board):
                 lambda element: f'attack {element.lane_i}'
             ),
             ClickConfig (
-                lambda element: element.unit is not None and client.Client.INSTANCE.last_state.request == 'target_unit' and element.unit.card.id in client.Client.INSTANCE.last_state.args,
+                lambda element: element.unit is not None and client.Client.INSTANCE.last_state.request == 'in_play' and element.unit.card.id in client.Client.INSTANCE.last_state.args,
                 lambda element: f'{element.unit.card.id}'
             )
         ])
@@ -425,7 +425,7 @@ class TreasureBoard(Board):
 
         self.cards = ClickableSpriteGroup([
             ClickConfig(
-                lambda element: element.card is not None and client.Client.INSTANCE.last_state.request == 'target_treasure' and element.card.id in client.Client.INSTANCE.last_state.args,
+                lambda element: element.card is not None and client.Client.INSTANCE.last_state.request == 'in_play' and element.card.id in client.Client.INSTANCE.last_state.args,
                 lambda element: f'{element.card.id}'
             )
         ])
