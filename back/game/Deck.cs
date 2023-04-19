@@ -16,9 +16,9 @@ namespace game.decks {
         }
 
         public void UnloadCards(CardMaster cMaster) {
-            cMaster.Unload(Bond.Name, Bond.Collection);
+            cMaster.Unload(Bond);
             foreach (var card in MainDeck.Keys)
-                cMaster.Unload(card.Name, card.Collection);
+                cMaster.Unload(Bond);
         }
 
         static private Card ParseCard(CardMaster cMaster, string cName) {
@@ -27,7 +27,12 @@ namespace game.decks {
             var colName = split[0];
             var cardName = split[1];
             cMaster.Load(cardName, colName);
-            return cMaster.Get(cardName, colName);
+            var result = cMaster.Get(cardName, colName);
+            foreach (var refC in result.RefCards) {
+                Logger.Instance.Log("Deck", "Loading reference for card " + cName + ": " + refC);
+                var refVard = ParseCard(cMaster, refC);
+            }
+            return result;
         }
 
         static public Deck FromText(CardMaster cMaster, string text) {
@@ -57,6 +62,7 @@ namespace game.decks {
                     continue;
                 }
                 var card = ParseCard(cMaster, cName);
+                if (card.Summoned) throw new Exception("Failed to add card " + card.Name + ": it is used for summoning");
                 nameMap.Add(cName, card);
                 cards.Add(card, amount);
             }

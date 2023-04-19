@@ -1,10 +1,10 @@
 {
-    "name": "Rectuiter",
+    "name": "Recruiter",
     "type": "Unit",
     "text": "When [CARDNAME] enters play, summon a [Recruit] card into your hand.",
     "script": "script.lua",
 
     "refCards": [
-        "Recruit"
+        "test_set::Recruit"
     ]
 }

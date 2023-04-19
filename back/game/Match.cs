@@ -8,6 +8,7 @@ using game.cards;
 using game.scripts;
 using game.core.phases;
 using game.core.effects;
+using game.core;
 
 namespace game.match {
     class CardManager
@@ -23,7 +24,15 @@ namespace game.match {
         public void Add(List<CardW> cards)
         {
             foreach (var card in cards)
-                Cards[card.ID] = card;
+                Add(card);
+        }
+
+        public void Add(CardW card) {
+            Cards[card.ID] = card;
+        }
+
+        public void Remove(string cID) {
+            Cards.Remove(cID);
         }
     }
 
@@ -64,6 +73,8 @@ namespace game.match {
             new TurnEnd()
         };
 
+        public Game Game { get; }
+
         public MatchConfig Config { get; private set; }
         public Lua LState { get; private set; }
         public Player? Winner { get; set; }
@@ -74,7 +85,8 @@ namespace game.match {
 
         public CardManager AllCards { get; private set; }
 
-        public Match(MatchConfig config) {
+        public Match(Game game, MatchConfig config) {
+            Game = game;
             Config = config;
 
             // load scripts
@@ -245,16 +257,15 @@ namespace game.match {
     }
 
     class MatchPool {
-
         public List<Match> Matches { get; private set; }
 
         public MatchPool() {
             Matches = new();
         }
 
-        public Match NewMatch(MatchConfig config) {
+        public Match NewMatch(Game game, MatchConfig config) {
             Logger.Instance.Log("MatchPool", "Requested to create new match");
-            return new Match(config);
+            return new Match(game, config);
         }
 
     }

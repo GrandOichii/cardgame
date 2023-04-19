@@ -35,7 +35,7 @@ class Program {
         // string configPath = "../match_configs/test_match.json";
         string configPath = "../match_configs/normal.json";
         var config = MatchConfig.FromText(File.ReadAllText(configPath));
-        var m = g.MatchPool.NewMatch(config);
+        var m = g.MatchPool.NewMatch(g, config);
 
         var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/deck1.deck"));
         var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener, config));

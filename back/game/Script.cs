@@ -281,5 +281,14 @@ namespace game.scripts
             // TODO? remove
             throw new Exception("Failed to destroy card with id " + cID + ": it's not in play");
         }
+
+
+        [LuaCommand]
+        public LuaTable SummonCard(string colName, string cName) {
+            var template = _match.Game.CardMaster.Get(cName, colName);
+            var t = template.ConstructWrapper(_match.LState, true);
+            _match.AllCards.Add(t);
+            return t.Info;
+        }
     }
 }

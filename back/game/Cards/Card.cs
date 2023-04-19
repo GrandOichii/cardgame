@@ -29,7 +29,8 @@ namespace game.cards {
             Logger.Instance.Log("CardMaster", "Increasing reference counter of card " + name + " to " + _refCount[name]);
         }
 
-        public void Unload(string cName, string colName) {
+        public void Unload(Card card) {
+            string cName = card.Name, colName = card.Collection;
             var name = FmtCard(cName, colName);
             Logger.Instance.Log("CardMaster", "Requested to unload card " + name);
             if (!_cardIndex.ContainsKey(name)) throw new Exception("Tried to unload a card that is not loaded: " + name);
@@ -42,6 +43,18 @@ namespace game.cards {
             _refCount.Remove(name);
 
             Logger.Instance.Log("CardMaster", "Card  " + name + " was removed from CardMaster");
+
+            foreach (var refC in card.RefCards)
+                Unload(refC);
+        }
+
+        public void Unload(string cName) {
+            var split = cName.Split("::");
+            if (split.Length != 2) throw new Exception("Failed to split card name " + cName);
+            var colName = split[0];
+            var cardName = split[1];
+            var card = Get(cardName, colName);
+            Unload(card);
         }
 
         public Card Get(string cName, string colName) {
@@ -101,7 +114,7 @@ namespace game.cards {
             return result;
         }
 
-        public CardW ConstructWrapper(Lua lState) {
+        public CardW ConstructWrapper(Lua lState, bool summoned=false) {
             lState.DoFile(ScriptPath);
             var creationF = Utility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
             var props = GetProps(lState);
