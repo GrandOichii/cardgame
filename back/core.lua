@@ -358,6 +358,11 @@ function CardCreation:CardObject(props)
         return Utility:TableLength(self.mutable) > 0
     end
 
+    function result:AddKeyword(keywordName)
+        local keywordData = Keywords.Map[keywordName]
+        keywordData.modFunc(self)
+    end
+
     return result
 end
 
@@ -486,3 +491,19 @@ function CardCreation:Unit(props)
 
     return result
 end
+
+
+Keywords = {}
+Keywords.Map = {
+    virtuous = {
+        modFunc = function (card)
+            local prevPlay = card.Play
+            function card:Play(player)
+                prevPlay(card, player)
+
+                local c = SummonCard('test_set', 'Healing Light')
+                PlaceIntoHand(c.id, player.id)
+            end
+        end
+    }
+}

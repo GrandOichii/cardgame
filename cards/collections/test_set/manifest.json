@@ -19,6 +19,7 @@
         "cards/Recruiter",
         "cards/Recruit",
         "cards/Meteor_Strike",
+        "cards/Faithful_Cleric",
         "cards/Infestation",
         "cards/Invasive_Critter",
         "cards/Growth_Chant",
@@ -26,6 +27,7 @@
         "cards/Inspiration",
         "cards/Young_Sphinx",
         "cards/First_Aid",
+        "cards/Healing_Light",
         "cards/Power_Tester",
         "cards/Brute"
     ],

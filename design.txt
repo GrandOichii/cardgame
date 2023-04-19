@@ -164,7 +164,7 @@ Cost: 1
 Power: 1
 Life: 3
 Text: 
-    {Good}
+    {Virtuous}
 
 
     [Cleansing the Land]
@@ -292,7 +292,7 @@ Cost: 4
 Power: 1
 Life: 2
 Text:
-    {Good}
+    {Virtuous}
     {Evil}
     
 
@@ -597,25 +597,10 @@ Text:
         Target Unit gains +3 power and +3 life.
 
 
-[Infestation]
-    Type: Spell
-    Cost: 6
-    Text:
-        On each of your lanes, summon a [Invasive Critter] card.
-
-
-(Summoned)
-[Invasive Critter]
-    Type: Unit
-    Cost: 2
-    Life: 2
-    Power: 2
-    Text: 
-
 // Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)
 
 == Keywords ==
-{Good} - When you cast a {Good} card, summon a [Healing Light] card into your hand.
+{Virtuous} - When you cast a {Virtuous} card, summon a [Healing Light] card into your hand.
 {Evil} - When you cast a {Evil} card, summon a [Corrupting Darkness] card into your hand.
 {Power Up} - Increment all bracketed numbers in the card.
 {Power Down} - Decrement all bracketed numbers in the card.

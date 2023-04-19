@@ -1,0 +1,8 @@
+{
+    "name": "Healing Light",
+    "type": "Spell",
+    "text": "Gain 3 life.",
+    "script": "script.lua",
+
+    "summoned": true
+}
