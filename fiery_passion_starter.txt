@@ -56,7 +56,7 @@ v [Fire Mage Apprentice]
         When [CARDNAME] is replaced, [CARDNAME] deals 2 damage to your opponent.
 
 
-[Fire Archmage]
+v [Fire Archmage]
     Type: Unit
     Cost: 6
     Power: 6

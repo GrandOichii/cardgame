@@ -177,7 +177,7 @@ namespace game.scripts
 
 
         [LuaCommand]
-        public void PlaceInUnits(string cID, int pID) {
+        public void RequestPlaceInUnits(string cID, int pID) {
             var player = GetPlayer(pID);
             var card = GetCard(cID);
             var cName = card.GetCardWrapper().Original.Name;
@@ -188,15 +188,25 @@ namespace game.scripts
             if (result >= _match.Config.LaneCount) throw new Exception("Player " + player.ShortStr() + " tried to place unit " + card.ShortStr() + " in lane " + result);
 
             // replace unit if present
+            PlaceInUnits(cID, pID, result);
+            
+        }
+
+
+        [LuaCommand]
+        public void PlaceInUnits(string cID, int pID, int lane) {
+            var player = GetPlayer(pID);
+            var card = GetCard(cID);
+
             var lanes = player.Lanes;
-            UnitW? replaced = lanes[result];
+            UnitW? replaced = lanes[lane];
             if (replaced is not null) {
                 replaced.Card.ExecFunc("LeavePlay", replaced.Card.Info, player.ToLuaTable(_match.LState));
                 player.PlaceIntoDiscard(replaced);
             }
 
-            lanes[result] = new UnitW(card);
-            Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " placed unit " + card.ShortStr() + " into lane " + result + (replaced is not null ? ", replacing unit " + replaced.Card.ShortStr() : ""));
+            lanes[lane] = new UnitW(card);
+            Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " placed unit " + card.ShortStr() + " into lane " + lane + (replaced is not null ? ", replacing unit " + replaced.Card.ShortStr() : ""));
             card.ExecFunc("OnEnter", card.Info, player.ToLuaTable(_match.LState));
             if (replaced is null) return;
 

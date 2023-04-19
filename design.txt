@@ -133,13 +133,6 @@ Answer Prayers
 
 == Cards ==
 
-    [New Recruit]
-Type: Unit
-Cost: 1
-Power: 1
-Life: 1
-Text: 
-
     [Landslide]
 Type: Spell
 Cost: TODO 3
@@ -445,14 +438,6 @@ Text:
     {Power Up} a card in your discard 3 times.
 
 
-
-    [Gain Knowledge]
-Type: Spell
-Cost: 3
-Text:
-    Draw (2/ 3 /5) cards.
-
-
     [Lifegem]
 Type: Treasure
 Life: 5
@@ -569,7 +554,7 @@ Text:
     Power: 7
     Life: 7
     Text:
-        When [CARDNAME] enters play, summon a [Healing Touch], a [Progenitor Knowledge], a [Gloomy Rite], a [Bolt Burn] and a [Wild Evolution] cards into your hand.
+        When [CARDNAME] enters play, summon the following cards into your hand:\n[Healing Touch]\n[Progenitor Knowledge]\n[Gloomy Rite]\n[Bolt Burn]\n[Wild Evolution]
 
 
 (Summoned)

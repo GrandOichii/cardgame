@@ -11,6 +11,7 @@
         "GetController",
         "DealDamage",
         "DrawCards",
+        "RequestPlaceInUnits",
         "PlaceInUnits",
         "RemoveFromDiscard",
         "PlaceIntoHand",

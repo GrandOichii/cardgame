@@ -1,0 +1,6 @@
+{
+    "name": "Invasive Critter",
+    "type": "Unit",
+    "text": "",
+    "script": "script.lua"
+}

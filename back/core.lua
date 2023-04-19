@@ -475,7 +475,7 @@ function CardCreation:Unit(props)
     local prevPlay = result.Play
     function result:Play(player)
         prevPlay(self, player)
-        PlaceInUnits(self.id, player.id)
+        RequestPlaceInUnits(self.id, player.id)
     end
 
     local prevLeave = result.LeavePlay
