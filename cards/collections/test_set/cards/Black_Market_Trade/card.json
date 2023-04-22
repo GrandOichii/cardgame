@@ -1,0 +1,11 @@
+{
+    "name": "Black Market Trade",
+    "type": "Spell",
+    "text": "{Virtuous}\n{Evil}",
+    "script": "script.lua",
+
+    "refCards": [
+        "test_set::Corrupting Darkness",
+        "test_set::Healing Light"
+    ]
+}
