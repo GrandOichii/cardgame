@@ -168,59 +168,153 @@ function Common:IsOwnersTurn(card)
 end
 
 
-function Common:TargetUnitOrTreasure(playerID)
+
+
+Common.Targeting = {
+    Selectors = {}
+}
+
+
+function Common.Targeting.Selectors:Filter(delegate)
+    return function (cards)
+        local result = {}
+        for _,card in ipairs(cards) do
+            if card ~= nil and delegate(card) then
+                result[#result+1] = card
+            end
+        end
+        return result
+    end
+end
+
+
+function Common.Targeting.Selectors:All()
+    return Common.Targeting.Selectors:Filter(function( card ) return true end)
+end
+
+
+function Common.Targeting.Selectors:AllOfPlayers( playerID )
+    return Common.Targeting.Selectors:Filter(function( card ) return GetController(card.id) == playerID end)
+end
+
+
+function Common.Targeting:Target( playerID, configs )
+    --[[ Common:Target(player.id, {
+        {
+            what = 'treasure',
+            which = Common:Targeting:Selectors:All()
+        },
+        {
+            what = 'bond',
+            which = Common:Targeting:Selectors:AllOfPlayers(player.id)
+        },
+        {
+            what = 'unit',
+            which = Common:Targeting:Selectors:Filter(function unit unit.power > 2 end)
+        }
+    })
+    --]]
     local args = {}
     local d = {}
     local players = GetPlayers()
-    for _, p in ipairs(players) do
-        for _, unit in ipairs(p.units) do
-            if unit ~= nil then
-                d[unit.id] = unit
-                args[#args+1] = tostring(unit.id)
+
+    for _, player in ipairs(players) do
+        local zoneMap = {
+            treasures = player.treasures,
+            units = player.units,
+            bond = player.bond,
+        }
+
+        for _, config in ipairs(configs) do
+            local zone = zoneMap[config.what]
+            local add = config.which(zone)
+            for _, card in ipairs(add) do
+                d[card.id] = card
+                args[#args+1] = card
             end
         end
-        for _, treasure in ipairs(p.treasures) do
-            d[treasure.id] = treasure
-            args[#args+1] = tostring(treasure.id)
-        end
     end
+
     local uID = PromptPlayer(playerID, 'in_play', args)
     local result = d[uID]
     return result
 end
 
 
-function Common:TargetUnit(playerID)
-    local args = {}
-    local d = {}
-    local players = GetPlayers()
-    for _, p in ipairs(players) do
-        for _, unit in ipairs(p.units) do
-            if unit ~= nil then
-                d[unit.id] = unit
-                args[#args+1] = tostring(unit.id)
-            end
-        end
-    end
-    local uID = PromptPlayer(playerID, 'in_play', args)
-    local result = d[uID]
-    return result
+function Common.Targeting:Unit(playerID)
+    return Common.Targeting:Target(playerID, {
+        {
+            what = 'units',
+            which = Common.Targeting.Selectors:All()
+        }
+    })
+    -- local args = {}
+    -- local d = {}
+    -- local players = GetPlayers()
+    -- for _, p in ipairs(players) do
+    --     for _, unit in ipairs(p.units) do
+    --         if unit ~= nil then
+    --             d[unit.id] = unit
+    --             args[#args+1] = tostring(unit.id)
+    --         end
+    --     end
+    -- end
+    -- local uID = PromptPlayer(playerID, 'in_play', args)
+    -- local result = d[uID]
+    -- return result
 end
 
 
-function Common:TargetTreasure(playerID)
-    local args = {}
-    local d = {}
-    local players = GetPlayers()
-    for _, p in ipairs(players) do
-        for _, treasure in ipairs(p.treasures) do
-            d[treasure.id] = treasure
-            args[#args+1] = tostring(treasure.id)
-        end
-    end
-    local uID = PromptPlayer(playerID, 'in_play', args)
-    local result = d[uID]
-    return result
+function Common.Targeting:Treasure(playerID)
+    return Common.Targeting:Target(playerID, {
+        {
+            what = 'treasures',
+            which = Common.Targeting.Selectors:All()
+        }
+    })
+    -- local args = {}
+    -- local d = {}
+    -- local players = GetPlayers()
+    -- for _, p in ipairs(players) do
+    --     for _, treasure in ipairs(p.treasures) do
+    --         d[treasure.id] = treasure
+    --         args[#args+1] = tostring(treasure.id)
+    --     end
+    -- end
+    -- local uID = PromptPlayer(playerID, 'in_play', args)
+    -- local result = d[uID]
+    -- return result
+end
+
+function Common.Targeting:UnitOrTreasure(playerID)
+    return Common.Targeting:Target(playerID, {
+        {
+            what = 'treasures',
+            which = Common.Targeting.Selectors:All()
+        },
+        {
+            what = 'units',
+            which = Common.Targeting.Selectors:All()
+        }
+    })
+    -- local args = {}
+    -- local d = {}
+    -- local players = GetPlayers()
+    -- for _, p in ipairs(players) do
+    --     for _, unit in ipairs(p.units) do
+    --         if unit ~= nil then
+    --             d[unit.id] = unit
+    --             args[#args+1] = tostring(unit.id)
+    --         end
+    --     end
+    --     for _, treasure in ipairs(p.treasures) do
+    --         d[treasure.id] = treasure
+    --         args[#args+1] = tostring(treasure.id)
+    --     end
+    -- end
+    -- local uID = PromptPlayer(playerID, 'in_play', args)
+    -- local result = d[uID]
+    -- return result
 end
 
 

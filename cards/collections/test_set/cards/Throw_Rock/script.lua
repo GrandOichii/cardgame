@@ -19,7 +19,7 @@ function _CreateCard( props )
     function result:Effect( player )
         prevEffect(self, player)
 
-        local target = Common:TargetTreasure(player.id)
+        local target = Common.Targeting:Treasure(player.id)
         DealDamage(self.id, target.id, 1)
     end
 

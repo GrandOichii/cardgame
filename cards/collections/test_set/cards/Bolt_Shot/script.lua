@@ -8,7 +8,7 @@ function _CreateCard(props)
     local prevEffect = result.Effect
     function result:Effect(player)
         prevEffect(self, player)
-        local unit = Common:TargetUnit(player.id)
+        local unit = Common.Targeting:Unit(player.id)
         DealDamage(self.id, unit.id, 3)
     end
 
