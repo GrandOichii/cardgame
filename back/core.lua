@@ -245,6 +245,22 @@ function Common:AtLeastOneUnitInPlay()
 end
 
 
+function Common:AtLeastOneTreasureInPlay()
+    local players = GetPlayers()
+    for _, player in ipairs(players) do
+        for _, unit in ipairs(player.treasures) do
+            if unit ~= nil then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
+
+
+
 Utility = {}
 
 
