@@ -1,7 +1,7 @@
 {
     "name": "Faithful Cleric",
     "type": "Unit",
-    "text": "{Good}",
+    "text": "{Virtuous}",
     "script": "script.lua",
 
     "refCards": [

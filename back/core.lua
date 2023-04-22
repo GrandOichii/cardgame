@@ -505,5 +505,16 @@ Keywords.Map = {
                 PlaceIntoHand(c.id, player.id)
             end
         end
+    },
+    evil = {
+        modFunc = function (card)
+            local prevPlay = card.Play
+            function card:Play(player)
+                prevPlay(card, player)
+
+                local c = SummonCard('test_set', 'Corrupting Darkness')
+                PlaceIntoHand(c.id, player.id)
+            end
+        end
     }
 }
