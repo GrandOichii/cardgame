@@ -293,6 +293,10 @@ class HandBoard(Board):
             ClickConfig(
                 lambda element: client.Client.INSTANCE.last_state.request == 'enter command',
                 lambda element: f'play {element.card.id}'
+            ),
+            ClickConfig(
+                lambda element: client.Client.INSTANCE.last_state.request == 'in_hand' and element.card.id in client.Client.INSTANCE.last_state.args,
+                lambda element: f'{element.card.id}'
             )
         ])
 

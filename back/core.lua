@@ -288,6 +288,7 @@ function Common.Targeting:Treasure(prompt, playerID)
     -- return result
 end
 
+
 function Common.Targeting:UnitOrTreasure(prompt, playerID)
     return Common.Targeting:Target(prompt, playerID, {
         {
@@ -317,6 +318,21 @@ function Common.Targeting:UnitOrTreasure(prompt, playerID)
     -- local uID = PromptPlayer(playerID, 'in_play', args)
     -- local result = d[uID]
     -- return result
+end
+
+
+function Common.Targeting:CardInHand(prompt, player, delegate)
+    local args = {}
+    local d = {}
+    for _, card in ipairs(player.hand) do
+        if delegate(card) then
+            d[card.id] = card
+            args[#args+1] = tostring(card.id)
+        end
+    end
+    local uID = PromptPlayer(player.id, prompt, 'in_hand', args)
+    local result = d[uID]
+    return result
 end
 
 
