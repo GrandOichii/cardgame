@@ -475,3 +475,18 @@ class TreasureBoard(Board):
 
 #         bg = BoxSprite(width, height)
 #         self.sprites.add(bg)
+
+
+class MatchResultSprite(pg.sprite.Sprite):
+    def __init__(self, won: bool, wWidth: int, wHeight: int) -> None:
+        super().__init__()
+        
+        font = pg.font.Font('fonts/Montserrat-Thin.ttf', 48)
+        font.set_bold(True)
+        self.image = None
+        if won:
+            self.image = font.render('Won!', False, colors.GREEN)
+        else:
+            self.image = font.render('Lost!', False, colors.RED)
+        self.rect = self.image.get_rect()
+        self.rect.center = (wWidth / 2, wHeight / 2)

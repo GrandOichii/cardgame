@@ -28,6 +28,7 @@ class Client:
     def __init__(self):
         self.lanes_board = None
         self.last_state = None
+        self.result_message = None
         
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         pg.init()
@@ -64,6 +65,9 @@ class Client:
         self.second_player.load(state.players[state.myData.playerI])
 
         self.hand.load(state.myData.hand)
+
+        if state.request in ['won', 'lost']:
+            self.result_message = sprites.MatchResultSprite(state.request == 'won', WIDTH, HEIGHT)
 
         # card1 = CardSprite(state.players[0].bond)
         # self.all_sprites.add(card1)
@@ -123,11 +127,12 @@ class Client:
             self.clock.tick(FPS)
 
             # check for new data
-            statej = self.read_msg()
-            if statej != '':
-                parsed = parse_state(statej)
-                print(f'Request: {parsed.request}')
-                self.load(parsed)
+            if self.result_message is None:
+                statej = self.read_msg()
+                if statej != '':
+                    parsed = parse_state(statej)
+                    print(f'Request: {parsed.request}')
+                    self.load(parsed)
             # self.load(test_state())
 
             # events
@@ -148,6 +153,9 @@ class Client:
                 self.first_player.player_draw(self.screen, self.last_state.curPlayerI == 0)
                 self.second_player.player_draw(self.screen, self.last_state.curPlayerI == 1)
             self.hand.draw(self.screen)
+            # self.screen.blit()
+            if self.result_message is not None:
+                self.screen.blit(self.result_message.image, self.result_message.rect)
             # self.all_sprites.draw(self.screen)
             
             self.clicked = False

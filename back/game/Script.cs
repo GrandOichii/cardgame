@@ -113,6 +113,10 @@ namespace game.scripts
             player.Life -= amount;
             var result = prevLife - player.Life;
             Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " lost " + result + " life");
+            if (player.Life <= 0) {
+                var opponent = _match.OpponentOf(player);
+                _match.Winner = opponent;
+            }
             return result;
         }
 

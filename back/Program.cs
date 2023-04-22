@@ -208,7 +208,7 @@ class TCPPlayerController : PlayerController
         var handler = _handler.GetStream();
         NetUtil.Write(handler, message);
         // _handler.GetStream().Write(data);
-        Logger.Instance.Log("TCPPlayerController", "Sent message " + message);
+        // Logger.Instance.Log("TCPPlayerController", "Sent message " + message);
     }
 
     private string Read() {
@@ -249,6 +249,11 @@ class TCPPlayerController : PlayerController
     {
         Write(MatchParsers.CreateMState(controlledPlayer, match, "update", new()).ToJson());
     }
+
+    public override void InformMatchEnd(Player controlledPlayer, Match match, bool won) {
+        Write(MatchParsers.CreateMState(controlledPlayer, match, (won ? "won" : "lost"), new()).ToJson());
+    }
+
 }
 
 
@@ -314,5 +319,9 @@ class LuaBotController : PlayerController
     public override void Update(Player controlledPlayer, Match match)
     {
         UpdateF.Call(MatchParsers.CreateMState(controlledPlayer, match, "update", new()).ToJson());
+    }
+
+    public override void InformMatchEnd(Player controlledPlayer, Match match, bool won) {
+        // TODO
     }
 }

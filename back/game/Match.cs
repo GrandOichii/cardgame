@@ -162,6 +162,8 @@ namespace game.match {
 
             // TODO should always be true
             if (Winner is not null) Logger.Instance.Log("Match", "Winner is " + Winner.ShortStr());
+            foreach (var player in Players)
+                player.Controller.InformMatchEnd(player, this, player == Winner);
             Logger.Instance.Log("Match", "Finished turns loop");
         }
 

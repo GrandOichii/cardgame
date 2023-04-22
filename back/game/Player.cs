@@ -217,6 +217,8 @@ namespace game.player {
         abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
         abstract public void Update(Player controlledPlayer, Match match);
         abstract public string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match);
+        abstract public void InformMatchEnd(Player controlledPlayer, Match match, bool won);
+
         protected string ShortInfo(Player player) {
             var result = "";
             result += "\tLife: " + player.Life + "\n";
@@ -275,6 +277,10 @@ namespace game.player {
 
         public override void Update(Player controlledPlayer, Match match)
         {
+            // throw new NotImplementedException();
+        }
+
+        public override void InformMatchEnd(Player controlledPlayer, Match match, bool won) {
             // throw new NotImplementedException();
         }
     }
