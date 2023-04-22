@@ -169,6 +169,21 @@ function Common:IsOwnersTurn(card)
 end
 
 
+function Common:DiscardCards(prompt, player, amount)
+    local count = 0
+    for i = 1, amount do
+        if #player.hand == 0 then
+            break
+        end
+        local target = Common.Targeting:CardInHand(prompt..' (remaining: '..tostring(amount-i+1)..')', player, Common.Targeting.Selectors:All())
+        RemoveFromHand(target.id, player.id)
+        PlaceIntoDiscard(target.id, player.id)
+
+        player = PlayerByID(player.id)
+        count = count + 1
+    end
+    return count
+end
 
 
 Common.Targeting = {
@@ -389,6 +404,21 @@ function Common:OwnerGainedLife(card)
     end
 end
 
+
+function Common:IsInPlay(cardID)
+    local players = GetPlayers()
+    for _, player in ipairs(players) do
+        local zones = {player.treasures, player.units, {player.bond}}
+        for _, zone in ipairs(zones) do
+            for _, card in ipairs(zone) do
+                if card.id == cardID then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
 
 
 Utility = {}

@@ -3,19 +3,19 @@
 //
 // A burn deck, utilizes some cards that {Burn} cards in discard / hand.
 
-testers::Pyromania
-18 testers::Source
-3 testers::Lava Bomb
-2 testers::Pyromania
-1 testers::Fire Archmage
-3 testers::Burning Touch
-3 testers::Archivist
-1 testers::Fiery Outburst
-3 testers::Wild Elemental
-3 testers::Spark of Imagination
-2 testers::Burning Passion
-2 testers::Wise Mentor
-2 testers::Recurring Lesson
+starters::Pyromania
+18 starters::Source
+3 starters::Lava Bomb
+2 starters::Pyromania
+1 starters::Fire Archmage
+3 starters::Burning Touch
+3 starters::Archivist
+1 starters::Fiery Outburst
+3 starters::Wild Elemental
+3 starters::Spark of Imagination
+2 starters::Look Inside
+2 starters::Wise Mentor
+2 starters::Recurring Lesson
 = 43
 
 [Pyromania]
@@ -104,7 +104,7 @@ v [Spark of Imagination]
         Draw 2 cards.
 
 
-[Burning Passion]
+v [Look Inside]
     Type: Spell
     Cost: 1
     Text:

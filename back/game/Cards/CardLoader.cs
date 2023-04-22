@@ -99,7 +99,7 @@ namespace game.cards.loaders {
             Logger.Instance.Log("FileCardLoader", "Finished indexing cards");
         }
 
-        private string FmtCard(string cName, string colName) => colName + ":" + cName;
+        private string FmtCard(string cName, string colName) => colName + "::" + cName;
 
         public override Card Load(string cName, string colName)
         {

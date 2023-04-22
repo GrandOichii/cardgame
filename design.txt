@@ -222,13 +222,13 @@ Answer Prayers
         Restore 3 life.
 
 
-    [Looming Shadow]
-Type: Unit
-Cost: 3
-Power: 2
-Life: 5
-Text:
-    Discard a [Corrupting Darkness] card from your hand: [Looming Shadow] gains +3 power.
+[Looming Shadow]
+    Type: Unit
+    Cost: 3
+    Power: 2
+    Life: 5
+    Text:
+        Discard a [Corrupting Darkness] card from your hand: [Looming Shadow] gains +3 power.
 
 
 [Grave Robbing]
@@ -254,7 +254,7 @@ Text:
     Text:
         {Evil}
         Discard 3 [Healing Light] cards from your hand: Destroy the defending unit in this lane.
-    (The idea is that you are less)
+    (The idea is that you are less virtuous by discarding virtuous cards)
 
 
 [Greedy Dragon]

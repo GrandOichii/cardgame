@@ -255,6 +255,12 @@ namespace game.scripts
 
 
         [LuaCommand]
+        public LuaTable PlayerByID(int pID) {
+            return GetPlayer(pID).ToLuaTable(_match.LState);
+        }
+
+
+        [LuaCommand]
         public string PromptPlayer(int pID, string prompt, string type, LuaTable args) {
             var player = GetPlayer(pID);
             List<string> aArgs = new();

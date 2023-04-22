@@ -1,0 +1,6 @@
+{
+    "name": "Look Inside",
+    "type": "Spell",
+    "text": "Deal [spellDamage] damage to target Unit or Treasure. If it kills it, draw a card.",
+    "script": "script.lua"
+}

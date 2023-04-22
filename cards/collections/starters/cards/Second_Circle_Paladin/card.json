@@ -1,0 +1,6 @@
+{
+    "name": "Second Circle Paladin",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, discard a [Healing Light] card from your hand. If you don't, [CARDNAME] gains -3 power and -3 life.",
+    "script": "script.lua"
+}

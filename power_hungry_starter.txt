@@ -50,11 +50,11 @@ v [Wise Mentor]
         When [CARDNAME] enters play, {Power Up} all cards in your hand.
 
 
-[Concentrate]
+v [Concentrate]
     Type: Spell
     Cost: 3
     Text:
-        {Power Up} target Treasure, Unit or Bond (2/ 3 /5) times.
+        {Power Up} target card in play (2/ 3 /5) times.
 
 
 v [Artifact Engineer]
@@ -91,7 +91,7 @@ v [Pet Robot]
         At the start of your turn, {Power Up} a treasure or unit you control (0/ 1 /2) times.
 
 
-[Compulsive Study]
+v [Compulsive Study]
     Type: Spell
     Cost: 3
     Text:
@@ -102,7 +102,7 @@ v [Pet Robot]
     Type: Spell
     Cost: 3
     Text:
-        Return (2/ 2 /3) cards from your discard to your hand.
+        Return (2/ 2 /3) Treasure cards from your discard to your hand.
 
 
 v [Assembled Monstrosity]
