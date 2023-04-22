@@ -255,7 +255,7 @@ namespace game.scripts
 
 
         [LuaCommand]
-        public string PromptPlayer(int pID, string prompt, LuaTable args) {
+        public string PromptPlayer(int pID, string prompt, string type, LuaTable args) {
             var player = GetPlayer(pID);
             List<string> aArgs = new();
             foreach (var a in args.Values) {
@@ -264,7 +264,7 @@ namespace game.scripts
                 if (n is null) throw new Exception("Cannot convert " + a + " to string");
                 aArgs.Add(n);
             }
-            return player.Controller.Prompt(prompt, aArgs, player, _match);
+            return player.Controller.Prompt(type, prompt, aArgs, player, _match);
         }
 
 

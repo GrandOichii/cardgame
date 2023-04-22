@@ -198,7 +198,7 @@ function Common.Targeting.Selectors:AllOfPlayers( playerID )
 end
 
 
-function Common.Targeting:Target( playerID, configs )
+function Common.Targeting:Target(prompt, playerID, configs )
     --[[ Common:Target(player.id, {
         {
             what = 'treasure',
@@ -236,14 +236,14 @@ function Common.Targeting:Target( playerID, configs )
     end
     -- print(Utility:TableToStr(args))
 
-    local uID = PromptPlayer(playerID, 'in_play', args)
+    local uID = PromptPlayer(playerID, prompt, 'in_play', args)
     local result = d[uID]
     return result
 end
 
 
-function Common.Targeting:Unit(playerID)
-    return Common.Targeting:Target(playerID, {
+function Common.Targeting:Unit(prompt, playerID)
+    return Common.Targeting:Target(prompt, playerID, {
         {
             what = 'units',
             which = Common.Targeting.Selectors:All()
@@ -266,8 +266,8 @@ function Common.Targeting:Unit(playerID)
 end
 
 
-function Common.Targeting:Treasure(playerID)
-    return Common.Targeting:Target(playerID, {
+function Common.Targeting:Treasure(prompt, playerID)
+    return Common.Targeting:Target(prompt, playerID, {
         {
             what = 'treasures',
             which = Common.Targeting.Selectors:All()
@@ -287,8 +287,8 @@ function Common.Targeting:Treasure(playerID)
     -- return result
 end
 
-function Common.Targeting:UnitOrTreasure(playerID)
-    return Common.Targeting:Target(playerID, {
+function Common.Targeting:UnitOrTreasure(prompt, playerID)
+    return Common.Targeting:Target(prompt, playerID, {
         {
             what = 'treasures',
             which = Common.Targeting.Selectors:All()

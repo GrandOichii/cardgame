@@ -478,7 +478,7 @@ class TreasureBoard(Board):
 
 
 class MatchResultSprite(pg.sprite.Sprite):
-    def __init__(self, won: bool, wWidth: int, wHeight: int) -> None:
+    def __init__(self, won: bool, wWidth: int, wHeight: int):
         super().__init__()
         
         font = pg.font.Font('fonts/Montserrat-Thin.ttf', 48)
@@ -490,3 +490,16 @@ class MatchResultSprite(pg.sprite.Sprite):
             self.image = font.render('Lost!', False, colors.RED)
         self.rect = self.image.get_rect()
         self.rect.center = (wWidth / 2, wHeight / 2)
+
+
+class PromptMessageSprite(pg.sprite.Sprite):
+    def __init__(self, message: str):
+        super().__init__()
+
+        self.font = pg.font.Font('fonts/Montserrat-Thin.ttf', 18)
+
+        self.load(message)
+
+    def load(self, message: str):
+        self.image = self.font.render(message, False, colors.BLACK)
+        self.rect = self.image.get_rect()

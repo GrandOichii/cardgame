@@ -19,6 +19,8 @@ FPS = 30
 WIDTH = 1200
 HEIGHT = WIDTH * 60 / 100
 
+TOP_OFFSET = 20
+
 HOST = 'localhost'
 PORT = 8080
 
@@ -29,10 +31,12 @@ class Client:
         self.lanes_board = None
         self.last_state = None
         self.result_message = None
+
         
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         pg.init()
 
+        self.top_message = sprites.PromptMessageSprite('')
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         # self.screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
 
@@ -40,12 +44,14 @@ class Client:
         # WIDTH, HEIGHT = self.screen.get_size()
 
         hand_h = sprites.CARD_HEIGHT + 6
-        pbh = (HEIGHT-hand_h) / 2
+        pbh = (HEIGHT-TOP_OFFSET-hand_h) / 2
         self.first_player = sprites.PlayerBoard(WIDTH, pbh)
         self.second_player = sprites.PlayerBoard(WIDTH, pbh)
         self.hand = sprites.HandBoard(WIDTH, hand_h)
-        self.second_player.set_pos((0, pbh-2))
-        self.hand.set_pos((0, pbh * 2))
+
+        self.first_player.set_pos((0, TOP_OFFSET))
+        self.second_player.set_pos((0, pbh-2+TOP_OFFSET))
+        self.hand.set_pos((0, pbh * 2+TOP_OFFSET))
 
         # self.load(test_state())
 
@@ -68,6 +74,8 @@ class Client:
 
         if state.request in ['won', 'lost']:
             self.result_message = sprites.MatchResultSprite(state.request == 'won', WIDTH, HEIGHT)
+
+        self.top_message.load(state.prompt)
 
         # card1 = CardSprite(state.players[0].bond)
         # self.all_sprites.add(card1)
@@ -154,6 +162,7 @@ class Client:
                 self.second_player.player_draw(self.screen, self.last_state.curPlayerI == 1)
             self.hand.draw(self.screen)
             # self.screen.blit()
+            self.screen.blit(self.top_message.image, self.top_message.rect)
             if self.result_message is not None:
                 self.screen.blit(self.result_message.image, self.result_message.rect)
             # self.all_sprites.draw(self.screen)

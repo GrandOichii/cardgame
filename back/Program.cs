@@ -68,7 +68,7 @@ class Program {
 
 
 static class MatchParsers {
-static public MatchState CreateMState(Player player, Match match, string request, List<string> args) {
+static public MatchState CreateMState(Player player, Match match, string request, List<string> args, string prompt="") {
         var result = new MatchState();
         result.Players = new PlayerState[match.Players.Count];
         for (int i = 0; i < match.Players.Count; i++) {
@@ -81,6 +81,8 @@ static public MatchState CreateMState(Player player, Match match, string request
         result.My = MyStateFrom(match, player);
 
         result.Request = request;
+
+        result.Prompt = prompt;
 
         result.Args = args;
         return result;
@@ -240,8 +242,8 @@ class TCPPlayerController : PlayerController
         return int.Parse(Read());
     }
 
-    public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match) {
-        Write(MatchParsers.CreateMState(controlledPlayer, match, prompt, args).ToJson());
+    public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match) {
+        Write(MatchParsers.CreateMState(controlledPlayer, match, type, args, prompt).ToJson());
         return Read();        
     }
 
@@ -296,10 +298,10 @@ class LuaBotController : PlayerController
     }
 
 
-    public override string Prompt(string prompt, List<string> args, Player controlledPlayer, Match match)
+    public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match)
     {
         // TODO change to created luatable
-        var result = PromptF.Call(MatchParsers.CreateMState(controlledPlayer, match, prompt, args).ToJson());
+        var result = PromptF.Call(MatchParsers.CreateMState(controlledPlayer, match, type, args).ToJson());
         return Utility.GetReturnAs<string>(result);
     }
 

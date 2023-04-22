@@ -12,8 +12,8 @@ function _CreateCard(props)
         prevOnEnter(self, prevOnEnter)
         local treasures = player.treasures
         for _, card in ipairs(treasures) do
-            if card:CanPowerDown() then
-                card:PowerDown()
+            if card:CanPowerUp() then
+                card:PowerUp()
             end
         end
     end

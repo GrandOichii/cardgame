@@ -59,6 +59,7 @@ namespace game.core.actions {
             // TODO ignore action
             if (attacker.AvailableAttacks == 0) throw new Exception("Player " + player.ShortStr() + " tried to attack with " + attacker.Card.ShortStr() + ", which can't attack");
             attacker.AvailableAttacks--;
+            var attackerPower = attacker.GetPower();
 
             var opponent = match.OpponentOf(player);
             IDamageable? target = opponent.Lanes[lane];
@@ -92,7 +93,7 @@ namespace game.core.actions {
             }
 
             // deal damage to defender/target
-            dealt = target.ProcessDamage(match, attacker.GetPower());
+            dealt = target.ProcessDamage(match, attackerPower);
             Logger.Instance.Log("Attack", "Unit " + attacker.ToShortStr() + " dealt " + dealt + " damage");
         }
     }

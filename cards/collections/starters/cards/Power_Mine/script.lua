@@ -7,19 +7,19 @@ function _CreateCard(props)
     local result = CardCreation:Treasure(props)
 
     result.mutable.charge = {
-        current = 1,
+        current = 0,
         min = 0,
-        max = 0
+        max = 1
     }
 
-    local prevPowerDown = result.PowerDown
-    function result:PowerDown()
-        prevPowerDown(self)
+    local prevPowerUp = result.PowerUp
+    function result:PowerUp()
+        prevPowerUp(self)
 
-        if self.mutable.charge.current == 0 then
+        if self.mutable.charge.current == 1 then
             local owner = GetController(self.id)
             Destroy(self.id)
-            local target = Common.Targeting:Unit(owner.id)
+            local target = Common.Targeting:Unit('Select target Unit or Treasure for '..self.name, owner.id)
             Destroy(target.id)
         end
     end
