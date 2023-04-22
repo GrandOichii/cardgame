@@ -411,7 +411,7 @@ Text:
 Type: Spell
 Cost: 3
 Text:
-    Deal 1 damage to target treasure.
+    Deal 1 damage to target Treasure.
 
 
 (Summoned)

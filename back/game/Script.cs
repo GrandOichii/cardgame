@@ -300,5 +300,21 @@ namespace game.scripts
             _match.AllCards.Add(t);
             return t.Info;
         }
+
+
+        [LuaCommand]
+        public void PlaceOnTopOfDeck(int pID, string cID) {
+            var player = GetPlayer(pID);
+            var card = GetCard(cID);
+
+            player.Deck.AddToFront(card);
+        }
+
+
+        [LuaCommand]
+        public void ShuffleDeck(int pID) {
+            var player = GetPlayer(pID);
+            player.Deck.Shuffle();
+        }
     }
 }

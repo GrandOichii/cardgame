@@ -2,5 +2,7 @@
     "name": "Corrupting Darkness",
     "type": "Spell",
     "text": "Your opponent loses 2 life.",
-    "script": "script.lua"
+    "script": "script.lua",
+
+    "summoned": true
 }

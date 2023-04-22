@@ -68,6 +68,10 @@ namespace game.core {
         public void AddToBack(T card) {
             Cards.Add(card);
         }
+
+        public void AddToFront(T card) {
+            Cards.Insert(0, card);
+        }
     
         public LuaTable ToLuaTable(Lua lState) {
             var result = Utility.CreateTable(lState);

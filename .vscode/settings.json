@@ -21,6 +21,8 @@
         "Emit",
         "DealDamageToPlayer",
         "Destroy",
-        "SummonCard"
+        "SummonCard",
+        "PlaceOnTopOfDeck",
+        "ShuffleDeck"
     ]
 }
