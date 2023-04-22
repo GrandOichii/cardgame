@@ -107,6 +107,7 @@ end
 
 Common = {}
 
+
 function Common:RequireField(table, fieldName)
     if table[fieldName] == nil then
         error('Table' .. Utility:TableToStr(table) .. 'does not have field ' .. fieldName)
@@ -222,8 +223,9 @@ function Common.Targeting:Target(prompt, playerID, configs )
         local zoneMap = {
             treasures = player.treasures,
             units = player.units,
-            bond = player.bond,
+            bond = {},
         }
+        zoneMap.bond[#zoneMap.bond+1] = player.bond
 
         for _, config in ipairs(configs) do
             local zone = zoneMap[config.what]
@@ -234,7 +236,6 @@ function Common.Targeting:Target(prompt, playerID, configs )
             end
         end
     end
-    -- print(Utility:TableToStr(args))
 
     local uID = PromptPlayer(playerID, prompt, 'in_play', args)
     local result = d[uID]
@@ -353,6 +354,24 @@ function Common:AtLeastOneTreasureInPlay()
 end
 
 
+function Common:HasCardsInHand(cardName, player, amount)
+    amount = amount or 1
+
+    local count = 0
+    for _, card in ipairs(player.hand) do
+        if card.name == cardName then
+            count = count + 1
+        end
+    end
+    return count >= amount
+end
+
+
+function Common:OwnerGainedLife(card)
+    return function (player, args)
+        return player.id == args.player.id
+    end
+end
 
 
 

@@ -1,0 +1,6 @@
+{
+    "name": "Grant Power",
+    "type": "Spell",
+    "text": "{Power up} a card in play.",
+    "script": "script.lua"
+}

@@ -90,14 +90,12 @@ class InfoBoard(Board):
         self.bg = BoxSprite(width, height)
         self.bond = None
 
-        # TODO not tested
         self.bond_group = ClickableSpriteGroup([
             ClickConfig(
                 lambda element: client.Client.INSTANCE.last_state.request == 'in_play' and element.card.id in client.Client.INSTANCE.last_state.args,
-                lambda element: f'{element.unit.card.id}'
+                lambda element: f'{element.card.id}'
             )
         ])
-        # self.boards += [self.bond_group]
 
         self.load(None)
 
@@ -105,6 +103,7 @@ class InfoBoard(Board):
     def load(self, state):
         # state is player state, extract player info
         self.sprites.empty()
+        self.bond_group.empty()
 
         self.sprites.add(self.bg)
 
@@ -113,7 +112,6 @@ class InfoBoard(Board):
         self.bond.rect.y = self.y + self.height - self.bond.rect.height - 5
         self.bond.rect.centerx = self.width / 2
         self.bond_group.add(self.bond)
-        # self.sprites.add(self.bond)
 
         return super().load(state)
     

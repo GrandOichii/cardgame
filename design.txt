@@ -133,118 +133,93 @@ Answer Prayers
 
 == Cards ==
 
-    [Landslide]
-Type: Spell
-Cost: TODO 3
-Text: Shift all charms to their left.
-(Moves all charms on lanes to a lane to their left. TODO The right-most is moved to discard or left-most?)
+[Landslide]
+    Type: Spell
+    Cost: TODO 3
+    Text: Shift all charms to their left.
+    (Moves all charms on lanes to a lane to their left. TODO The right-most is moved to discard or left-most?)
 
 
-    [Lich King]
-Type: Unit
-Cost: 7
-Power: 6
-Life: 5
-Text: 
-    Your opponent can't place units on this lane.
+[Lich King]
+    Type: Unit
+    Cost: 7
+    Power: 6
+    Life: 5
+    Text: 
+        Your opponent can't place units on this lane.
 
 
-    [Storyteller]
-Type: Unit
-Cost: 4
-Power: 2
-Life: 4
-Text: 
-    When [Storyteller] enters play, return 2 [Source] cards from your discard to your hand.
+[Storyteller]
+    Type: Unit
+    Cost: 4
+    Power: 2
+    Life: 4
+    Text: 
+        When [Storyteller] enters play, return 2 [Source] cards from your discard to your hand.
 
 
-    [Faithful Cleric]
-Type: Unit
-Cost: 1
-Power: 1
-Life: 3
-Text: 
-    {Virtuous}
-
-
-    [Cleansing the Land]
-Type: Charm
-Cost: TODO
-Text:
-    At the beginning of your turn, all non-[Peaseful Peasant] units in this lane are destroyed and replaced with a summoned [Peaseful Peasants] unit.
+[Cleansing the Land]
+    Type: Charm
+    Cost: TODO
+    Text:
+        At the beginning of your turn, all non-[Peaseful Peasant] units in this lane are destroyed and replaced with a summoned [Peaseful Peasants] unit.
 
 
 (Summoned)
-    [Peaseful Peasants]
-Type: Unit
-Power: 0
-Life: 1
-Text:
-    At the start of your turn, [Peaseful Peasants] gains +1 life.
+[Peaseful Peasants]
+    Type: Unit
+    Power: 0
+    Life: 1
+    Text:
+        At the start of your turn, [Peaseful Peasants] gains +1 life.
 
 
-    [Reward Devotion]
-Type: Spell
-Cost: 2
-Text:
-    Discard a [Healing Light] card from your hand and gain 2 energy.
+[TODO]
+    Type: Bond
+    Text:
+        Whenever you gain life, deal (2/ 2 /4) damage to your opponent.
 
 
-    [TODO]
-Type: Bond
-Text:
-    Whenever you gain life, deal (2/ 2 /4) damage to your opponent.
+[Crazed Engineer]
+    Type: Unit
+    Cost: 6
+    Power: 6
+    Life: 5
+    Text:
+        At the start of your turn, randomly {Power Up} (2/ 3 /5) cards in play.
 
 
-    [Crazed Engineer]
-Type: Unit
-Cost: 6
-Power: 6
-Life: 5
-Text:
-    At the start of your turn, randomly {Power Up} (2/ 3 /5) cards in play.
-
-
-    [Collective Prayer]
-Type: Bond
-Text: 
-    Discard 7 [Healing Light] cards: summon an [Archangel] card into play.
+[Collective Prayer]
+    Type: Bond
+    Text: 
+        Discard 7 [Healing Light] cards: summon an [Archangel] card into play.
 
 
 (Summoned)
-    [Archangel]
-Type: Unit
-Power: 7
-Life: 7
-Text: 
-    At the start of your turn, one of your [Healing Light] cards in your hand turns into a [Lesser Angel] card.
-    Your [Lesser Angel] units ignore defending units.
+[Archangel]
+    Type: Unit
+    Power: 7
+    Life: 7
+    Text: 
+        At the start of your turn, one of your [Healing Light] cards in your hand turns into a [Lesser Angel] card.
+        Your [Lesser Angel] units ignore defending units.
 
 
 (Summoned)
-    [Lesser Angel]
-Type: Unit
-Power: 4
-Life: 4
-Text: 
-    At the start of your turn, gain 3 life.
+[Lesser Angel]
+    Type: Unit
+    Power: 4
+    Life: 4
+    Text: 
+        At the start of your turn, gain 3 life.
 
 
 (Summoned)
-    [Healing Light]
-Type: Spell
-Cost: 2
-Text: 
-    Restore 3 life.
-
-
-    [Priest of the Archdemon]
-Type: Unit
-Cost: 2
-Power: 2
-Life: 2
-Text: 
-    {Evil}
+[Healing Light]
+    Type: Spell
+    Cost: 2
+    Text: 
+        Restore 3 life.
 
 
     [Looming Shadow]
@@ -256,289 +231,238 @@ Text:
     Discard a [Corrupting Darkness] card from your hand: [Looming Shadow] gains +3 power.
 
 
-    [Reward Obedience]
-Type: Spell
-Cost: 2
-Text:
-    Discard a [Corrupting Darkness] card from your hand and gain 2 energy.
+[Grave Robbing]
+    Type: Spell
+    Cost: 5
+    Text:
+        {Evil}
+        Burn up to (2/ 3 /4) cards in your opponents discard. Draw a card for each burned card.
 
 
-    [Grave Robbing]
-Type: Spell
-Cost: 5
-Text:
-    {Evil}
-    Burn up to (2/ 3 /4) cards in your opponents discard. Draw a card for each burned card.
-
-
-    [Foul Ideas]
-Type: Charm
-Cost: TODO
-Text:
-    At the start of your turn, each player with a unit in this lane summons a [Corrupting Darkness] card into their hand.
-
-
-(Summoned)
-    [Corrupting Darkness]
-Type: Spell
-Cost: 2
-Text: 
-    Your opponent loses 2 life.
-
-
-    [Black Market Merchant]
-Type: Unit
-Cost: 4
-Power: 1
-Life: 2
-Text:
-    {Virtuous}
-    {Evil}
+[Foul Ideas]
+    Type: Charm
+    Cost: TODO
+    Text:
+        At the start of your turn, each player with a unit in this lane summons a [Corrupting Darkness] card into their hand.
     
 
-    [State Executioner]
-Type: Unit
-Cost: 5
-Power: 3
-Life: 3
-Text:
-    {Evil}
-    Discard 3 [Healing Light] cards from your hand: Destroy the defending unit in this lane.
-(The idea is that you are less)
+[State Executioner]
+    Type: Unit
+    Cost: 5
+    Power: 3
+    Life: 3
+    Text:
+        {Evil}
+        Discard 3 [Healing Light] cards from your hand: Destroy the defending unit in this lane.
+    (The idea is that you are less)
 
 
-    [Greedy Dragon]
-Type: Unit
-Cost: 6
-Power: 2
-Life: 5
-Text:
-    {Aggresive}
-    Destroy one of your Treasures: Double [Greedy Dragon's] power.
+[Greedy Dragon]
+    Type: Unit
+    Cost: 6
+    Power: 2
+    Life: 5
+    Text:
+        {Aggresive}
+        Destroy one of your Treasures: Double [Greedy Dragon's] power.
 
 
-    [Landlord]
-Type: Unit
-Cost: 4
-Power: 2
-Life: 3
-Text:
-    When [Landlord] enters play, destroy the opponent's charm on this lane.
-    Your opponent can't cast Charms on this lane.
+[Landlord]
+    Type: Unit
+    Cost: 4
+    Power: 2
+    Life: 3
+    Text:
+        When [Landlord] enters play, destroy the opponent's Charm on this lane.
+        Your opponent can't cast Charms on this lane.
 
 
-    [Taskmaster]
-Type: Unit
-Cost: 3
-Power: 3
-Life: 2
-Text:
-    Whenever an opoonent's unit is destroyed, summon a [Coin Pouch] treasure into play.
+[Taskmaster]
+    Type: Unit
+    Cost: 3
+    Power: 3
+    Life: 2
+    Text:
+        Whenever an opoonent's unit is destroyed, summon a [Coin Pouch] treasure into play.
 
 
-    [Mechanical Engineer]
-Type: Unit
-Cost: 5
-Power: 3
-Life: 5
-Text:
-    When [CARDNAME] enters play, {Power Up} all your treasures.
+[Earth Elemental]
+    Type: Unit
+    Cost: 4
+    Power: 6
+    Life: 6
+    Text:
+        When [CARDNAME] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
 
 
-    [Earth Elemental]
-Type: Unit
-Cost: 4
-Power: 6
-Life: 6
-Text:
-    When [CARDNAME] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
+[Fire Elemental]
+    Type: Unit
+    Cost: 5
+    Power: 8
+    Life: 8
+    Text:
+        {Fast}
+        At the start of your turn, [CARDNAME]s power becomes half of it's power, and it's life becomes half of it's life. Round down each time.
 
 
-    [Earthling]
-Type: Unit
-Cost: 1
-Power: 2
-Life: 2
-Text:
-    When [Earthling] enters play, summon 2 [Throw Rock] cards and shuffle them into your deck.
+[Goblin Provocateurs]
+    Type: Unit
+    Cost: 4
+    Power: 4
+    Life: 4
+    Text:
+        All of your enemy units are {Aggresive}.
 
 
-    [Fire Elemental]
-Type: Unit
-Cost: 5
-Power: 8
-Life: 8
-Text:
-    {Fast}
-    At the start of your turn, [CARDNAME]s power becomes half of it's power, and it's life becomes half of it's life. Round down each time.
-
-
-    [Goblin Provocateurs]
-Type: Unit
-Cost: 4
-Power: 4
-Life: 4
-Text:
-    All of your enemy units are {Aggresive}.
-
-
-    [Heavy Fog]
-Type: Charm
-Cost: 5
-Text:
-    Units can't attack on this lane.
+[Heavy Fog]
+    Type: Charm
+    Cost: 5
+    Text:
+        Units can't attack on this lane.
 
     
-    [Cursed Totem]
-Type: Treasure
-Cost: 5
-Text:
-    At the start of your turn, [Cursed Totem] deals (1/ 1 /3) damage to all units. If your unit dies this way, summon an [Ancient Spirit] into play.
+[Cursed Totem]
+    Type: Treasure
+    Cost: 5
+    Text:
+        At the start of your turn, [Cursed Totem] deals (1/ 1 /3) damage to all units. If your unit dies this way, destroy [CARDNAME] and summon an [Ancient Spirit] card into play.
 
 
 (Summoned)
-    [Ancient Spirit]
-Type: Unit
-Power: 5
-Life: 3
-Text:
-    {Fast}
-    Ingores the defending unit.
+[Ancient Spirit]
+    Type: Unit
+    Power: 5
+    Life: 3
+    Text:
+        {Fast}
+        Ingores the defending unit.
 
 
 (Summoned)
-    [Throw Rock]
-Type: Spell
-Cost: 3
-Text:
-    Deal 1 damage to target Treasure.
+[Coin Pouch]
+    Type: Treasure
+    Life: 1
+    Text:
+        Pay 2 energy: Destroy [Coin Pouch] and draw (0/ 2 /5) cards.
+
+
+[Powerstone]
+    Type: Treasure
+    Cost: 3
+    Life: 5
+    Text:
+        Units you control have +2 power.
+        At the start of your turn, {Power Down} [CARDNAME]. If (0/ 3 /10) is equal to 0, destroy [CARDNAME].
+
+
+[Remember the old times]
+    Type: Spell
+    Cost: 3
+    Text:
+        {Power Up} a card in your discard 3 times.
+
+
+[Lifegem]
+    Type: Treasure
+    Life: 5
+    Text:
+        At the start of your turn, [Lifegem] deals 1 damage to itself, then you gain (1/ 1 /3) life.
+
+
+[Shawarma Stand]
+    Type: Treasure
+    Life: 5
+    Text:
+        At the start of your turn, all your units gain +1 life.
+        When [CARDNAME] is destroyed, summon an [Angry Cook] into play.
 
 
 (Summoned)
-    [Coin Pouch]
-Type: Treasure
-Life: 1
-Text:
-    Pay 2 energy: Destroy [Coin Pouch] and draw (0/ 2 /5) cards.
+[Angry Cook]
+    Type: Unit
+    Power: 3
+    Life: 2
+    Text:
+        At the start of your turn, a random unit you control gains +1 life.
 
 
-    [Powerstone]
-Type: Treasure
-Cost: 3
-Life: 5
-Text:
-    Units you control have +2 power.
-    At the start of your turn, {Power Down} [CARDNAME]. If (0/ 3 /10) is equal to 0, destroy [CARDNAME].
+[Doomsday Mechanism]
+    Type: Treasure
+    Life: 6
+    Text:
+        At the end of your turn, {Power Up} [Doomsday Mechanism], then it deals (1/ 1 /5) damage to itself.
+        When [Doomsday Mechanism] is destroyed, deal (0/ 2 /7) damage to all units and players.
 
 
-    [Remember the old times]
-Type: Spell
-Cost: 3
-Text:
-    {Power Up} a card in your discard 3 times.
+[Rock Launcher]
+    Type: Treasure
+    Cost: 4
+    Life: 5
+    Text:
+        Discard a [Throw Rock] card: [CARDNAME] deals (2/ 2 /4) damage to target Unit.
 
 
-    [Lifegem]
-Type: Treasure
-Life: 5
-Text:
-    At the start of your turn, [Lifegem] deals 1 damage to itself, then you gain (1/ 1 /3) life.
+[Rock Smelter]
+    Type: Treasure
+    Cost: 3
+    Life: 5
+    Text:
+        Discard 3 [Throw Rock] cards: gain 1 energy.
 
 
-    [Shawarma Stand]
-Type: Treasure
-Life: 5
-Text:
-    At the start of your turn, all your units gain +1 life.
-    When [CARDNAME] is destroyed, summon an [Angry Cook] into play.
+[Rock Grinder]
+    Type: Treasure
+    Cost: 2
+    Life: 5
+    Text:
+        Discard 2 [Throw Rock] cards: target unit gains +4 power.
 
 
-(Summoned)
-    [Angry Cook]
-Type: Unit
-Power: 3
-Life: 2
-Text:
-    At the start of your turn, a random unit you control gains +1 life.
+[Repentance]
+    Type: Bond
+    Text:
+        As long as you have 7 or lower life, TODO
 
 
-    [Doomsday Mechanism]
-Type: Treasure
-Life: 6
-Text:
-    At the end of your turn, {Power Up} [Doomsday Mechanism], then it deals (1/ 1 /5) damage to itself.
-    When [Doomsday Mechanism] is destroyed, deal (0/ 2 /7) damage to all units and players.
+[TODO Confusion]
+    Type: Spell
+    Cost: 4
+    Text:
+        Exchange control of units on target lane.
 
 
-    [Rock Launcher]
-Type: Treasure
-Cost: 4
-Life: 5
-Text:
-    Discard a [Throw Rock] card: [CARDNAME] deals (2/ 2 /4) damage to target Unit.
+[Gang Wars] // TODO change name, should be something that implies stealing
+    Type: Charm
+    Cost: 3
+    Text:
+        When a player gains life, if they have a unit in this lane, that player's opponent loses that much life.
 
 
-    [Rock Smelter]
-Type: Treasure
-Cost: 3
-Life: 5
-Text:
-    Discard 3 [Throw Rock] cards: gain 1 energy.
+[Voracious Ghoul]
+    Type: Unit
+    Cost: 3
+    Power: 5
+    Life: 4
+    Text:
+        At the start of your turn, burn a card in your discard. If you can't, destroy [CARDNAME].
 
 
-    [Rock Grinder]
-Type: Treasure
-Cost: 2
-Life: 5
-Text:
-    Discard 2 [Throw Rock] cards: target unit gains +4 power.
-
-
-    [Repentance]
-Type: Bond
-Text:
-    As long as you have 7 or lower life, TODO
-
-
-    [TODO Confusion]
-Type: Spell
-Cost: 4
-Text:
-    Exchange control of units on target lane.
-
-
-    [Gang Wars] // TODO change name, should be something that implies stealing
-Type: Charm
-Cost: 3
-Text:
-    When a player gains life, if they have a unit in this lane, that player's opponent loses that much life.
-
-
-    [Voracious Ghoul]
-Type: Unit
-Cost: 3
-Power: 5
-Life: 4
-Text:
-    At the start of your turn, burn a card in your discard. If you can't, destroy [CARDNAME].
-
-
-    [Powerstone Crafter]
-Type: Unit
-Cost: 4
-Power: 1
-Life: 3
-Text:
-    At the start of your turn, {Power down} [CARDNAME]. Then if (0/ 3 /3) is greater than 0, summon a [Weakened Powerstone] treasure card into your treasures.
+[Powerstone Crafter]
+    Type: Unit
+    Cost: 4
+    Power: 1
+    Life: 3
+    Text:
+        At the start of your turn, {Power down} [CARDNAME]. Then if (0/ 3 /3) is greater than 0, summon a [Weakened Powerstone] treasure card into your treasures.
 
 
 (Summoned)
-    [Weakened Powerstone]
-Type: Treasure
-Life: 2
-Text:
-    Units you control have +2 power.
-    At the start of your turn, {Power Down} [CARDNAME]. If (0/ 2 /3) is equal to 0, destroy [CARDNAME].
+[Weakened Powerstone]
+    Type: Treasure
+    Life: 2
+    Text:
+        Units you control have +2 power.
+        At the start of your turn, {Power Down} [CARDNAME]. If (0/ 2 /3) is equal to 0, destroy [CARDNAME].
 
 
 [Hot Springs]

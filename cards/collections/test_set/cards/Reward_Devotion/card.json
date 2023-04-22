@@ -1,0 +1,10 @@
+{
+    "name": "Reward Devotion",
+    "type": "Spell",
+    "text": "Discard a [Healing Light] card to gain +1 energy.",
+    "script": "script.lua",
+
+    "refCards": [
+        "test_set::Healing Light"
+    ]
+}

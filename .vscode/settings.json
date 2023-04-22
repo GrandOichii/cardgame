@@ -23,6 +23,7 @@
         "Destroy",
         "SummonCard",
         "PlaceOnTopOfDeck",
-        "ShuffleDeck"
+        "ShuffleDeck",
+        "RemoveFromHand"
     ]
 }
