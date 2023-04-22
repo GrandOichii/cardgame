@@ -1,8 +1,8 @@
 
--- TODO not tested
+
 function _CreateCard(props)
-    props.cost = 1
-    -- props.cost = 6
+    -- props.cost = 1
+    props.cost = 6
     props.power = 3
     props.life = 5
 

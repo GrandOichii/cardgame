@@ -230,10 +230,11 @@ function Common.Targeting:Target( playerID, configs )
             local add = config.which(zone)
             for _, card in ipairs(add) do
                 d[card.id] = card
-                args[#args+1] = card
+                args[#args+1] = tostring(card.id)
             end
         end
     end
+    -- print(Utility:TableToStr(args))
 
     local uID = PromptPlayer(playerID, 'in_play', args)
     local result = d[uID]

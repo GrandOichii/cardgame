@@ -18,7 +18,7 @@ namespace game.decks {
         public void UnloadCards(CardMaster cMaster) {
             cMaster.Unload(Bond);
             foreach (var card in MainDeck.Keys)
-                cMaster.Unload(Bond);
+                cMaster.Unload(card);
         }
 
         static private Card ParseCard(CardMaster cMaster, string cName) {

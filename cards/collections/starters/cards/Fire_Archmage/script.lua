@@ -1,8 +1,8 @@
 
 
 function _CreateCard(props)
-    -- props.cost = 5
-    props.cost = 1
+    props.cost = 5
+    -- props.cost = 1
     props.power = 4
     props.life = 4
 

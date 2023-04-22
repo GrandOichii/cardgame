@@ -9,7 +9,6 @@
         "cards/Reinforce",
         "cards/Contract_Demon",
         "cards/Necromancers_Tutolage",
-        "cards/Demons_Horn",
         "cards/Undead_Cleric",
         "cards/Risen_Dead",
         "cards/Life_Drain",
@@ -33,12 +32,12 @@
         "cards/Corrupting_Darkness",
         "cards/Earthling",
         "cards/Healing_Light",
-        "cards/Power_Tester",
         "cards/Brute"
     ],
-    "cards1": [
-        "cards/Good_Cleric",
-        "cards/Source",
-        "cards/Healer"
+    "add_these": [
+        "cards/Demons_Horn"
+    ],
+    "for_testing": [
+        "cards/Power_Tester"
     ]
 }

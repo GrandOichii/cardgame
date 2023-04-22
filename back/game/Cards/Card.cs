@@ -35,6 +35,9 @@ namespace game.cards {
             Logger.Instance.Log("CardMaster", "Requested to unload card " + name);
             if (!_cardIndex.ContainsKey(name)) throw new Exception("Tried to unload a card that is not loaded: " + name);
             _refCount[name]--;
+            foreach (var refC in card.RefCards)
+                Unload(refC);
+                
             if (_refCount[name] > 0) return;
             Logger.Instance.Log("CardMaster", "Reference counter of  " + name + " reached 0, removing it");
 
@@ -42,10 +45,8 @@ namespace game.cards {
             _cardIndex.Remove(name);
             _refCount.Remove(name);
 
-            Logger.Instance.Log("CardMaster", "Card  " + name + " was removed from CardMaster");
+            Logger.Instance.Log("CardMaster", "Card " + name + " was removed from CardMaster");
 
-            foreach (var refC in card.RefCards)
-                Unload(refC);
         }
 
         public void Unload(string cName) {
@@ -64,7 +65,7 @@ namespace game.cards {
             return _cardIndex[name]; 
         }
 
-        private string FmtCard(string cName, string colName) => colName + ":" + cName;
+        private string FmtCard(string cName, string colName) => colName + "::" + cName;
 
         public CardMaster(CardLoader loader) {
             _loader = loader;
