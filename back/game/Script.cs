@@ -320,5 +320,13 @@ namespace game.scripts
             var player = GetPlayer(pID);
             player.Deck.Shuffle();
         }
+
+
+        [LuaCommand]
+        public void RemoveFromHand(string cID, int pID) {
+            var player = GetPlayer(pID);
+            var card = GetCard(cID);
+            player.Hand.Cards.Remove(card);
+        }
     }
 }

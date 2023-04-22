@@ -37,11 +37,11 @@ class Program {
         var config = MatchConfig.FromText(File.ReadAllText(configPath));
         var m = g.MatchPool.NewMatch(g, config);
 
-        var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+        var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/deck1.deck"));
         var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener, config));
         // var p1 = new Player(m, "Igor", deck1, new LuaBotController("../bots/test_bot.lua"));
 
-        var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+        var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/deck1.deck"));
         // var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
         // var p2 = new Player(m, "Nastya", deck2, new TCPPlayerController(listener, config));
         var p2 = new Player(m, "Nastya", deck2, new LuaBotController("../bots/test_bot.lua"));

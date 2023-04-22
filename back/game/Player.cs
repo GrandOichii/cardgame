@@ -166,6 +166,8 @@ namespace game.player {
 
             result["lanes"] = lanes;
 
+            result["bond"] = Bond.Info;
+
             return result;
         }
 

@@ -1,0 +1,6 @@
+{
+    "name": "Dark Dealings",
+    "type": "Bond",
+    "text": "When you gain life, your opponent loses [lifeLossPerGain] life.",
+    "script": "script.lua"
+}

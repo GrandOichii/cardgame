@@ -1,22 +1,22 @@
 
 
 function _CreateCard(props)
-    props.cost = 6
-    props.power = 6
-    props.life = 6
+    local result = CardCreation:Bond(props)
+    result.mutable.lifeLossPerGain = {
+        current = 1,
+        max = 5,
+        min = 0
+    }
 
-    local result = CardCreation:Unit(props)
-
-    -- TODO not tested
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
         :Check(Common.OwnerGainedLife(result))
         :IsSilent(false)
         :On(TRIGGERS.LIFE_GAIN)
-        :Zone(ZONES.UNITS)
+        :Zone(ZONES.BOND)
         :Cost(Common:NoCost())
         :Effect(function (player, args)
-            LoseLife(player.id, args.amount)
-            DrawCards(player.id, args.amount)
+            local opponent = OpponentOf(player.id)
+            LoseLife(opponent.id, result.mutable.lifeLossPerGain.current)
         end)
         :Build()
 
