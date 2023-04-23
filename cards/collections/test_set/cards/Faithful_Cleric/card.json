@@ -5,6 +5,6 @@
     "script": "script.lua",
 
     "refCards": [
-        "test_set::Healing Light"
+        "starters::Healing Light"
     ]
 }

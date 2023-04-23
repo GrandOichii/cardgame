@@ -38,6 +38,24 @@
 		"description": "create script for spell card"
 	},
 	
+	"treasure": {
+		"scope": "lua",
+		"prefix": "treasure",
+		"body": [
+			"function _CreateCard(props)",
+			"\tprops.cost = $1",
+			"\tprops.life = $2",
+			"",
+			"\tlocal result = CardCreation:Treasure(props)",
+			"\t",
+			"\t$0",
+			"\t",
+			"\treturn result",
+			"end"
+		],
+		"description": "create script for spell card"
+	},
+	
 	"mutable": {
 		"scope": "lua",
 		"prefix": "mut",
@@ -62,6 +80,25 @@
 			"end",
 		],
 		"description": "unit on enter play trigger"
+	},
+
+	"trigger": {
+		"scope": "lua",
+		"prefix": "trigger",
+		"body": [
+			"result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()",
+			"\t:Check($1)",
+			"\t:IsSilent(${2:false})",
+			"\t:On(TRIGGERS.$3)",
+			"\t:Zone(ZONES.$4)",
+			"\t:Cost($5)",
+			"\t:Effect(function ($6)",
+			"\t\t$0",
+			"\tend)",
+			":Build()"
+	
+		],
+		"description": "triggered effect"
 	}
 	// Place your cardgame workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
 	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 

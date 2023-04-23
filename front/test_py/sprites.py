@@ -388,7 +388,7 @@ class CardSprite(pg.sprite.Sprite):
         for pair in m.items():
             key = pair[0]
             value = pair[1]
-            text = card_state.text.replace(f'[{key}]', str(value.current))
+            text = text.replace(f'[{key}]', str(value.current))
 
         util.blit_text(self.image, text, (1, CARD_NAME_OFFSET*2 + 3), CardSprite.TEXT_FONT, colors.BLACK)
 

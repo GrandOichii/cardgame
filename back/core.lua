@@ -689,7 +689,7 @@ Keywords.Map = {
             function card:Play(player)
                 prevPlay(card, player)
 
-                local c = SummonCard('test_set', 'Healing Light')
+                local c = SummonCard('starters', 'Healing Light')
                 PlaceIntoHand(c.id, player.id)
             end
         end

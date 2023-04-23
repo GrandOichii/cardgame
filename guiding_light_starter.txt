@@ -67,13 +67,13 @@ v [Second Circle Paladin]
         When [CARDNAME] enters play, discard a [Healing Light] card. If you don't, [CARDNAME] gains -3 power and -3 life.
 
 
-[Angel's Halo]
+v [Angel's Halo]
     Type: Treasure
-    Cost: 7
+    Cost: 5
     Life: 8
     Text:
         {Virtuous}
-        TODO
+        At the start of your turn, a random non-[Healing Light] card in your hand becomes {Virtuous}.
 
 
 v [City Fortifications]
