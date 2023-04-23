@@ -133,6 +133,15 @@ function Common:AlwaysFalse( ... )
 end
 
 
+-- TODO not tested
+function Common:DrawOwnerIsCardOwner( card )
+    return function( player, args )
+        local owner = GetController(card.id)
+        return owner.id == args.player.id
+    end
+end
+
+
 function Common:HasEnoughEnergy( amount )
     return function ( player, ... )
         return player.energy >= amount
@@ -687,6 +696,10 @@ function CardCreation:Unit(props)
     function result:LeavePlay(player)
         prevLeave(self, player)
         self.power = self.basePower
+    end
+
+    function result:PreDeath()
+        Log('Called PreDeath method of '..self.name)
     end
 
     return result

@@ -1,0 +1,10 @@
+{
+    "name": "Baar Swamp Traveller",
+    "type": "Unit",
+    "text": "When [CARDNAME] dies, summon a [Risen Dead] card into the same lane.",
+    "script": "script.lua",
+
+    "refCards": [
+        "starters::Risen Dead"
+    ]
+}

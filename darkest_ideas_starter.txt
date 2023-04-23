@@ -42,7 +42,7 @@ v [Reward Obedience]
         When [CARDNAME] enters play, place target Unit in your opponent's discard to one of your lanes.
 
 
-[Lesser Demon]
+v [Lesser Demon]
     Type: Unit
     Cost: 4
     Power: 4
@@ -52,7 +52,7 @@ v [Reward Obedience]
         When [CARDNAME] enters play, draw a card and lose 2 life.
 
 
-[Demon's Horn]
+v [Demon's Horn]
     Type: Treasure
     Cost: 5
     Life: 5

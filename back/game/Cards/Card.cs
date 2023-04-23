@@ -262,6 +262,7 @@ namespace game.cards {
 
             var owner = match.OwnerOf(Card.ID);
             Logger.Instance.Log("UnitW", "Unit card " + Card.ShortStr() + " of player " + owner.ShortStr() + " was destroyed");
+            Card.ExecFunc("PreDeath", Card.Info);
 
             bool removed = false;
             for (int i = 0; i < owner.Lanes.Length; i++){
