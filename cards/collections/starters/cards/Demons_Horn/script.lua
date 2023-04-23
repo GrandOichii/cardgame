@@ -2,9 +2,10 @@
 -- TODO not tested
 function _CreateCard(props)
     props.cost = 5
+    props.life = 5
     local result = CardCreation:Treasure(props)
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
-        :Check(Common:DrawOwnerIsCardOwner(result))
+        :Check(Common:DrawOwnerIsNotCardOwner(result))
         :IsSilent(false)
         :On(TRIGGERS.CARD_DRAW)
         :Zone(ZONES.TREASURES)

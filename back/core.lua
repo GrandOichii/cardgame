@@ -133,11 +133,18 @@ function Common:AlwaysFalse( ... )
 end
 
 
--- TODO not tested
 function Common:DrawOwnerIsCardOwner( card )
     return function( player, args )
         local owner = GetController(card.id)
         return owner.id == args.player.id
+    end
+end
+
+
+function Common:DrawOwnerIsNotCardOwner( card )
+    return function( player, args )
+        local owner = GetController(card.id)
+        return owner.id ~= args.player.id
     end
 end
 
@@ -729,7 +736,7 @@ Keywords.Map = {
             function card:Play(player)
                 prevPlay(card, player)
 
-                local c = SummonCard('test_set', 'Corrupting Darkness')
+                local c = SummonCard('starters', 'Corrupting Darkness')
                 PlaceIntoHand(c.id, player.id)
             end
         end

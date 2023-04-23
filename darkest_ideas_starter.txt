@@ -16,7 +16,7 @@ starters::TODO
 3 starters::Looming Shadow // rewards evil
 2 starters::Lich King
 2 starters::Shadowcrafter's Toolkit
-3 starters::Shadowcreafter Apprentice
+3 starters::Shadowcreafter Elf
 3 starters::Deny Existance
 
 v [Priest of the Archdemon]
@@ -60,7 +60,7 @@ v [Demon's Horn]
         When your opponent draws a card, they lose (1/ 1 /2) life.
 
 
-[Baar Swamp Traveller]
+v [Baar Swamp Traveller]
     Type: Unit
     Cost: 2
     Power: 2
@@ -70,7 +70,7 @@ v [Demon's Horn]
 
 
 (Summoned)
-[Risen Dead]
+v [Risen Dead]
     Type: Unit
     Cost: 2
     Power: 2
@@ -120,7 +120,7 @@ v [Demon's Horn]
         Discard a [Corrupting Darkness] card from your hand: [CARDNAME] deals 3 damage to target Unit.
 
 
-[Shadowcrafter Apprentice]
+v [Shadowcrafter Elf]
     Type: Unit
     Cost: 2
     Power: 4

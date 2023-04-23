@@ -1,5 +1,5 @@
 {
-    "name": "Lesser_Demon",
+    "name": "Lesser Demon",
     "type": "Unit",
     "text": "{Evil}\nWhen [CARDNAME] enters play, draw a card and lose 2 life.",
     "script": "script.lua"

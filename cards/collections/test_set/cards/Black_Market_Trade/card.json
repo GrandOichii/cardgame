@@ -5,7 +5,7 @@
     "script": "script.lua",
 
     "refCards": [
-        "test_set::Corrupting Darkness",
+        "starters::Corrupting Darkness",
         "starters::Healing Light"
     ]
 }
