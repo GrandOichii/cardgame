@@ -169,6 +169,20 @@ function Common:IsOwnersTurn(card)
 end
 
 
+function Common:PowerUpCardInPlay()
+    local players = GetPlayers()
+    for _, p in ipairs(players) do
+        local cards = {table.unpack(p.units), table.unpack(p.treasures), p.bond}
+        for _, card in ipairs(cards) do
+            if card:CanPowerUp() then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
 function Common:DiscardCards(prompt, player, amount)
     local count = 0
     for i = 1, amount do

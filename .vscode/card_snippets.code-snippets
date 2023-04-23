@@ -14,6 +14,7 @@
 			"\t\t$0",
 			"\tend",
 			"",
+			"\treturn result",
 			"end"
 		],
 		"description": "create script for spell card"
@@ -76,6 +77,21 @@
 			"local prevOnEnter = result.OnEnter",
 			"function result:OnEnter(player)",
 			"\tprevOnEnter(self, player)",
+			"\t$0",
+			"end",
+		],
+		"description": "unit on enter play trigger"
+	},
+	
+	"can play card": {
+		"scope": "lua",
+		"prefix": "canplay",
+		"body": [
+			"local prevCanPlay = result.CanPlay",
+			"function result:CanPlay(player)",
+			"\tif not prevCanPlay(self, player) then",
+			"\t\treturn false",
+			"\tend",
 			"\t$0",
 			"end",
 		],

@@ -9,6 +9,15 @@ function _CreateCard(props)
         max = 4
     }
 
+    local prevCanPlay = result.CanPlay
+    function result:CanPlay(player)
+        if not prevCanPlay(self, player) then
+            return false
+        end
+        -- TODO too clunky
+        return Common:PowerUpCardInPlay()
+    end
+
     local prevEffect = result.Effect
     function result:Effect(player)
         prevEffect(self, player)

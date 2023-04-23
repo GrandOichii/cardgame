@@ -18,4 +18,6 @@ function _CreateCard(props)
             end
         end
     end
+
+    return result
 end

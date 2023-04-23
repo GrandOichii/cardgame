@@ -174,12 +174,6 @@ Answer Prayers
         At the start of your turn, [Peaseful Peasants] gains +1 life.
 
 
-[TODO]
-    Type: Bond
-    Text:
-        Whenever you gain life, deal (2/ 2 /4) damage to your opponent.
-
-
 [Crazed Engineer]
     Type: Unit
     Cost: 6
@@ -224,7 +218,7 @@ Answer Prayers
 
 [Looming Shadow]
     Type: Unit
-    Cost: 3
+    Cost: 4
     Power: 2
     Life: 5
     Text:

@@ -5,12 +5,19 @@
 
 starters::TODO
 20 starters::Source
-3 starters::Priest of the Archdemon
-3 starters::Reward Obedience
-2 starters::Corpse-Stealer Imp
-3 starters::Lesser Demon
+3 starters::Priest of the Archdemon // evil
+3 starters::Reward Obedience // rewards evil
+2 starters::Corpse-Stealer Imp // evil
+3 starters::Lesser Demon // evil
 3 starters::Baar Swamp Traveller
-=34
+3 startets::Foul Ideas // evil
+2 starters::Grave Robbing
+3 starters::Spark of Imagination
+3 starters::Looming Shadow // rewards evil
+2 starters::Lich King
+2 starters::Shadowcrafter's Toolkit
+3 starters::Shadowcreafter Apprentice
+3 starters::Deny Existance
 
 v [Priest of the Archdemon]
     Type: Unit
@@ -69,3 +76,54 @@ v [Reward Obedience]
     Power: 2
     Life: 2
     Text:
+
+
+[Foul Ideas]
+    Type: Charm
+    Cost: 4
+    Text:
+        At the start of your turn, each player with a unit in this lane summons a [Corrupting Darkness] card into their hand.
+
+
+[Grave Robbing]
+    Type: Spell
+    Cost: 5
+    Text:
+        {Evil}
+        Burn up to (2/ 3 /4) cards in your opponents discard. Draw a card for each burned card.
+
+
+[Looming Shadow]
+    Type: Unit
+    Cost: 4
+    Power: 2
+    Life: 5
+    Text:
+        Discard a [Corrupting Darkness] card from your hand: [CARDNAME] gains +3 power.
+
+
+[Lich King]
+    Type: Unit
+    Cost: 7
+    Power: 6
+    Life: 5
+    Text: 
+        {Evil}
+        Your opponent can't place units on this lane.
+
+
+[Shadowcrafter's Toolkit]
+    Type: Treasure
+    Cost: 3
+    Life: 3
+    Text:
+        Discard a [Corrupting Darkness] card from your hand: [CARDNAME] deals 3 damage to target Unit.
+
+
+[Shadowcrafter Apprentice]
+    Type: Unit
+    Cost: 2
+    Power: 4
+    Life: 4
+    Text:
+        When [CARDNAME] enters play, discard a [Corrupting Darkness]. If you don't, destroy [CARDNAME].

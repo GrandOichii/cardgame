@@ -5,6 +5,14 @@ function _CreateCard(props)
 
     local result = CardCreation:Spell(props)
 
+    local prevCanPlay = result.CanPlay
+    function result:CanPlay(player)
+        if not prevCanPlay(self, player) then
+            return false
+        end
+        return Common:PowerUpCardInPlay()
+    end
+
     local prevEffect = result.Effect
     function result:Effect(player)
         prevEffect(self, player)
