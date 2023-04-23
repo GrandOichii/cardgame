@@ -1,0 +1,71 @@
+//
+// Deck 4 - Darkest Ideas
+//
+// A deck focused around [Corrupting Darkness].
+
+starters::TODO
+20 starters::Source
+3 starters::Priest of the Archdemon
+3 starters::Reward Obedience
+2 starters::Corpse-Stealer Imp
+3 starters::Lesser Demon
+3 starters::Baar Swamp Traveller
+=34
+
+v [Priest of the Archdemon]
+    Type: Unit
+    Cost: 2
+    Life: 2
+    Power: 2
+    Text:
+        {Evil}
+
+v [Reward Obedience]
+    Type: Spell
+    Cost: 2
+    Text:
+        Discard a [Corrupting Darkness] card and gain +1 energy.
+
+[Corpse-Stealer Imp]
+    Type: Unit
+    Cost: 5
+    Life: 3
+    Power: 3
+    Text:
+        When [CARDNAME] enters play, place target Unit in your opponent's discard to one of your lanes.
+
+
+[Lesser Demon]
+    Type: Unit
+    Cost: 4
+    Power: 4
+    Life: 3
+    Text:
+        {Evil}
+        When [CARDNAME] enters play, draw a card and lose 2 life.
+
+
+[Demon's Horn]
+    Type: Treasure
+    Cost: 5
+    Life: 5
+    Text:
+        When your opponent draws a card, they lose (1/ 1 /2) life.
+
+
+[Baar Swamp Traveller]
+    Type: Unit
+    Cost: 2
+    Power: 2
+    Life: 2
+    Text:
+        When [CARDNAME] dies, summon a [Risen Dead] on the same lane.
+
+
+(Summoned)
+[Risen Dead]
+    Type: Unit
+    Cost: 2
+    Power: 2
+    Life: 2
+    Text:

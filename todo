@@ -1,4 +1,4 @@
-- add attacking treasures
+- add targeting players
 - add charms
 - add condition-based power/life boosting
 - add card burning
@@ -12,4 +12,5 @@
 - add ingoring of defending units
 - add condition-based keyword/ability granting
 
+- implement test decks
 - make presentable front end
