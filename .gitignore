@@ -478,3 +478,4 @@ $RECYCLE.BIN/
 
 .vscode/*
 !.vscode/settings.json
+!.vscode/card_snippets.code-snippets

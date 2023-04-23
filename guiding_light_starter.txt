@@ -21,7 +21,7 @@ starters::TODO
 1 starters::Contract Demon
 =50
 
-[Dark Dealings]
+v [Dark Dealings]
     Type: Bond
     Text:
         When you gain life, your opponent loses (1/ 1 /5) life.
@@ -44,7 +44,7 @@ v [Healing Light]
         Gain 2 life.
 
 
-[Cleanse the Unholy]
+v [Cleanse the Unholy]
     Type: Spell
     Cost: 5
     Text:
@@ -76,7 +76,7 @@ v [Second Circle Paladin]
         TODO
 
 
-[City Fortifications]
+v [City Fortifications]
     Type: Unit
     Cost: 3
     Power: 0
@@ -84,7 +84,7 @@ v [Second Circle Paladin]
     Text:
 
 
-[Courier]
+v [Courier]
     Type: Unit
     Cost: 2
     Power: 1
@@ -122,7 +122,7 @@ v [Second Circle Paladin]
     Life: 3
     Power: 2
     Text:
-        When [CARDNAME] enters play, summon a [New Recruit] card to the left of [CARDNAME].
+        When [CARDNAME] enters play, summon a [New Recruit] card to the right of [CARDNAME].
 
 
 (Summoned)
@@ -142,7 +142,7 @@ v [Second Circle Paladin]
         All of your cards are {Virtuous}.
 
 
-[Contract Demon]
+v [Contract Demon]
     Type: Unit
     Cost: 6
     Life: 6

@@ -479,7 +479,8 @@ CardCreation = {}
 function CardCreation:CardObject(props)
     local result = {}
     result.mutable = {} -- Things that power up the card
-    
+    result.labels = {}
+
     Common:RequireField(props, 'name')
     Common:RequireField(props, 'type')
     Common:RequireField(props, 'cost')
@@ -537,6 +538,15 @@ function CardCreation:CardObject(props)
     function result:AddKeyword(keywordName)
         local keywordData = Keywords.Map[keywordName]
         keywordData.modFunc(self)
+    end
+
+    function result:HasLabel(label)
+        for _, l in ipairs(self.labels) do
+            if label == l then
+                return true
+            end
+        end
+        return false
     end
 
     return result
@@ -673,6 +683,8 @@ Keywords = {}
 Keywords.Map = {
     virtuous = {
         modFunc = function (card)
+            card.labels[#card.labels+1] = 'virtuous'
+
             local prevPlay = card.Play
             function card:Play(player)
                 prevPlay(card, player)
@@ -684,6 +696,8 @@ Keywords.Map = {
     },
     evil = {
         modFunc = function (card)
+            card.labels[#card.labels+1] = 'evil'
+
             local prevPlay = card.Play
             function card:Play(player)
                 prevPlay(card, player)

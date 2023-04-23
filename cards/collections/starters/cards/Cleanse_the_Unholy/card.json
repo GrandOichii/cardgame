@@ -1,0 +1,6 @@
+{
+    "name": "Cleanse the Unholy",
+    "type": "Spell",
+    "text": "Destroy all {Evil} cards in play.",
+    "script": "script.lua"
+}
