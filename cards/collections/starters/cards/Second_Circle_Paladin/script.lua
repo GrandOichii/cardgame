@@ -12,7 +12,7 @@ function _CreateCard(props)
     local prevOnEnter = result.OnEnter
     function result:OnEnter(player)
         prevOnEnter(self, player)
-        if not Common:HasCardsInHand(requiredCardName) then
+        if not Common:HasCardsInHand(requiredCardName, player) then
             self.life = self.life - 3
             self.power = self.power - 3
             return

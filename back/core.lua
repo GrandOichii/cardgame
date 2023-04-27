@@ -282,7 +282,7 @@ function Common.Targeting:Target(prompt, playerID, configs )
         end
     end
 
-    local uID = PromptPlayer(playerID, prompt, 'in_play', args)
+    local uID = PromptPlayer(playerID, prompt, 'target', args)
     local result = d[uID]
     return result
 end
@@ -306,7 +306,7 @@ function Common.Targeting:Unit(prompt, playerID)
     --         end
     --     end
     -- end
-    -- local uID = PromptPlayer(playerID, 'in_play', args)
+    -- local uID = PromptPlayer(playerID, 'target', args)
     -- local result = d[uID]
     -- return result
 end
@@ -328,7 +328,7 @@ function Common.Targeting:Treasure(prompt, playerID)
     --         args[#args+1] = tostring(treasure.id)
     --     end
     -- end
-    -- local uID = PromptPlayer(playerID, 'in_play', args)
+    -- local uID = PromptPlayer(playerID, 'target', args)
     -- local result = d[uID]
     -- return result
 end
@@ -360,7 +360,7 @@ function Common.Targeting:UnitOrTreasure(prompt, playerID)
     --         args[#args+1] = tostring(treasure.id)
     --     end
     -- end
-    -- local uID = PromptPlayer(playerID, 'in_play', args)
+    -- local uID = PromptPlayer(playerID, 'target', args)
     -- local result = d[uID]
     -- return result
 end
@@ -571,6 +571,9 @@ function CardCreation:CardObject(props)
     end
 
     function result:HasLabel(label)
+        print(label)
+        print(self.name)
+        print(Utility:TableToStr(self.labels))
         for _, l in ipairs(self.labels) do
             if label == l then
                 return true

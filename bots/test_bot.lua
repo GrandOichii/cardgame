@@ -74,7 +74,6 @@ function _PromptLane(stateJ)
         -- TODO
         return 1
     end
-    print(common:TableToStr(me.units))
     for i, unit in ipairs(me.units) do
         if unit.card == nil then
             return i - 1
