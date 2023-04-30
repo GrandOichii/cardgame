@@ -31,12 +31,14 @@ LGRAY = (200, 200, 200)
 def random_color():
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
+
 class WindowConfigs:
     def __init__(self) -> None:
         self.wireframe = False
 
     def toggle_wireframe(self):
         self.wireframe = not self.wireframe
+
 
 # new front architecture
 class Window:
@@ -110,12 +112,34 @@ class Window:
         self.key_map[key]()
 
 
-class ContentLoader:
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(ContentLoader, cls).__new__(cls)
-        return cls.instance
+class FontContainer:
+    def __init__(self, fpath: str):
+        self.fpath = fpath
+        self.size_index = {}
 
+    def get(self, size: int):
+        if not size in self.size_index:
+            font = pg.font.Font(self.fpath, size)
+            self.size_index[size] = font
+        return self.size_index[size]
+
+
+class ContentLoader:
+    def __init__(self):
+        self.findex: dict[str, FontContainer] = {}
+
+    def load_font(self, font_key: str, path: str):
+        if path in self.findex:
+            return
+        self.findex[font_key] = FontContainer(path)
+
+    def get_font(self, font_key: str, size: int):
+        if not font_key in self.findex:
+            raise Exception(f'Font key {font_key} is not present in ContentLoader')
+        return self.findex[font_key].get(size)
+    
+ContentLoader.Instance = ContentLoader()
+        
 
 def between(min: int, cur: int, max: int) -> int:
     if cur < min:
@@ -145,6 +169,9 @@ class Rect:
     
     def with_mod(self, xmod: int=0, ymod: int=0, widthmod: int=0, heightmod: int=0):
         return Rect(self.x + xmod, self.y + ymod, self.width + widthmod, self.height + heightmod)
+
+    def to_tuple(self) -> tuple[int, int, int, int]:
+        return (self.x, self.y, self.width, self.height)
 
 
 class Widget:
@@ -224,27 +251,46 @@ class Container(Widget):
 
 
 class RectWidget(Widget):
-    def __init__(self, color: tuple[int, int, int], pref_width: int=50, pref_height: int=50, min_width: int=0, min_height: int=0, max_width: int=-1, max_height: int=-1):
+    def __init__(self, bg_color: tuple[int, int, int]=WHITE, pref_width: int=50, pref_height: int=50, min_width: int=0, min_height: int=0, max_width: int=-1, max_height: int=-1):
         super().__init__(pref_width, pref_height, min_width, min_height, max_width, max_height)
 
-        self.color = color
+        self.bg_color = bg_color
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
-        pg.draw.rect(surface, self.color, (bounds.x, bounds.y, bounds.width, bounds.height))
+        pg.draw.rect(surface, self.bg_color, (bounds.x, bounds.y, bounds.width, bounds.height))
         
         if configs.wireframe:
             pg.draw.rect(surface, BLACK, (bounds.x, bounds.y, bounds.width, bounds.height), 1)
             pg.draw.line(surface, BLACK, (bounds.x, bounds.y), (bounds.x + bounds.width - 1, bounds.y + bounds.height - 1))
             pg.draw.line(surface, BLACK, (bounds.x, bounds.y + bounds.height - 1), (bounds.x + bounds.width - 1, bounds.y))
 
-        # ??? WHY DOES THIS BREAK ???
-        # if Window().configs.wireframe:
-        #     print('a')
-
         # pg.display.flip()
         # pg.time.wait(60)
         return bounds.width, bounds.height
     
+
+class LabelWdiget(RectWidget):
+    def __init__(self, font: pg.font.Font, text: str, fg_color: tuple[int, int, int]=BLACK, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1):
+        super().__init__(bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height)
+        self.label: pg.sprite.Sprite = None
+        self.fg_color = fg_color
+
+        self.font = font
+        self.set_text(text)
+
+    def set_text(self, text: str):
+        self.label = self.font.render(text, False, self.fg_color)
+        self.min_width = self.label.get_width()
+        self.min_height = self.label.get_height()
+        self.pref_width = self.label.get_width()
+        self.pref_height = self.label.get_height()
+
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+        super().draw(surface, bounds, configs)
+
+        surface.blit(self.label, bounds.to_tuple())
+        return (bounds.width, bounds.height)
+
 
 class HorContainer(Container):
     def __init__(self, outline_color: tuple[int, int, int] = None):
@@ -352,7 +398,6 @@ class VerContainer(Container):
         return sum([widget.get_pref_height() for widget in self.widgets])
     
 
-
 w = Window()
 w.set_title('client test')
 # w.container = VertContainer()
@@ -397,16 +442,26 @@ def add(c: Container, level: int):
 
     # new.add_widget(w)
 
-add(c, 20)
+# add(c, 20)
+
+
 
 # ww = RectWidget(RED)
 # ww.move(200, 300)
 # c.add_widget(ww)
     
+ContentLoader.Instance.load_font('basic', 'fonts/Montserrat-Thin.ttf')
 
-# c1 = VertContainer()
-# c1.move(100, 100)
-# c.add_widget(c1)
+c1 = HorContainer()
+c1.move(100, 100)
+l1 = LabelWdiget(ContentLoader.Instance.get_font('basic', 12), 'Hello, ', bg_color=RED)
+c1.add_widget(l1)
+l2 = LabelWdiget(ContentLoader.Instance.get_font('basic', 12), 'world', bg_color=RED)
+l2.move(0, 20)
+c1.add_widget(l2)
+
+
+c.add_widget(c1)
 
 
 # c2 = HorContainer()
@@ -440,6 +495,5 @@ add(c, 20)
 # c.add_widget(c1)
 # c.add_widget(c2)
 # w.go_fullscreen()
-print(w.configs)
-print(WindowConfigs())
+
 w.run()
