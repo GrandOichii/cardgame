@@ -15,6 +15,22 @@ using game.decks;
 using Shared;
 
 
+struct BotMessage {
+    [JsonPropertyName("header")]
+    public string Header { get; set; }
+    [JsonPropertyName("payload")]
+    public string Payload { get; set; }
+
+    public BotMessage(string header, string payload) {
+        Header = header;
+        Payload = payload;
+    }
+
+    public string ToJson() => JsonSerializer.Serialize(this);
+
+    static public BotMessage From(string text) => JsonSerializer.Deserialize<BotMessage>(text);
+}
+
 class Program {
 
     static private IPAddress ADDRESS = IPAddress.Any;
@@ -22,8 +38,119 @@ class Program {
 
     static private TcpListener listener = new TcpListener(new IPEndPoint(ADDRESS, PORT));
 
+    static async void RunMatch(Match match) {
+        match.Start();
+    }
+
+    static void RunMatchPool(string[] args) {
+        var g = new Game("../cards");
+        string configPath = "../match_configs/normal.json";
+        var config = MatchConfig.FromText(File.ReadAllText(configPath));
+
+        // TODO remove, fills matches with random matches
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            var m = g.MatchPool.NewMatch(g, config);
+
+            var values = Enum.GetValues(typeof(EMatchState));
+            m.State = (EMatchState)values.GetValue(random.Next(values.Length));
+        }
+
+        Dictionary<string, Action<NetworkStream, string[]>> commands = new(){
+            {"list", (stream, args) => {
+                var result = new Dictionary<string, string>();
+                foreach (var pair in g.MatchPool.Matches) {
+                    var mID = pair.Key;
+                    string status = pair.Value.State.ToString();
+                    result.Add(mID, status);
+                }
+                NetUtil.Write(stream, JsonSerializer.Serialize(result));
+            }},
+            {"new", (stream, args) => {
+                // TODO required argument for whether the game has a bot or not
+                var m = g.MatchPool.NewMatch(g, config);
+                var mID = g.MatchPool.IDOf(m);
+
+                // TODO remove
+                var deck = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+                var p = new Player(m, "Nastya", deck, new LuaBotController("../bots/test_bot.lua"));
+                m.AddPlayer(p);
+
+                NetUtil.Write(stream, new BotMessage("success", mID).ToJson());
+            }},
+            {"connect", (stream, args) => {
+                var mID = args[1];
+                var username = args[2];
+                if (!g.MatchPool.Matches.ContainsKey(mID)) {
+                    NetUtil.Write(stream, new BotMessage("fail", "No match with id: " + mID).ToJson());
+                    return;
+                }
+                var match = g.MatchPool.Matches[mID];
+                if (match.State == EMatchState.Ended) {
+                    NetUtil.Write(stream, new BotMessage("fail", "Failed to connect to match with id " + mID + ": the match already ended").ToJson());
+                    return;
+                }
+                if (match.State == EMatchState.InProgress) {
+                    NetUtil.Write(stream, new BotMessage("fail", "Failed to connect to match with id " + mID + ": the match is in progress").ToJson());
+                    return;
+                }
+
+                NetUtil.Write(stream, new BotMessage("success", "Waiting for connection").ToJson());
+
+                // TODO remove, adds bot
+                var deck = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+                var p = new Player(match, "Igor", deck, new TCPPlayerController(listener, config));
+                match.AddPlayer(p);
+
+                if (match.Players.Count != 2) {
+                    NetUtil.Write(stream, new BotMessage("match_pending", "").ToJson());
+                    return;
+                }
+
+                NetUtil.Write(stream, new BotMessage("match_started", "").ToJson());
+                RunMatch(match);
+            }}
+        };
+
+
+        listener.Start();
+        System.Console.WriteLine("Started");
+
+        // connect to tg bot
+        var tgBotConnection = listener.AcceptTcpClient();
+        var tgBotStream = tgBotConnection.GetStream();
+        while (true) {
+            var messageRaw = NetUtil.Read(tgBotStream);
+            var message = BotMessage.From(messageRaw);
+
+            if (message.Header == "command") {
+                var command = message.Payload;
+                var cArgs = command.Split(' ');
+                var commandF = commands[cArgs[0]];
+                commandF.Invoke(tgBotStream, cArgs);
+                continue;
+            }
+        }
+    }
+
     static void Main(string[] args)
     {
+        RunMatchPool(args);
+        return;
+        // listener.Start();
+        // System.Console.WriteLine("Started server");
+        // var handler = listener.AcceptTcpClient();
+        // var stream = handler.GetStream();
+        // NetUtil.Write(stream, "Hello");
+        // NetUtil.Write(stream, ", world");
+        // // byte[] buffer = Encoding.UTF8.GetBytes("Hello, ");
+        // // stream.Write(buffer, 0, buffer.Length);
+        // // buffer = Encoding.UTF8.GetBytes("world.");
+        // // stream.Write(buffer, 0, buffer.Length);
+        // handler.Close();
+        // // handler
+
+        // return;
         #region Game Creation
         var g = new Game("../cards");
 

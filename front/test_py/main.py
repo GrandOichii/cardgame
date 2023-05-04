@@ -16,6 +16,8 @@ import random
 # random.seed(0)
 import pygame as pg
 
+
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -149,9 +151,9 @@ def between(min: int, cur: int, max: int) -> int:
         return min
     if max == -1:
         return cur
-    if cur > max:
-        return max
-    return cur
+    # if cur > max:
+    #     return max
+    return max
 
 
 class Rect:
@@ -168,7 +170,7 @@ class Rect:
         return Rect(self.x, self.y, self.width, self.height)
     
     def __str__(self) -> str:
-        return f'{self.x} {self.y} {self.width} {self.height}'
+        return f'x:{self.x} y:{self.y} w:{self.width} h:{self.height}'
     
     def with_mod(self, xmod: int=0, ymod: int=0, widthmod: int=0, heightmod: int=0):
         return Rect(self.x + xmod, self.y + ymod, self.width + widthmod, self.height + heightmod)
@@ -201,9 +203,15 @@ class Widget:
 
     def set_pref_width(self, value: str):
         self.pref_width = max(value, self.min_width)
+        if self.max_width == -1:
+            return
+        self.pref_width = min(self.pref_width, self.max_width)
 
     def set_pref_height(self, value: str):
         self.pref_height = max(value, self.min_height)
+        if self.max_height == -1:
+            return
+        self.pref_height = min(self.pref_height, self.max_height)
 
     def _draw(self, surface: pg.Surface, context: Rect, fit_type: int, configs: WindowConfigs) -> tuple[int, int]:
         bounds = context.copy()
@@ -217,11 +225,17 @@ class Widget:
             # bounds.width = context.width - context.x
 
         new_var = self.get_min_width()
-        new_var1 = self.get_max_width()
-        bounds.width = between(new_var, context.width, new_var1)
+        new_var1 = min(self.get_max_width(), context.width)
+        if new_var1 == -1:
+            new_var1 = context.width
+        bounds.width = between(new_var, bounds.width, new_var1)
         new_var2 = self.get_min_height()
-        new_var3 = self.get_max_height()
-        bounds.height = between(new_var2, context.height, new_var3)
+        new_var3 = min(self.get_max_height(), context.height)
+        if new_var3 == -1:
+            new_var3 = context.height
+        bounds.height = between(new_var2, bounds.height, new_var3)
+
+        # print(self, bounds, sep='\t')
         return self.draw(surface, bounds, configs)
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
@@ -322,7 +336,7 @@ class LabelWidget(RectWidget, LabelComponent):
         return (bounds.width, bounds.height)
 
 
-class HorContainer(Container):
+class HorContainer1(Container):
     def __init__(self, outline_color: tuple[int, int, int] = None):
         super().__init__(outline_color)
 
@@ -347,7 +361,6 @@ class HorContainer(Container):
                 if count != 0:
                     per_one = width / count
 
-        startx = b.x
         b.height = between(self.get_min_height(), self.get_pref_height(), self.get_max_height())
         for i in range(len(self.widgets)):
             widget = self.widgets[i]
@@ -356,13 +369,19 @@ class HorContainer(Container):
             if size > per_one:
                 b.width = size
             res_w, res_h = widget._draw(surface, b, 1, configs)
+            if res_w < per_one:
+                width -= res_w
+                count -= 1
+                if count == 0:
+                    break
+                per_one = width / count
             b.x += res_w
             sum += res_w
         
-        if configs.wireframe:
-            pg.draw.rect(surface, BLACK, (startx, b.y, sum, b.height), 2)
-            pg.draw.line(surface, BLACK, (startx, b.y), (startx + sum - 1, b.y + b.height - 1))
-            pg.draw.line(surface, BLACK, (startx, b.y + b.height - 1), (startx + sum - 1, b.y))
+        # if configs.wireframe:
+        #     pg.draw.rect(surface, BLACK, (startx, b.y, sum, b.height), 2)
+        #     pg.draw.line(surface, BLACK, (startx, b.y), (startx + sum - 1, b.y + b.height - 1))
+        #     pg.draw.line(surface, BLACK, (startx, b.y + b.height - 1), (startx + sum - 1, b.y))
         
 
         return sum, bounds.height
@@ -409,7 +428,7 @@ class HorContainer(Container):
         return result
     
 
-class VerContainer(Container):
+class VerContainer1(Container):
     def __init__(self, outline_color: tuple[int, int, int] = None):
         super().__init__(outline_color)
 
@@ -437,7 +456,6 @@ class VerContainer(Container):
                 if count != 0:
                     per_one = height / count
 
-        starty = b.y
         new_var = self.get_min_width()
         new_var1 = self.get_pref_width()
         new_var2 = self.get_max_width()
@@ -449,13 +467,19 @@ class VerContainer(Container):
             if size > per_one:
                 b.height = size
             res_w, res_h = widget._draw(surface, b, 2, configs)
+            if res_h < per_one:
+                height -= res_h
+                count -= 1
+                if count == 0:
+                    break
+                per_one = height / count
             b.y += res_h
             sum += res_h
         
-        if configs.wireframe:
-            pg.draw.rect(surface, BLACK, (b.x, starty, b.width, sum), 2)
-            pg.draw.line(surface, BLACK, (b.x, starty), (b.x + b.width - 1, starty + sum - 1))
-            pg.draw.line(surface, BLACK, (b.x, starty + sum - 1), (b.x + b.width - 1, starty))
+        # if configs.wireframe:
+        #     pg.draw.rect(surface, BLACK, (b.x, starty, b.width, sum), 2)
+        #     pg.draw.line(surface, BLACK, (b.x, starty), (b.x + b.width - 1, starty + sum - 1))
+        #     pg.draw.line(surface, BLACK, (b.x, starty + sum - 1), (b.x + b.width - 1, starty))
 
         return bounds.width, sum
     
@@ -503,6 +527,248 @@ class VerContainer(Container):
         return result
 
 
+class FlowConfig(Container):
+    def __init__(self):
+        self.dominant = ''
+
+    def extract_value_from_bounds(self, bounds: Rect):
+        # return bounds.width
+        raise NotImplementedError()
+    
+    def extract_pref_value(self, widget: Widget):
+        # return widget.get_pref_width()
+        raise NotImplementedError()
+    
+    def config_other_bound(self, me: Widget, bounds: Rect):
+        # bounds.height = between(me.get_min_height(), me.get_pref_height(), me.get_max_height())
+        raise NotImplementedError()
+
+    def mutate_coords(self, bounds: Rect, width: int, height: int):
+        # bounds.x += width
+        raise NotImplementedError()
+    
+    def set_bound(self, bounds: Rect, value: int):
+        # bounds.x = value
+        raise NotImplementedError()
+    
+    def select_important(self, width: int, height: int):
+        # return width
+        raise NotImplementedError()
+    
+    def pick_return_values(self, bounds: Rect, sum_width: int, sum_height: int):
+        # return sum_width, bounds.height
+        raise NotImplementedError()
+    
+    def pref_and_min_policy_width(self, arr: list[Widget]):
+        # return sum(arr)
+        raise NotImplementedError()
+    
+    def pref_and_min_policy_height(self, arr: list[Widget]):
+        # return sum(arr)
+        raise NotImplementedError()
+        
+
+class FlowContainer(Container):
+    def __init__(self, flow_config: FlowConfig, outline_color: tuple[int, int, int] = None):
+        super().__init__(outline_color)
+
+        self.config = flow_config
+
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+        b = bounds.copy()
+        value = self.config.extract_value_from_bounds(bounds)
+        # value = bounds.width
+        count = len(self.widgets)
+        per_one = value / count
+        sum_w = 0
+        sum_h = 0
+        sizes = []
+        for widget in self.widgets:
+            size = self.config.extract_pref_value(widget)
+
+            sizes += [size]
+            if size > per_one:
+                value -= size
+                count -= 1
+                if count != 0:
+                    per_one = value / count
+
+        # start = b.x
+        # b.height = between(self.get_min_height(), self.get_pref_height(), self.get_max_height())
+        self.config.config_other_bound(self, b)
+        for i in range(len(self.widgets)):
+            widget = self.widgets[i]
+            # b.width = per_one
+            self.config.set_bound(b, per_one)
+            size = sizes[i]
+            if size > per_one:
+                self.config.set_bound(b, size)
+            res_w, res_h = widget._draw(surface, b, 1, configs)
+            # i_metric = self.config.select_important(res_w, res_h)
+            # if i_metric < per_one:
+            #     value -= i_metric
+            #     count -= 1
+            #     if count == 0:
+            #         break
+            #     per_one = value / count
+
+            # b.x += res_w
+            self.config.mutate_coords(b, res_w, res_h)
+            sum_h += res_h
+            sum_w += res_w
+        
+        # if configs.wireframe:
+        #     pg.draw.rect(surface, BLACK, (start, b.y, sum_w, b.height), 2)
+        #     pg.draw.line(surface, BLACK, (start, b.y), (start + sum_w - 1, b.y + b.height - 1))
+        #     pg.draw.line(surface, BLACK, (start, b.y + b.height - 1), (start + sum_w - 1, b.y))
+        
+        return self.config.pick_return_values(bounds, sum_w, sum_h)
+        # return sum_w, bounds.height
+
+    
+    def get_min_width(self):
+        return self.config.pref_and_min_policy_width([widget.get_min_width() for widget in self.widgets])
+    
+    def get_min_height(self):
+        return self.config.pref_and_min_policy_height([widget.get_min_height() for widget in self.widgets])
+    
+    
+    def get_pref_width(self):
+        return self.config.pref_and_min_policy_width([widget.get_pref_width() for widget in self.widgets])
+    
+    def get_pref_height(self):
+        # TODO
+        return self.config.pref_and_min_policy_height([widget.get_pref_height() for widget in self.widgets])
+    
+
+    def min_metric_accumulator(self, extractor):
+        result = None
+        for widget in self.widgets:
+            mv = extractor(widget)
+            if mv != -1 and (result == None or mv < result):
+                result = mv
+        return result if result is not None else -1
+    
+    def sum_metric_accumulator(self, extractor):
+        result = 0
+        for widget in self.widgets:
+            mv = extractor(widget)
+            if mv == -1:
+                return -1
+            result += mv
+        if result == 0:
+            return -1
+        return result
+
+
+    def get_max_height(self):
+        if self.config.dominant == 'width':
+            return self.min_metric_accumulator(lambda w: w.get_max_height())
+        return self.min_metric_accumulator(lambda w: w.get_max_width())
+
+        # if self.config.dominant == 'height':
+            # return self.
+    #     result = None
+    #     for widget in self.widgets:
+    #         mw = widget.get_max_height()
+    #         if mw != -1 and (result == None or mw < result):
+    #             result = mw
+    #     return result if result is not None else -1
+    
+    def get_max_width(self):
+        if self.config.dominant == 'width':
+            return self.sum_metric_accumulator(lambda w: w.get_max_width())
+        return self.sum_metric_accumulator(lambda w: w.get_max_height())
+    #     result = 0
+    #     for widget in self.widgets:
+    #         mw = widget.get_max_width()
+    #         if mw == -1:
+    #             return -1
+    #         result += mw
+    #     if result == 0:
+    #         return -1
+    #     return result
+    
+
+class HorFlowConfig(FlowConfig):
+    def __init__(self):
+        super().__init__()
+
+        self.dominant = 'width'
+
+    def extract_value_from_bounds(self, bounds: Rect):
+        return bounds.width
+    
+    def extract_pref_value(self, widget: Widget):
+        return widget.get_pref_width()
+    
+    def config_other_bound(self, me: Widget, bounds: Rect):
+        bounds.height = between(me.get_min_height(), me.get_pref_height(), me.get_max_height())
+
+    def mutate_coords(self, bounds: Rect, width: int, height: int):
+        bounds.x += width
+    
+    def set_bound(self, bounds: Rect, value: int):
+        bounds.width = value
+    
+    def select_important(self, width: int, height: int):
+        return width
+    
+    def pick_return_values(self, bounds: Rect, sum_width: int, sum_height: int):
+        return sum_width, bounds.height
+    
+    def pref_and_min_policy_width(self, arr: list[Widget]):
+        return sum(arr)
+    
+    def pref_and_min_policy_height(self, arr: list[Widget]):
+        return min(arr)
+    
+
+class VerFlowConfig(FlowConfig):
+    def __init__(self):
+        super().__init__()
+
+        self.dominant = 'height'
+
+    def extract_value_from_bounds(self, bounds: Rect):
+        return bounds.height
+    
+    def extract_pref_value(self, widget: Widget):
+        return widget.get_pref_height()
+    
+    def config_other_bound(self, me: Widget, bounds: Rect):
+        bounds.width = between(me.get_min_width(), me.get_pref_width(), me.get_max_width())
+
+    def mutate_coords(self, bounds: Rect, width: int, height: int):
+        bounds.y += height
+    
+    def set_bound(self, bounds: Rect, value: int):
+        bounds.height = value
+    
+    def select_important(self, width: int, height: int):
+        return height
+    
+    def pick_return_values(self, bounds: Rect, sum_width: int, sum_height: int):
+        return bounds.width, sum_height
+    
+    def pref_and_min_policy_width(self, arr: list[Widget]):
+        return min(arr)
+    
+    def pref_and_min_policy_height(self, arr: list[Widget]):
+        return sum(arr)
+
+
+
+class HorContainer(FlowContainer):
+    def __init__(self, outline_color: tuple[int, int, int] = None):
+        super().__init__(HorFlowConfig(), outline_color)
+
+
+class VerContainer(FlowContainer):
+    def __init__(self, outline_color: tuple[int, int, int] = None):
+        super().__init__(VerFlowConfig(), outline_color)
+
+
 class ClickConfig:
     def __init__(self):
         self.mouse_over_condition = None
@@ -521,7 +787,6 @@ class ButtonTemplateWidget(RectWidget, LabelComponent):
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
         RectWidget.draw(self, surface, bounds, configs)
-        print(bounds.width)
 
         # TODO change when text shouldn't be centered
         if self.label:
@@ -552,8 +817,7 @@ class ButtonTemplateWidget(RectWidget, LabelComponent):
 class ButtonWidget(ButtonTemplateWidget):
     def __init__(self, font: pg.font.Font=None, text: str='', fg_color: tuple[int, int, int] = BLACK, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1):
         cc = ClickConfig()
-        def update_color(w):
-            w.bg_color = random_color()
+
         cc.mouse_over_condition = lambda: True
         cc.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc.mouse_click_condition = lambda: True
@@ -579,18 +843,7 @@ w.set_title('client test')
 # w.container = VertContainer()
 c = w.container
 
-COLORS = [
-    RED,
-    LRED,
-    GREEN,
-    LGREEN,
-    BLUE,
-    LBLUE,
-    GRAY,
-    LGRAY,
-]
-
-def random_widget():
+def random_rect():
     return RectWidget(random_color(), min_width=random.randint(10, 100), min_height=random.randint(10, 100))
 
 PREV_COLOR = [0, 255, 255]
@@ -618,7 +871,7 @@ def add(c: Container, level: int):
 
     # new.add_widget(w)
 
-# add(c, 20)
+add(c, 20)
 
 
 
@@ -658,18 +911,21 @@ container.move(10, 10)
 entries_count = 3
 
 # TODO don't fit, fix
-up_button = ButtonWidget(bg_color=LGREEN)
+up_button = ButtonWidget(bg_color=LGREEN, max_height=20)
 container.add_widget(up_button)
 for i in range(entries_count):
     c = HorContainer()
     left = RectWidget(LBLUE, max_width=20, max_height=20)
-    # right = LabelWidget(font, 'a'*(i+1), bg_color=LRED)
-    right = RectWidget(bg_color=RED)
+    r = 'a'*(random.randint(1, 20))
+    # r = 'aaa'
+    print(r)
+    right = LabelWidget(font, r, bg_color=LRED)
+    # right = RectWidget(bg_color=RED)
     c.add_widget(left)
     c.add_widget(right)
     container.add_widget(c)
 
-down_button = ButtonWidget(bg_color=LGREEN)
+down_button = ButtonWidget(bg_color=LGREEN, max_height=20)
 container.add_widget(down_button)
 w.container.add_widget(container)
 
@@ -705,5 +961,5 @@ w.container.add_widget(container)
 # c.add_widget(c1)
 # c.add_widget(c2)
 # w.go_fullscreen()
-w.set_screen_size(400, 200)
+# w.set_screen_size(400, 200)
 w.run()

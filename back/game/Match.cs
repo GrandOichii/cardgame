@@ -66,12 +66,23 @@ namespace game.match {
         public string ToJson() => JsonSerializer.Serialize<MatchConfig>(this);
     }
 
+    enum EMatchState
+    {
+        WaitingForPlayer,
+        InProgress,
+        Ended
+    }
+
     class Match {
         static private List<GamePhase> _phases = new(){
             new TurnStart(),
             new MainPhase(),
             new TurnEnd()
         };
+
+        private static Random Rand = new();
+
+        public EMatchState State { get; set; }
 
         public Game Game { get; }
 
@@ -86,6 +97,7 @@ namespace game.match {
         public CardManager AllCards { get; private set; }
 
         public Match(Game game, MatchConfig config) {
+            State = EMatchState.WaitingForPlayer;
             Game = game;
             Config = config;
 
@@ -109,6 +121,10 @@ namespace game.match {
         public void Start() {
             if (Players.Count != 2) throw new Exception("Tried to launch match with " + Players.Count + " players");
             Logger.Instance.Log("Match", "Match started!");
+
+            CurPlayerI = Rand.Next(Players.Count);
+
+            State = EMatchState.InProgress;
 
             Setup();
             Turns();
@@ -148,7 +164,7 @@ namespace game.match {
 
         private void Turns() {
             Logger.Instance.Log("Match", "Started turns loop");
-            while(Active) {
+            while (Active) {
                 var cPlayer = Players[CurPlayerI];
                 foreach (var phase in _phases) {
                     phase.Exec(this, cPlayer);
@@ -171,6 +187,8 @@ namespace game.match {
             Logger.Instance.Log("Match", "Performing clean up");
             // TODO
             Logger.Instance.Log("Match", "Clean up concluded");
+            
+            State = EMatchState.Ended;
         }
 
         public void Emit(string signal, Dictionary<string, object> args) {
@@ -259,16 +277,25 @@ namespace game.match {
     }
 
     class MatchPool {
-        public List<Match> Matches { get; private set; }
+        private IDCreator MatchIDCreator;
+        public Dictionary<string, Match> Matches { get; private set; }
 
         public MatchPool() {
+            MatchIDCreator = new BasicIDCreator();
             Matches = new();
         }
 
         public Match NewMatch(Game game, MatchConfig config) {
             Logger.Instance.Log("MatchPool", "Requested to create new match");
-            return new Match(game, config);
+            var match = new Match(game, config);
+            var id = MatchIDCreator.Next();
+            Matches.Add("#" + id, match);
+            return match;
         }
+
+        public Match GetMatch(string mID) => Matches[mID];
+
+        public string IDOf(Match match) => Matches.FirstOrDefault(p => p.Value == match).Key;
 
     }
 
