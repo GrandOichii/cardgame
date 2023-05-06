@@ -20,6 +20,7 @@ PORT = 8080
 
 SOCK = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+
 def parse(text: str):
     return json.loads(text, object_hook=lambda d: SimpleNamespace(**d))
 
