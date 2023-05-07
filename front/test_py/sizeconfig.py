@@ -8,12 +8,6 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
     for item in data:
         a += [[min_delegate(item), per_one, max_delegate(item)]]
 
-    # closest = None
-    # for item in a:
-    #     diff = 
-    #     if item is None or 
-
-
     while True:
         # find closest to min
         closest = None
@@ -36,6 +30,7 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
         # calculate distributions
         dis_total = min_sum / len(good)
         dis_closest = (closest[0] - closest[1]) / len(good)
+
         sub = min(dis_total, dis_closest)
         for i in good:
             a[i][1] -= sub
@@ -46,8 +41,10 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
         if dis_total < dis_closest:
             break
 
-    while True:
+        if dis_total < 0.0001:
+            break
 
+    while True:
         # find the closest
         closest = None
         closest_diff = 0
@@ -77,34 +74,24 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
         sub = min(dis_total, dis_closest)
         for i in good:
             a[i][1] += sub
-        if dis_closest < dis_total:
-            closest[1] = closest[2]
-            continue
-        
+
+        # TODO don't know why this is here
+        # if dis_closest < dis_total:
+        #     closest[1] = closest[2]
+        # else:
         sub = min(max_sum / len(bad), (closest[1] - closest[2]) / len(bad))
         for i in bad:
             a[i][1] -= sub
             
         if dis_total < dis_closest:
             break
+    
+        if dis_total < 0.0001:
+            break
 
-    # min_sum = 0
-    # other = []
-    # for i, item in enumerate(a):
-    #     if item[0] < item[1]:
-    #         other += [i]
-    #         continue
-    #     diff = item[0] - item[1]
-    #     item[1] += diff
-    #     min_sum += diff
-
-    # if other:
-    #     min_per_one = min_sum / len(other)
-    #     for i in other:
-    #         a[i][1] -= min_per_one
-
-    # return [i[1] for i in a]
-    return [math.ceil(i[1]) for i in a]
+    # works more or less
+    # TODO configure the thresh
+    return [math.floor(i[1]) if (i[1] - 1) < 0.01 else math.ceil(i[1]) for i in a]
 
 def tuple_size_config(data: list, target: int):
     return size_config(data, target, lambda o: o[0], lambda o: o[1])

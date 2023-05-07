@@ -552,6 +552,7 @@ class HorFlowConfig(FlowConfig):
             raise Exception('FAILED TO GET PREF HEIGHT')
         return max(result)
 
+
 class VerFlowConfig(FlowConfig):
     def __init__(self):
         super().__init__()
@@ -747,10 +748,15 @@ except:
     font = ContentPool.Instance.get_font('basic', 12)
 
 
-
 def click():
     print('AA')
 
+
+def top_click():
+    print('top')
+
+def bottom_click():
+    print('bottom')
 
 container = VerContainer()
 container.move(10, 10)
@@ -758,23 +764,29 @@ container.move(10, 10)
 entries_count = 3
 
 # TODO don't fit, fix
-up_button = ButtonWidget(bg_color=LGREEN, max_height=20)
-container.add_widget(up_button)
+top_button = ButtonWidget(bg_color=LGREEN, max_height=20)
+top_button.click = top_click
+
+container.add_widget(top_button)
 for i in range(entries_count):
     c = HorContainer()
     left = RectWidget(LBLUE, max_width=20, max_height=20)
     r = 'a'*(5 * (i+1))
-    # r = 'a'*(random.randint(1, 20))
+    r = 'a'*(random.randint(1, 20))
     # r = 'aaa'
     right = LabelWidget(font, r, bg_color=LRED)
     # right = RectWidget(bg_color=RED)
     c.add_widget(left)
     c.add_widget(right)
+    # TODO doesn't work, loops
+    container.add_widget(RectWidget(BLACK, max_height=1))
     container.add_widget(c)
+container.add_widget(RectWidget(BLACK, max_height=1))
 
 down_button = ButtonWidget(bg_color=LGREEN, max_height=20)
+down_button.click = bottom_click
 container.add_widget(down_button)
 container.move(200, 200)
-# w.container.add_widget(container)
+w.container.add_widget(container)
 
 w.run()
