@@ -47,6 +47,7 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
             break
 
     while True:
+
         # find the closest
         closest = None
         closest_diff = 0
@@ -76,6 +77,10 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
         sub = min(dis_total, dis_closest)
         for i in good:
             a[i][1] += sub
+        if dis_closest < dis_total:
+            closest[1] = closest[2]
+            continue
+        
         sub = min(max_sum / len(bad), (closest[1] - closest[2]) / len(bad))
         for i in bad:
             a[i][1] -= sub
@@ -98,7 +103,8 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
     #     for i in other:
     #         a[i][1] -= min_per_one
 
-    return [i[1] for i in a]
+    # return [i[1] for i in a]
+    return [math.ceil(i[1]) for i in a]
 
 def tuple_size_config(data: list, target: int):
     return size_config(data, target, lambda o: o[0], lambda o: o[1])
