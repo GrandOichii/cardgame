@@ -80,6 +80,8 @@ class Window:
             # clock
             self.clock.tick(self.fps)
 
+            self.update()
+
             # draw
             self.draw()
 
@@ -88,6 +90,9 @@ class Window:
 
             # events
             self.events()
+
+    def update(self):
+        pass
 
     def draw(self):
         self.screen.fill(WHITE)
@@ -247,6 +252,8 @@ class Widget:
     def get_pref_height(self):
         return self.pref_height
     
+    def load(self, data):
+        pass
 
 class Container(Widget):
     def __init__(self, outline_color: tuple[int, int, int]=None):

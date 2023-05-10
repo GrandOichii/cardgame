@@ -1,0 +1,125 @@
+{
+    "request": "enter command",
+    "prompt": "",
+    "args": [],
+    "curPlayerI": 0,
+    "players": [
+        {
+            "name": "Igor",
+            "handCount": 6,
+            "deckCount": 44,
+            "life": 20,
+            "energy": 0,
+            "maxEnergy": 0,
+            "bond": {
+                "id": "1",
+                "name": "Basic Bond",
+                "type": "Bond",
+                "text": "Amogus",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            "discard": [],
+            "burned": [],
+            "treasures": [],
+            "units": [
+                null,
+                null,
+                null
+            ]
+        },
+        {
+            "name": "Nastya",
+            "handCount": 5,
+            "deckCount": 45,
+            "life": 20,
+            "energy": 0,
+            "maxEnergy": 0,
+            "bond": {
+                "id": "52",
+                "name": "Basic Bond",
+                "type": "Bond",
+                "text": "Amogus",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            "discard": [],
+            "burned": [],
+            "treasures": [],
+            "units": [
+                null,
+                null,
+                null
+            ]
+        }
+    ],
+    "myData": {
+        "playerI": 0,
+        "hand": [
+            {
+                "id": "13",
+                "name": "Source",
+                "type": "Source",
+                "text": "Gain 1 energy token.",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "5",
+                "name": "Source",
+                "type": "Source",
+                "text": "Gain 1 energy token.",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "11",
+                "name": "Source",
+                "type": "Source",
+                "text": "Gain 1 energy token.",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "40",
+                "name": "Baar Swamp Traveller",
+                "type": "Unit",
+                "text": "When [CARDNAME] dies, summon a [Risen Dead] card into the same lane.",
+                "life": 1,
+                "power": 1,
+                "cost": 2,
+                "mutable": {}
+            },
+            {
+                "id": "36",
+                "name": "Ice Wall",
+                "type": "Unit",
+                "text": "",
+                "life": 6,
+                "power": 0,
+                "cost": 4,
+                "mutable": {}
+            },
+            {
+                "id": "42",
+                "name": "Courier",
+                "type": "Unit",
+                "text": "When [CARDNAME] enters play, draw a card and gain 1 life.",
+                "life": 1,
+                "power": 1,
+                "cost": 2,
+                "mutable": {}
+            }
+        ]
+    }
+}
