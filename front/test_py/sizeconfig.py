@@ -91,7 +91,8 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
 
     # works more or less
     # TODO configure the thresh
-    return [math.floor(i[1]) if (i[1] - 1) < 0.01 else math.ceil(i[1]) for i in a]
+    return [math.floor(i[1]) for i in a]
+    # return [math.floor(i[1]) if (i[1] - 1) < 0.01 else math.ceil(i[1]) for i in a]
 
 def tuple_size_config(data: list, target: int):
     return size_config(data, target, lambda o: o[0], lambda o: o[1])

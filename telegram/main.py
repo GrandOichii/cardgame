@@ -1,12 +1,12 @@
+
+# from front.test_py.client import ClientWindow
+# from ..
 from types import SimpleNamespace
 import socket
 import json
 import telebot
 import telebot.types as types
 import asyncio
-# create a variable, that stores the match connections
-# when receiving a message, index the player, then index the match
-# notify the other player on the actions done by the opponent
 
 CHAT_ID = None
 
@@ -23,6 +23,22 @@ SOCK = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 def parse(text: str):
     return json.loads(text, object_hook=lambda d: SimpleNamespace(**d))
+
+
+class ImageCapturer:
+    def __init__(self) -> None:
+        pass
+
+    def to_image(self, state):
+        return None
+    
+
+IMAGE_CAPTURER = ImageCapturer()
+
+
+def set_image_capturer(capturer: ImageCapturer):
+    global IMAGE_CAPTURER
+    IMAGE_CAPTURER = capturer
 
 
 class MatchState:
@@ -75,10 +91,22 @@ def send_state_to_user(chatID, state_j):
 
         b = types.InlineKeyboardButton(text='Pass turn', callback_data=f'/c pass')
         keyboard.add(b)
+
+    print(state.request)
+    if state.request == 'pick lane':
+        print(state.players[0].units)
+        for i, unit in enumerate(state.players[state.myData.playerI].units):
+            b_text = f'Lane {i+1}'
+            if unit is not None:
+                b_text += f' ({unit.card.name})'
+            b = types.InlineKeyboardButton(text=b_text, callback_data=f'/c {i}')
+            keyboard.add(b)
     
-
-    BOT.send_message(chatID, state_j, reply_markup=keyboard)
-
+    image_path = IMAGE_CAPTURER.to_image(state)
+    if image_path is None:
+        BOT.send_message(chatID, state_j, reply_markup=keyboard)
+        return
+    BOT.send_photo(chatID, open(image_path, 'rb'), reply_markup=keyboard)
 
 @BOT.message_handler(commands=['start'])
 def start(message: types.Message):
@@ -108,7 +136,6 @@ def parse_command(message: types.Message):
 
 @BOT.callback_query_handler(lambda call: True)
 def callback(call):
-    print(call.message.text)
     call.message.text = call.data
     parse_command(call.message)
 
@@ -250,7 +277,6 @@ def main():
     print('Started polling')
     BOT.polling(non_stop=True)
 
-asyncio.run(main())
 
 # def start_server():
 

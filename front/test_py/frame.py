@@ -8,7 +8,10 @@ import os
 import random
 # random.seed(0)
 import pygame as pg
-from sizeconfig import size_config
+
+
+from front.test_py.sizeconfig import size_config
+# from sizeconfig import size_config
 
 
 BLACK = (0, 0, 0)
@@ -82,14 +85,15 @@ class Window:
 
             self.update()
 
+            # events
+            self.events()
+
             # draw
             self.draw()
 
             # refresh screen
             pg.display.flip()
 
-            # events
-            self.events()
 
     def update(self):
         pass
@@ -103,6 +107,7 @@ class Window:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
+                return
             if event.type == pg.KEYDOWN:
                 self.process_key(event)
             if event.type == pg.MOUSEBUTTONDOWN:

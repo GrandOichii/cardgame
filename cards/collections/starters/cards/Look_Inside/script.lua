@@ -1,5 +1,6 @@
 
 -- TODO not tested
+-- TODO add can play clause
 function _CreateCard(props)
     props.cost = 1
     local result = CardCreation:Spell(props)

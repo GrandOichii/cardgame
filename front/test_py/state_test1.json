@@ -1,1 +1,279 @@
-{"request":"enter command","prompt":"","args":[],"curPlayerI":1,"players":[{"name":"Nastya","handCount":3,"deckCount":41,"life":13,"energy":2,"maxEnergy":4,"bond":{"id":"1","name":"Basic Bond","type":"Bond","text":"Amogus","life":0,"power":0,"cost":0,"mutable":{}},"discard":[{"id":"15","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"21","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"12","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"8","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}}],"burned":[],"treasures":[],"units":[{"card":{"id":"28","name":"Second Circle Paladin","type":"Unit","text":"When [CARDNAME] enters play, discard a [Healing Light] card from your hand. If you don\u0027t, [CARDNAME] gains -3 power and -3 life.","life":3,"power":3,"cost":3,"mutable":{}},"attacksLeft":0},{"card":{"id":"40","name":"Baar Swamp Traveller","type":"Unit","text":"When [CARDNAME] dies, summon a [Risen Dead] card into the same lane.","life":1,"power":1,"cost":2,"mutable":{}},"attacksLeft":0},null]},{"name":"Igor","handCount":3,"deckCount":41,"life":21,"energy":1,"maxEnergy":4,"bond":{"id":"52","name":"Basic Bond","type":"Bond","text":"Amogus","life":0,"power":0,"cost":0,"mutable":{}},"discard":[{"id":"58","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"61","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"66","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"84","name":"Healer","type":"Unit","text":"At the end of your turn, gain 1 life.","life":2,"power":0,"cost":2,"mutable":{}},{"id":"62","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}},{"id":"80","name":"Lava Bomb","type":"Spell","text":"[CARDNAME] deals 5 damage to your opponent.","life":0,"power":0,"cost":3,"mutable":{}}],"burned":[],"treasures":[],"units":[null,{"card":{"id":"89","name":"Priest of the Archdemon","type":"Unit","text":"{Evil}","life":2,"power":2,"cost":2,"mutable":{}},"attacksLeft":1},null]}],"myData":{"playerI":1,"hand":[{"id":"93","name":"Courier","type":"Unit","text":"When [CARDNAME] enters play, draw a card and gain 1 life.","life":1,"power":1,"cost":2,"mutable":{}},{"id":"103","name":"Corrupting Darkness","type":"Spell","text":"Your opponent loses 2 life.","life":0,"power":0,"cost":2,"mutable":{}},{"id":"54","name":"Source","type":"Source","text":"Gain 1 energy token.","life":0,"power":0,"cost":0,"mutable":{}}]}}
+{
+    "request":"enter command",
+    "prompt":"",
+    "args":[
+        
+    ],
+    "curPlayerI":1,
+    "players":[
+        {
+            "name":"Nastya",
+            "handCount":3,
+            "deckCount":41,
+            "life":13,
+            "energy":2,
+            "maxEnergy":4,
+            "bond":{
+                "id":"1",
+                "name":"Basic Bond",
+                "type":"Bond",
+                "text":"Amogus",
+                "life":0,
+                "power":0,
+                "cost":0,
+                "mutable":{
+                    
+                }
+            },
+            "discard":[
+                {
+                    "id":"15",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"21",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"12",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"8",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                }
+            ],
+            "burned":[
+                
+            ],
+            "treasures":[
+                
+            ],
+            "units":[
+                {
+                    "card":{
+                        "id":"28",
+                        "name":"Second Circle Paladin",
+                        "type":"Unit",
+                        "text":"When [CARDNAME] enters play, discard a [Healing Light] card from your hand. If you don\u0027t, [CARDNAME] gains -3 power and -3 life.",
+                        "life":3,
+                        "power":3,
+                        "cost":3,
+                        "mutable":{
+                            
+                        }
+                    },
+                    "attacksLeft":0
+                },
+                {
+                    "card":{
+                        "id":"40",
+                        "name":"Baar Swamp Traveller",
+                        "type":"Unit",
+                        "text":"When [CARDNAME] dies, summon a [Risen Dead] card into the same lane.",
+                        "life":1,
+                        "power":1,
+                        "cost":2,
+                        "mutable":{
+                            
+                        }
+                    },
+                    "attacksLeft":0
+                },
+                null
+            ]
+        },
+        {
+            "name":"Igor",
+            "handCount":3,
+            "deckCount":41,
+            "life":21,
+            "energy":1,
+            "maxEnergy":4,
+            "bond":{
+                "id":"52",
+                "name":"Basic Bond",
+                "type":"Bond",
+                "text":"Amogus",
+                "life":0,
+                "power":0,
+                "cost":0,
+                "mutable":{
+                    
+                }
+            },
+            "discard":[
+                {
+                    "id":"58",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"61",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"66",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"84",
+                    "name":"Healer",
+                    "type":"Unit",
+                    "text":"At the end of your turn, gain 1 life.",
+                    "life":2,
+                    "power":0,
+                    "cost":2,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"62",
+                    "name":"Source",
+                    "type":"Source",
+                    "text":"Gain 1 energy token.",
+                    "life":0,
+                    "power":0,
+                    "cost":0,
+                    "mutable":{
+                        
+                    }
+                },
+                {
+                    "id":"80",
+                    "name":"Lava Bomb",
+                    "type":"Spell",
+                    "text":"[CARDNAME] deals 5 damage to your opponent.",
+                    "life":0,
+                    "power":0,
+                    "cost":3,
+                    "mutable":{
+                        
+                    }
+                }
+            ],
+            "burned":[
+                
+            ],
+            "treasures":[
+                
+            ],
+            "units":[
+                null,
+                {
+                    "card":{
+                        "id":"89",
+                        "name":"Priest of the Archdemon",
+                        "type":"Unit",
+                        "text":"{Evil}",
+                        "life":2,
+                        "power":2,
+                        "cost":2,
+                        "mutable":{
+                            
+                        }
+                    },
+                    "attacksLeft":1
+                },
+                null
+            ]
+        }
+    ],
+    "myData":{
+        "playerI":1,
+        "hand":[
+            {
+                "id":"93",
+                "name":"Courier",
+                "type":"Unit",
+                "text":"When [CARDNAME] enters play, draw a card and gain 1 life.",
+                "life":1,
+                "power":1,
+                "cost":2,
+                "mutable":{
+                    
+                }
+            },
+            {
+                "id":"103",
+                "name":"Corrupting Darkness",
+                "type":"Spell",
+                "text":"Your opponent loses 2 life.",
+                "life":0,
+                "power":0,
+                "cost":2,
+                "mutable":{
+                    
+                }
+            },
+            {
+                "id":"54",
+                "name":"Source",
+                "type":"Source",
+                "text":"Gain 1 energy token.",
+                "life":0,
+                "power":0,
+                "cost":0,
+                "mutable":{
+                    
+                }
+            }
+        ]
+    }
+}
