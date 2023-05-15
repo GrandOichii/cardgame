@@ -9,6 +9,7 @@ function _CreateCard(props)
     function result:Effect(player)
         prevEffect(self, player)
 
+        -- TODO caused exception
         local laneI = PickLane(player.id)
         local players = GetPlayers()
         for _, p in ipairs(players) do

@@ -13,7 +13,7 @@ function _CreateCard(props)
     local prevEffect = result.Effect
     function result:Effect(player)
         prevEffect(self, player)
-        local target = Common.Targeting:UnitOrTreasure('Select target for '..self.name, player.id)
+        local target = Common.Targeting:UnitOrTreasure('Select target for '..self.name, player.id, result.id)
         DealDamage(self.id, target.id, self.mutable.spellDamage.current)
         if Common:IsInPlay(target.id) then
             return

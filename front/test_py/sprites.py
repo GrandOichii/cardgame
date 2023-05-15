@@ -1,5 +1,5 @@
 import pygame as pg
-from front.test_py.frame import BLACK, WHITE, ClickConfig
+from front.test_py.frame import BLACK, WHITE, ClickConfig, Rect, WindowConfigs, pg
 
 import front.test_py.util as util
 from front.test_py.frame import *
@@ -143,6 +143,11 @@ class CardInPlayWidget(CardWidget):
     def target_action(self):
         client.ClientWindow.Instance.send_response(f'{self.last_data.id}')
 
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+        if self.last_data is not None:
+            client.ClientWindow.Instance.coord_dict[self.last_data.id] = (bounds.x, bounds.y)
+
+        return super().draw(surface, bounds, configs)
 
 class UnitCardWidget(CardInPlayWidget):
     def __init__(self, lane_i: int):

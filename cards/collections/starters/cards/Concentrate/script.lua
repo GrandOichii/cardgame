@@ -35,7 +35,7 @@ function _CreateCard(props)
                 what = 'units',
                 which = Common.Targeting.Selectors:Filter(function(card) return card:CanPowerUp() end)
             }
-        })
+        }, result.id)
         for i = 1, self.mutable.howMany.current do
             target:PowerUp()
         end

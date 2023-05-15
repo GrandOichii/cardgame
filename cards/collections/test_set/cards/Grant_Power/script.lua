@@ -30,7 +30,7 @@ function _CreateCard(props)
                 what = 'units',
                 which = Common.Targeting.Selectors:Filter(function(card) return card:CanPowerUp() end)
             }
-        })
+        }, result.id)
         target:PowerUp()
     end
 

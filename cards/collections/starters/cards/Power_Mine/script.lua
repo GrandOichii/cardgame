@@ -19,7 +19,7 @@ function _CreateCard(props)
         if self.mutable.charge.current == 1 then
             local owner = GetController(self.id)
             Destroy(self.id)
-            local target = Common.Targeting:Unit('Select target Unit or Treasure for '..self.name, owner.id)
+            local target = Common.Targeting:Unit('Select target Unit or Treasure for '..self.name, owner.id, result.id)
             Destroy(target.id)
         end
     end

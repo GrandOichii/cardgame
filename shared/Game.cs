@@ -11,6 +11,8 @@ public struct MatchState {
     public string Prompt { get; set; }
     [JsonPropertyName("args")]
     public List<string> Args { get; set; }
+    [JsonPropertyName("sourceID")]
+    public string SourceID { get; set; }
 
     // TODO add lane charms
     [JsonPropertyName("curPlayerI")]

@@ -12,7 +12,7 @@ from front.test_py.sprites import *
 # from frame import *
 # from sprites import *
 
-SPACE_FILLER = RectWidget(LGREEN)
+SPACE_FILLER = RectWidget()
 
 
 def parse_state(textj):
@@ -209,12 +209,12 @@ class ClientWindow(Window):
         self.set_title('client test')
 
         # connection
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((HOST, PORT))
-        sconfig = parse_state(self.read_msg())
-        # TODO untilize match configuration
+        # self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.sock.connect((HOST, PORT))
+        # sconfig = parse_state(self.read_msg())
+        # # TODO untilize match configuration
 
-        self.sock.settimeout(.1)
+        # self.sock.settimeout(.1)
 
     def init_ui(self):
         # TODO remove, for easier debugging
@@ -245,15 +245,24 @@ class ClientWindow(Window):
         container.add_widget(self.hand)
         container.add_widget(sep)
 
+    def draw(self):
+        self.coord_dict = {}
+        super().draw()
+        if self.last_state is not None and not self.last_state.sourceID in self.coord_dict:
+            return
+        
+        coord = self.coord_dict[self.last_state.sourceID]
+        util.draw_arrow(self.screen, coord, pg.mouse.get_pos())
+
     def update(self):
         super().update()
-        statej = self.read_msg()
-        if statej != '':
-            # print(json.dumps(json.loads(statej), indent=4))
-            parsed = parse_state(statej)
-            self.load(parsed)
-        # state = test_state()
-        # self.load(state)
+        # statej = self.read_msg()
+        # if statej != '':
+        #     print(json.dumps(json.loads(statej), indent=4))
+        #     parsed = parse_state(statej)
+        #     self.load(parsed)
+        state = test_state()
+        self.load(state)
 
     def load(self, state):
         self.last_state = state

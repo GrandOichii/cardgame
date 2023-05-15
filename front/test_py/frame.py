@@ -8,6 +8,7 @@ import os
 import random
 # random.seed(0)
 import pygame as pg
+# from front.test_py.frame import Widget
 # from front.test_py.frame import Rect, WindowConfigs
 
 
@@ -697,6 +698,23 @@ class FormContainer(VerContainer):
         c.add_widget(label)
         c.add_widget(widget)
         self.add_widget(c)
+
+
+class StackContainer(VerContainer):
+    def __init__(self, max_per_line: int, outline_color: tuple[int, int, int] = None):
+        super().__init__(outline_color)
+
+        self.max_per_line = max_per_line
+        self.last_container: HorContainer = None
+
+    def add_widget(self, w: Widget):
+        if self.last_container is None or len(self.last_container.widgets) == self.max_per_line:
+            self.last_container = HorContainer()
+            self.add_widget(self.last_container)
+        self.last_container.add_widget(w)
+            
+
+
 # w = Window()
 # w.set_title('client test')
 # # w.container = VertContainer()

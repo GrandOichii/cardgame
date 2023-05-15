@@ -218,7 +218,7 @@ namespace game.player {
         abstract public string PromptAction(Player controlledPlayer, Match match);
         abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
         abstract public void Update(Player controlledPlayer, Match match);
-        abstract public string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match);
+        abstract public string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID);
         abstract public void InformMatchEnd(Player controlledPlayer, Match match, bool won);
 
         protected string ShortInfo(Player player) {
@@ -271,7 +271,7 @@ namespace game.player {
             return int.Parse(result);
         }
 
-        public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match)
+        public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID)
         {
             return "";
             // throw new NotImplementedException();

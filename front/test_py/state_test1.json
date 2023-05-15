@@ -1,279 +1,339 @@
 {
-    "request":"enter command",
-    "prompt":"",
-    "args":[
-        
-    ],
-    "curPlayerI":1,
-    "players":[
-        {
-            "name":"Nastya",
-            "handCount":3,
-            "deckCount":41,
-            "life":13,
-            "energy":2,
-            "maxEnergy":4,
-            "bond":{
-                "id":"1",
-                "name":"Basic Bond",
-                "type":"Bond",
-                "text":"Amogus",
-                "life":0,
-                "power":0,
-                "cost":0,
-                "mutable":{
-                    
-                }
-            },
-            "discard":[
-                {
-                    "id":"15",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"21",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"12",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"8",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                }
-            ],
-            "burned":[
-                
-            ],
-            "treasures":[
-                
-            ],
-            "units":[
-                {
-                    "card":{
-                        "id":"28",
-                        "name":"Second Circle Paladin",
-                        "type":"Unit",
-                        "text":"When [CARDNAME] enters play, discard a [Healing Light] card from your hand. If you don\u0027t, [CARDNAME] gains -3 power and -3 life.",
-                        "life":3,
-                        "power":3,
-                        "cost":3,
-                        "mutable":{
-                            
-                        }
-                    },
-                    "attacksLeft":0
-                },
-                {
-                    "card":{
-                        "id":"40",
-                        "name":"Baar Swamp Traveller",
-                        "type":"Unit",
-                        "text":"When [CARDNAME] dies, summon a [Risen Dead] card into the same lane.",
-                        "life":1,
-                        "power":1,
-                        "cost":2,
-                        "mutable":{
-                            
-                        }
-                    },
-                    "attacksLeft":0
-                },
-                null
-            ]
+"request": "target",
+"prompt": "Select target Unit or Treasure for Fire Archmage",
+"args": [
+"36",
+"31",
+"75"
+],
+"sourceID": "36",
+"curPlayerI": 0,
+"players": [
+{
+"name": "Igor",
+"handCount": 3,
+"deckCount": 41,
+"life": 14,
+"energy": 4,
+"maxEnergy": 6,
+"bond": {
+"id": "1",
+"name": "Basic Bond",
+"type": "Bond",
+"text": "Amogus",
+"life": 0,
+"power": 0,
+"cost": 0,
+"mutable": {}
+},
+"discard": [
+{
+    "id": "10",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "20",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "22",
+    "name": "Earthling",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, summon 3 [Throw Rock] cards and shuffle them into your deck",
+    "life": 2,
+    "power": 2,
+    "cost": 1,
+    "mutable": {}
+},
+{
+    "id": "17",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "40",
+    "name": "Black Market Trade",
+    "type": "Spell",
+    "text": "{Virtuous}\n{Evil}",
+    "life": 0,
+    "power": 0,
+    "cost": 2,
+    "mutable": {}
+},
+{
+    "id": "11",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "45",
+    "name": "A Critical Flaw",
+    "type": "Spell",
+    "text": "Destroy all Treasures.",
+    "life": 0,
+    "power": 0,
+    "cost": 7,
+    "mutable": {}
+},
+{
+    "id": "43",
+    "name": "Compulsive Study",
+    "type": "Spell",
+    "text": "Draw [cardDraw] cards, then discard [cardDiscard] card(s).",
+    "life": 0,
+    "power": 0,
+    "cost": 3,
+    "mutable": {
+        "cardDraw": {
+            "current": 3,
+            "min": 3,
+            "max": 4
         },
-        {
-            "name":"Igor",
-            "handCount":3,
-            "deckCount":41,
-            "life":21,
-            "energy":1,
-            "maxEnergy":4,
-            "bond":{
-                "id":"52",
-                "name":"Basic Bond",
-                "type":"Bond",
-                "text":"Amogus",
-                "life":0,
-                "power":0,
-                "cost":0,
-                "mutable":{
-                    
-                }
-            },
-            "discard":[
-                {
-                    "id":"58",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"61",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"66",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"84",
-                    "name":"Healer",
-                    "type":"Unit",
-                    "text":"At the end of your turn, gain 1 life.",
-                    "life":2,
-                    "power":0,
-                    "cost":2,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"62",
-                    "name":"Source",
-                    "type":"Source",
-                    "text":"Gain 1 energy token.",
-                    "life":0,
-                    "power":0,
-                    "cost":0,
-                    "mutable":{
-                        
-                    }
-                },
-                {
-                    "id":"80",
-                    "name":"Lava Bomb",
-                    "type":"Spell",
-                    "text":"[CARDNAME] deals 5 damage to your opponent.",
-                    "life":0,
-                    "power":0,
-                    "cost":3,
-                    "mutable":{
-                        
-                    }
-                }
-            ],
-            "burned":[
-                
-            ],
-            "treasures":[
-                
-            ],
-            "units":[
-                null,
-                {
-                    "card":{
-                        "id":"89",
-                        "name":"Priest of the Archdemon",
-                        "type":"Unit",
-                        "text":"{Evil}",
-                        "life":2,
-                        "power":2,
-                        "cost":2,
-                        "mutable":{
-                            
-                        }
-                    },
-                    "attacksLeft":1
-                },
-                null
-            ]
+        "cardDiscard": {
+            "current": 1,
+            "min": 1,
+            "max": 2
         }
-    ],
-    "myData":{
-        "playerI":1,
-        "hand":[
-            {
-                "id":"93",
-                "name":"Courier",
-                "type":"Unit",
-                "text":"When [CARDNAME] enters play, draw a card and gain 1 life.",
-                "life":1,
-                "power":1,
-                "cost":2,
-                "mutable":{
-                    
-                }
-            },
-            {
-                "id":"103",
-                "name":"Corrupting Darkness",
-                "type":"Spell",
-                "text":"Your opponent loses 2 life.",
-                "life":0,
-                "power":0,
-                "cost":2,
-                "mutable":{
-                    
-                }
-            },
-            {
-                "id":"54",
-                "name":"Source",
-                "type":"Source",
-                "text":"Gain 1 energy token.",
-                "life":0,
-                "power":0,
-                "cost":0,
-                "mutable":{
-                    
-                }
-            }
-        ]
     }
+},
+{
+    "id": "23",
+    "name": "Earthling",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, summon 3 [Throw Rock] cards and shuffle them into your deck",
+    "life": 2,
+    "power": 2,
+    "cost": 1,
+    "mutable": {}
+},
+{
+    "id": "50",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "21",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+}
+],
+"burned": [],
+"treasures": [],
+"units": [
+null,
+{
+    "card": {
+        "id": "36",
+        "name": "Fire Archmage",
+        "type": "Unit",
+        "text": "When you cast a Spell, [CARDNAME] deals 4 damage to target Unit or Treasure.",
+        "life": 4,
+        "power": 4,
+        "cost": 5,
+        "mutable": {}
+    },
+    "attacksLeft": 1
+},
+{
+    "card": {
+        "id": "31",
+        "name": "Healer",
+        "type": "Unit",
+        "text": "At the end of your turn, gain 1 life.",
+        "life": 2,
+        "power": 0,
+        "cost": 2,
+        "mutable": {}
+    },
+    "attacksLeft": 1
+}
+]
+},
+{
+"name": "Nastya",
+"handCount": 3,
+"deckCount": 42,
+"life": 23,
+"energy": 5,
+"maxEnergy": 5,
+"bond": {
+"id": "52",
+"name": "Basic Bond",
+"type": "Bond",
+"text": "Amogus",
+"life": 0,
+"power": 0,
+"cost": 0,
+"mutable": {}
+},
+"discard": [
+{
+    "id": "62",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "54",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "74",
+    "name": "Earthling",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, summon 3 [Throw Rock] cards and shuffle them into your deck",
+    "life": 2,
+    "power": 2,
+    "cost": 1,
+    "mutable": {}
+},
+{
+    "id": "60",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "111",
+    "name": "Healing Light",
+    "type": "Spell",
+    "text": "Gain 3 life.",
+    "life": 0,
+    "power": 0,
+    "cost": 2,
+    "mutable": {}
+},
+{
+    "id": "65",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "61",
+    "name": "Source",
+    "type": "Source",
+    "text": "Gain 1 energy token.",
+    "life": 0,
+    "power": 0,
+    "cost": 0,
+    "mutable": {}
+},
+{
+    "id": "76",
+    "name": "Hired Thug",
+    "type": "Unit",
+    "text": "",
+    "life": 2,
+    "power": 3,
+    "cost": 2,
+    "mutable": {}
+}
+],
+"burned": [],
+"treasures": [],
+"units": [
+{
+    "card": {
+        "id": "75",
+        "name": "Faithful Cleric",
+        "type": "Unit",
+        "text": "{Virtuous}",
+        "life": 2,
+        "power": 1,
+        "cost": 1,
+        "mutable": {}
+    },
+    "attacksLeft": 0
+},
+null,
+null
+]
+}
+],
+"myData": {
+"playerI": 0,
+"hand": [
+{
+"id": "34",
+"name": "Loyal Knight",
+"type": "Unit",
+"text": "When [CARDNAME] enters play, summon a [New Recruit] card to the right of [CARDNAME].",
+"life": 2,
+"power": 2,
+"cost": 3,
+"mutable": {}
+},
+{
+"id": "109",
+"name": "Healing Light",
+"type": "Spell",
+"text": "Gain 3 life.",
+"life": 0,
+"power": 0,
+"cost": 2,
+"mutable": {}
+},
+{
+"id": "110",
+"name": "Corrupting Darkness",
+"type": "Spell",
+"text": "Your opponent loses 2 life.",
+"life": 0,
+"power": 0,
+"cost": 2,
+"mutable": {}
+}
+]
+}
 }
