@@ -93,16 +93,16 @@ class Client:
         message = ''
         try :
             message_length_bytes = self.sock.recv(4)
-            print(message_length_bytes)
+            # print(message_length_bytes)
             message_length = int.from_bytes(message_length_bytes, byteorder='little')
-            print(f'Message length: {message_length}')
+            # print(f'Message length: {message_length}')
 
             # Receive the message itself
             while len(message) < message_length:
                 message_bytes = self.sock.recv(message_length)
                 message += message_bytes.decode('utf-8')
 
-            print('Read: ' + message)
+            # print('Read: ' + message)
         except socket.timeout:
             message = ''
 

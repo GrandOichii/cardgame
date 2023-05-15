@@ -1,6 +1,6 @@
 {
     "name": "Compulsive Study",
     "type": "Spell",
-    "text": "Draw [cardDraw] cards, then discard [cardDiscard] cards.",
+    "text": "Draw [cardDraw] cards, then discard [cardDiscard] card(s).",
     "script": "script.lua"
 }

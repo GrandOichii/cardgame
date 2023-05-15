@@ -8,6 +8,7 @@ import os
 import random
 # random.seed(0)
 import pygame as pg
+# from front.test_py.frame import Rect, WindowConfigs
 
 
 from front.test_py.sizeconfig import size_config
@@ -51,7 +52,7 @@ class Window:
 
 
         self.key_map = {
-            pg.K_SPACE: self.configs.toggle_wireframe
+            pg.KSCAN_APOSTROPHE: self.configs.toggle_wireframe
         }
         self.fps = 60
         self.set_screen_size(1000, 1000 * 6 / 8)
@@ -94,13 +95,12 @@ class Window:
             # refresh screen
             pg.display.flip()
 
-
     def update(self):
         pass
 
     def draw(self):
         self.screen.fill(WHITE)
-        self.container._draw(self.screen, Rect(0, 0, self.width, self.height), 0, self.configs)
+        self.container._draw(self.screen, Rect(0, 0, self.width, self.height), self.configs)
         self.configs.mouse_clicked = False
 
     def events(self):
@@ -181,8 +181,17 @@ class Rect:
         return (self.x, self.y, self.width, self.height)
 
 
+class ClickConfig:
+    def __init__(self):
+        self.mouse_over_condition = None
+        self.mouse_over_action = None
+        
+        self.mouse_click_condition = None
+        self.mouse_click_action = None
+
+
 class Widget:
-    def __init__(self, pref_width: int=50, pref_height: int=50, min_width: int=0, min_height: int=0, max_width: int=-1, max_height: int=-1):
+    def __init__(self, pref_width: int=50, pref_height: int=50, min_width: int=0, min_height: int=0, max_width: int=-1, max_height: int=-1, click_configs: list[ClickConfig]=None):
         self.parent: Container = None
         self.x, self.y = 0, 0
         self.min_width, self.max_width = min_width, max_width
@@ -190,6 +199,10 @@ class Widget:
         
         self.set_pref_width(pref_width)
         self.set_pref_height(pref_height)
+
+        self.click_configs = click_configs
+        if click_configs is None:
+            self.click_configs = []
 
     def get_min_width(self):
         return self.min_width
@@ -215,33 +228,24 @@ class Widget:
             return
         self.pref_height = min(self.pref_height, self.max_height)
 
-    def _draw(self, surface: pg.Surface, context: Rect, fit_type: int, configs: WindowConfigs) -> tuple[int, int]:
+    def _draw(self, surface: pg.Surface, context: Rect, configs: WindowConfigs) -> tuple[int, int]:
         bounds = context.copy()
 
-        # if fit_type != 1:
-        #     bounds.height = self.get_pref_height()
-        #     # bounds.height = context.height - context.y
-            
-        # if fit_type != 2:
-        #     bounds.width = self.get_pref_width()
-        #     # bounds.width = context.width - context.x
-
-        # new_var = self.get_min_width()
-        # new_var1 = min(self.get_max_width(), context.width)
-        # if new_var1 == -1:
-        #     new_var1 = context.width
-        # bounds.width = between(new_var, bounds.width, new_var1)
-        # new_var2 = self.get_min_height()
-        # new_var3 = min(self.get_max_height(), context.height)
-        # if new_var3 == -1:
-        #     new_var3 = context.height
-        # bounds.height = between(new_var2, bounds.height, new_var3)
-
-        # print(self, bounds, sep='\t')
-        return self.draw(surface, bounds, configs)
+        result = self.draw(surface, bounds, configs)
+        self.post_draw(surface, context, configs)
+        return result
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
         pass
+
+    def post_draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+        mx, my = pg.mouse.get_pos()
+        if bounds.x <= mx <= bounds.x + bounds.width and bounds.y <= my <= bounds.y + bounds.height:
+            for cc in self.click_configs:
+                if cc.mouse_over_condition is not None and cc.mouse_over_condition():
+                    cc.mouse_over_action(surface, bounds)
+                    if configs.mouse_clicked and cc.mouse_click_condition is not None and cc.mouse_click_condition():
+                        cc.mouse_click_action()
 
     def bounds(self, context: Rect) -> Rect:
         width = between(self.get_min_width(), context.width, self.get_max_width())
@@ -260,6 +264,7 @@ class Widget:
     def load(self, data):
         pass
 
+
 class Container(Widget):
     def __init__(self, outline_color: tuple[int, int, int]=None):
         super().__init__()
@@ -272,7 +277,7 @@ class Container(Widget):
             width = widget.get_pref_width()
             height = widget.get_pref_height()
             b = Rect(bounds.x + widget.x, bounds.y + widget.y, width, height)
-            widget._draw(surface, b, 0, configs)
+            widget._draw(surface, b, configs)
         return bounds.width, bounds.height
 
     def add_widget(self, w: Widget):
@@ -281,8 +286,8 @@ class Container(Widget):
 
 
 class RectWidget(Widget):
-    def __init__(self, bg_color: tuple[int, int, int]=WHITE, pref_width: int=50, pref_height: int=50, min_width: int=0, min_height: int=0, max_width: int=-1, max_height: int=-1):
-        super().__init__(pref_width, pref_height, min_width, min_height, max_width, max_height)
+    def __init__(self, bg_color: tuple[int, int, int]=WHITE, pref_width: int=50, pref_height: int=50, min_width: int=0, min_height: int=0, max_width: int=-1, max_height: int=-1, click_configs: list[ClickConfig]=None):
+        super().__init__(pref_width, pref_height, min_width, min_height, max_width, max_height, click_configs)
 
         self.bg_color = bg_color
 
@@ -315,8 +320,8 @@ class LabelComponent:
 
 class LabelWidget(RectWidget, LabelComponent):
 
-    def __init__(self, font: pg.font.Font, text: str, fg_color: tuple[int, int, int]=BLACK, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1):
-        RectWidget.__init__(self, bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height)
+    def __init__(self, font: pg.font.Font, text: str, fg_color: tuple[int, int, int]=BLACK, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1, click_configs: list[ClickConfig]=None):
+        RectWidget.__init__(self, bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height, click_configs)
         LabelComponent.__init__(self, font, text, fg_color)
 
     def set_text(self, text: str):
@@ -334,8 +339,8 @@ class LabelWidget(RectWidget, LabelComponent):
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
         super().draw(surface, bounds, configs)
-
-        surface.blit(self.label, bounds.to_tuple())
+        if self.label is not None:
+            surface.blit(self.label, bounds.to_tuple())
         return (bounds.width, bounds.height)
 
 
@@ -439,7 +444,7 @@ class FlowContainer(Container):
             widget = self.widgets[i]
             size = sizes[i]
             self.config.set_bound(b, size)
-            res_w, res_h = widget._draw(surface, b, 1, configs)
+            res_w, res_h = widget._draw(surface, b, configs)
 
             self.config.mutate_coords(b, res_w, res_h)
             sum_h += res_h
@@ -641,52 +646,7 @@ class VerContainer(FlowContainer):
         super().__init__(VerFlowConfig(), outline_color)
 
 
-class ClickConfig:
-    def __init__(self):
-        self.mouse_over_condition = None
-        self.mouse_over_action = None
-        
-        self.mouse_click_condition = None
-        self.mouse_click_action = None
-        
-
-class ButtonTemplateWidget(RectWidget, LabelComponent):
-    def __init__(self, font: pg.font.Font, text: str, click_configs: list[ClickConfig], fg_color: tuple[int, int, int]=BLACK, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1):
-        RectWidget.__init__(self, bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height)
-        LabelComponent.__init__(self, font, text, fg_color)
-
-        self.click_configs: list[ClickConfig] = click_configs
-
-    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
-        RectWidget.draw(self, surface, bounds, configs)
-
-        # TODO change when text shouldn't be centered
-        if self.label:
-            lb = bounds.copy()
-            lb.x += (lb.width - self.label.get_width()) // 2
-            lb.y += (lb.height - self.label.get_height()) // 2
-            surface.blit(self.label, lb.to_tuple())
-        
-        # lb.
-
-        mx, my = pg.mouse.get_pos()
-        if bounds.x <= mx <= bounds.x + bounds.width and bounds.y <= my <= bounds.y + bounds.height:
-            for cc in self.click_configs:
-                if cc.mouse_over_condition is not None and cc.mouse_over_condition():
-                    cc.mouse_over_action(surface, bounds)
-                    if configs.mouse_clicked and cc.mouse_click_condition is not None and cc.mouse_click_condition():
-                        cc.mouse_click_action()
-
-        return bounds.width, bounds.height
-    
-    def set_text(self, text: str):
-        LabelComponent.set_text(self, text)
-
-        self.min_width = self.label.get_width()
-        self.min_height = self.label.get_height()
-
-
-class ButtonWidget(ButtonTemplateWidget):
+class ButtonWidget(RectWidget):
     def __init__(self, font: pg.font.Font=None, text: str='', fg_color: tuple[int, int, int] = BLACK, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1):
         cc = ClickConfig()
 
@@ -699,7 +659,8 @@ class ButtonWidget(ButtonTemplateWidget):
             cc
         ]
 
-        super().__init__(font, text, click_configs, fg_color, bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height)
+        LabelComponent.__init__(self, font, text, fg_color)
+        Widget.__init__(self, bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height, click_configs)
 
         self.click = None
 
@@ -708,6 +669,23 @@ class ButtonWidget(ButtonTemplateWidget):
             return
         
         self.click()
+
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+        result = RectWidget.draw(self, surface, bounds, configs)
+
+        if self.label:
+            lb = bounds.copy()
+            lb.x += (lb.width - self.label.get_width()) // 2
+            lb.y += (lb.height - self.label.get_height()) // 2
+            surface.blit(self.label, lb.to_tuple())
+
+        return result
+    
+    def set_text(self, text: str):
+        LabelComponent.set_text(self, text)
+
+        self.min_width = self.label.get_width()
+        self.min_height = self.label.get_height()
 
 
 class FormContainer(VerContainer):

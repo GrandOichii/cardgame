@@ -244,7 +244,7 @@ function Common.Targeting.Selectors:AllOfPlayers( playerID )
 end
 
 
-function Common.Targeting:Target(prompt, playerID, configs )
+function Common.Targeting:Target(prompt, playerID, configs)
     --[[ Common:Target(player.id, {
         {
             what = 'treasure',

@@ -135,8 +135,9 @@ class Program {
 
     static void Main(string[] args)
     {
-        RunMatchPool(args);
-        return;
+        // RunMatchPool(args);
+        // return;
+        
         // listener.Start();
         // System.Console.WriteLine("Started server");
         // var handler = listener.AcceptTcpClient();
@@ -195,7 +196,7 @@ class Program {
 
 
 static class MatchParsers {
-static public MatchState CreateMState(Player player, Match match, string request, List<string> args, string prompt="") {
+    static public MatchState CreateMState(Player player, Match match, string request, List<string> args, string prompt="") {
         var result = new MatchState();
         result.Players = new PlayerState[match.Players.Count];
         for (int i = 0; i < match.Players.Count; i++) {

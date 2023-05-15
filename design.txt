@@ -515,6 +515,15 @@ Answer Prayers
         Target Unit gains +3 power and +3 life.
 
 
+[TODO]
+    Type: Creature
+    Cost: 2
+    Life: 2
+    Power: 2
+    Text:
+        While [CARDNAME] is in the center lane, it gains +2 power.
+
+
 // Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)
 
 == Keywords ==

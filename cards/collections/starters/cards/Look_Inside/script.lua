@@ -21,5 +21,13 @@ function _CreateCard(props)
         DrawCards(player.id, 1)
     end
 
+    local prevCanPlay = result.CanPlay
+    function result:CanPlay(player)
+        if not prevCanPlay(self, player) then
+            return false
+        end
+        return Common:AtLeastOneUnitInPlay() or Common:AtLeastOneTreasureInPlay()
+    end
+
     return result
 end

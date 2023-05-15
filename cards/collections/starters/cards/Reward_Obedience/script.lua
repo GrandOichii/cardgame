@@ -20,6 +20,7 @@ function _CreateCard(props)
 
         local target = Common.Targeting:CardInHand('Choose a card to discard to '..self.name, player, function(card) return card.name == requiredCardName end)
         if target ~= nil then
+            -- TODO add check for card name (for anti-cheat) + same for other reward card
             RemoveFromHand(target.id, player.id)
             PlaceIntoDiscard(target.id, player.id)
             IncreaseMaxEnergy(player.id, 1)

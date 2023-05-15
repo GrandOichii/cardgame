@@ -4,6 +4,7 @@ from front.test_py.client import ClientWindow
 from telegram.main import main, set_image_capturer, ImageCapturer
 ClientWindow.Instance = ClientWindow()
 WINDOW = ClientWindow.Instance
+WINDOW.set_screen_size(1200, 800)
 
 # set_image_capturer(...)
 class TestFrontImageCapturer(ImageCapturer):
