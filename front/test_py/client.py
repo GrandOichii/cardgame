@@ -209,12 +209,14 @@ class ClientWindow(Window):
         self.set_title('client test')
 
         # connection
-        # self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.sock.connect((HOST, PORT))
-        # sconfig = parse_state(self.read_msg())
-        # # TODO untilize match configuration
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((HOST, PORT))
+        sconfig = parse_state(self.read_msg())
+        # TODO untilize match configuration
 
-        # self.sock.settimeout(.1)
+        self.sock.settimeout(.01)
+
+        self.last_state = None
 
     def init_ui(self):
         # TODO remove, for easier debugging
@@ -246,6 +248,9 @@ class ClientWindow(Window):
         container.add_widget(sep)
 
     def draw(self):
+        if self.last_state is None:
+            return
+        
         self.coord_dict = {}
         super().draw()
         if self.last_state is not None and not self.last_state.sourceID in self.coord_dict:
@@ -256,13 +261,12 @@ class ClientWindow(Window):
 
     def update(self):
         super().update()
-        # statej = self.read_msg()
-        # if statej != '':
-        #     print(json.dumps(json.loads(statej), indent=4))
-        #     parsed = parse_state(statej)
-        #     self.load(parsed)
-        state = test_state()
-        self.load(state)
+        statej = self.read_msg()
+        if statej != '':
+            parsed = parse_state(statej)
+            self.load(parsed)
+        # state = test_state()
+        # self.load(state)
 
     def load(self, state):
         self.last_state = state
