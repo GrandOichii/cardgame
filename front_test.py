@@ -13,7 +13,7 @@ class TestWindow(Window):
 
         start = (100, 100)
         mpos = pg.mouse.get_pos()
-        pg.draw.line(self.screen, (0, 0, 0), start, mpos, 6)
+        pg.draw.line(self.screen, (0, 0, 0), start, mpos, 1)
 
         angle_diff = pi / 6
         angle = atan2(-(mpos[1] - start[1]), -(mpos[0] - start[0])) - angle_diff / 2

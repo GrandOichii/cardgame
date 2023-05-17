@@ -22,6 +22,7 @@ function _CreateCard(props)
             end
             local card = hand[math.random(#hand)]
             card:AddKeyword('virtuous')
+            card.text = card.text..'\n{Virtuous}'
         end)
     :Build()
     

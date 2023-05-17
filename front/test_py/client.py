@@ -257,7 +257,7 @@ class ClientWindow(Window):
             return
         
         coord = self.coord_dict[self.last_state.sourceID]
-        util.draw_arrow(self.screen, coord, pg.mouse.get_pos())
+        util.draw_arrow(self.screen, (coord[0] + CARD_WIDTH/2, coord[1] + CARD_HEIGHT/2), pg.mouse.get_pos(), 3)
 
     def update(self):
         super().update()
