@@ -33,6 +33,8 @@ struct BotMessage {
 
 class Program {
 
+    static private string DECK_PATH = "../decks/test.deck";
+
     static private IPAddress ADDRESS = IPAddress.Any;
     static private int PORT = 8080;
 
@@ -72,7 +74,7 @@ class Program {
                 var mID = g.MatchPool.IDOf(m);
 
                 // TODO remove
-                var deck = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+                var deck = Deck.FromText(g.CardMaster, File.ReadAllText(DECK_PATH));
                 var p = new Player(m, "Nastya", deck, new LuaBotController("../bots/test_bot.lua"));
                 m.AddPlayer(p);
 
@@ -98,7 +100,7 @@ class Program {
                 NetUtil.Write(stream, new BotMessage("success", "Waiting for connection").ToJson());
 
                 // TODO remove, adds bot
-                var deck = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+                var deck = Deck.FromText(g.CardMaster, File.ReadAllText(DECK_PATH));
                 var p = new Player(match, "Igor", deck, new TCPPlayerController(listener, config));
                 match.AddPlayer(p);
 
@@ -165,11 +167,11 @@ class Program {
         var config = MatchConfig.FromText(File.ReadAllText(configPath));
         var m = g.MatchPool.NewMatch(g, config);
 
-        var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+        var deck1 = Deck.FromText(g.CardMaster, File.ReadAllText(DECK_PATH));
         var p1 = new Player(m, "Igor", deck1, new TCPPlayerController(listener, config));
         // var p1 = new Player(m, "Igor", deck1, new LuaBotController("../bots/test_bot.lua"));
 
-        var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText("../decks/generated.deck"));
+        var deck2 = Deck.FromText(g.CardMaster, File.ReadAllText(DECK_PATH));
         // var p2 = new Player(m, "Nastya", deck2, new TerminalPlayerController());
         // var p2 = new Player(m, "Nastya", deck2, new TCPPlayerController(listener, config));
         var p2 = new Player(m, "Nastya", deck2, new LuaBotController("../bots/test_bot.lua"));
@@ -387,6 +389,17 @@ class TCPPlayerController : PlayerController
         Write(MatchParsers.CreateMState(controlledPlayer, match, (won ? "won" : "lost"), new()).ToJson());
     }
 
+    public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+        // TODO replace new() with available attacks
+        var opponent = match.OpponentOf(controlledPlayer);
+        var targets = new List<string>();
+        foreach (var treasure in opponent.Treasures.Cards)
+            targets.Add(treasure.GetCardWrapper().ID);
+        Write(MatchParsers.CreateMState(controlledPlayer, match, "pick attack target", targets, "", card.ID).ToJson());
+        return Read();
+    }
+
+
 }
 
 
@@ -457,4 +470,10 @@ class LuaBotController : PlayerController
     public override void InformMatchEnd(Player controlledPlayer, Match match, bool won) {
         // TODO
     }
+
+    public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+        // TODO
+        return "";
+    }
+
 }

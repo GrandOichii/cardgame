@@ -15,10 +15,10 @@ CARD_NAME_OFFSET = 18
 
 
 class CardWidget(RectWidget):
-    def from_card(card):
-        result = CardWidget()
-        result.load(card)
-        return result
+    # def from_card(card):
+    #     result = CardWidget()
+    #     result.load(card)
+    #     return result
 
     def __init__(self, click_configs: list[ClickConfig]):
         self.last_data = None
@@ -149,6 +149,30 @@ class CardInPlayWidget(CardWidget):
 
         return super().draw(surface, bounds, configs)
 
+
+class TreasureWidget(CardInPlayWidget):
+    def __init__(self):
+        super().__init__()
+
+        # cc1 = ClickConfig()
+        # cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'enter command'
+        # cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
+        # cc1.mouse_click_condition = lambda: True
+        # cc1.mouse_click_action = self.attack_action
+
+        cc1 = ClickConfig()
+        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick attack target'
+        cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, BLUE, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
+        cc1.mouse_click_condition = lambda: True
+        cc1.mouse_click_action = self.pick_attack_action
+
+        # self.click_configs += [cc1]
+        self.click_configs += [cc1]
+
+    def pick_attack_action(self):
+        client.ClientWindow.Instance.send_response(f'{self.last_data.id}')
+
+
 class UnitCardWidget(CardInPlayWidget):
     def __init__(self, lane_i: int):
         super().__init__()
@@ -161,14 +185,14 @@ class UnitCardWidget(CardInPlayWidget):
         # cc1.mouse_click_condition = lambda: True
         # cc1.mouse_click_action = self.attack_action
 
-        cc2 = ClickConfig()
-        cc2.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick lane'
-        cc2.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, BLUE, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
-        cc2.mouse_click_condition = lambda: True
-        cc2.mouse_click_action = self.pick_lane_action
+        cc1 = ClickConfig()
+        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick lane'
+        cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, BLUE, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
+        cc1.mouse_click_condition = lambda: True
+        cc1.mouse_click_action = self.pick_lane_action
 
         # self.click_configs += [cc1]
-        self.click_configs += [cc2]
+        self.click_configs += [cc1]
 
     # def attack_action(self):
     #     client.ClientWindow.send_response(f'attack {self.lane_i}')

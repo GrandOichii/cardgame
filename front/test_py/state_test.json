@@ -3,6 +3,7 @@
     "prompt": "",
     "args": [],
     "curPlayerI": 0,
+    "sourceID": "",
     "players": [
         {
             "name": "Igor",
@@ -24,6 +25,26 @@
             "discard": [],
             "burned": [],
             "treasures": [],
+            "treasures1": [{
+                "id": "1",
+                "name": "Treasure1",
+                "type": "Treasure",
+                "text": "Treasure1 text",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "1",
+                "name": "Treasure2",
+                "type": "Treasure",
+                "text": "Treasure2 text",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            }],
             "units": [
                 null,
                 null,
@@ -49,7 +70,90 @@
             },
             "discard": [],
             "burned": [],
-            "treasures": [],
+            "treasures": [{
+                "id": "1",
+                "name": "Treasure1",
+                "type": "Treasure",
+                "text": "Treasure1 text",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "1",
+                "name": "Treasure2",
+                "type": "Treasure",
+                "text": "Treasure2 text",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "1",
+                "name": "Treasure2",
+                "type": "Treasure",
+                "text": "Treasure2 text",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            },
+            {
+                "id": "1",
+                "name": "Treasure2",
+                "type": "Treasure",
+                "text": "Treasure2 text",
+                "life": 0,
+                "power": 0,
+                "cost": 0,
+                "mutable": {}
+            }
+            ],
+
+            "treasures0": [
+                {
+                    "id": "1",
+                    "name": "Treasure1",
+                    "type": "Treasure",
+                    "text": "Treasure1 text",
+                    "life": 0,
+                    "power": 0,
+                    "cost": 0,
+                    "mutable": {}
+                },
+                {
+                    "id": "1",
+                    "name": "Treasure2",
+                    "type": "Treasure",
+                    "text": "Treasure2 text",
+                    "life": 0,
+                    "power": 0,
+                    "cost": 0,
+                    "mutable": {}
+                },
+                {
+                    "id": "1",
+                    "name": "Treasure3",
+                    "type": "Treasure",
+                    "text": "Treasure3 text",
+                    "life": 0,
+                    "power": 0,
+                    "cost": 0,
+                    "mutable": {}
+                },
+                {
+                    "id": "1",
+                    "name": "Treasure4",
+                    "type": "Treasure",
+                    "text": "Treasure4 text",
+                    "life": 0,
+                    "power": 0,
+                    "cost": 0,
+                    "mutable": {}
+                }
+            ],
             "units": [
                 null,
                 null,

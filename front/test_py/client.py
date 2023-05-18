@@ -7,12 +7,10 @@ import pygame as pg
 
 
 from front.test_py.frame import *
-from front.test_py.frame import BLACK, WHITE, ClickConfig
+from front.test_py.frame import WHITE, ClickConfig
 from front.test_py.sprites import *
 # from frame import *
 # from sprites import *
-
-SPACE_FILLER = RectWidget()
 
 
 def parse_state(textj):
@@ -21,9 +19,9 @@ def parse_state(textj):
 
 def test_state():
     try:
-        return parse_state(open('state_test1.json', 'r').read())
+        return parse_state(open('state_test.json', 'r').read())
     except:
-        return parse_state(open('front/test_py/state_test1.json', 'r').read())
+        return parse_state(open('front/test_py/state_test.json', 'r').read())
     
 
 CHARS = 'abcdefghikklmnopqrstuvwxyz1234567890?!-+='
@@ -40,21 +38,23 @@ class NameLabelWidget(LabelWidget):
         font = ClientWindow.Instance.font
 
         click_configs = []
-        cc = ClickConfig()
+        cc1 = ClickConfig()
+
         # TODO
-        cc.mouse_over_condition = lambda: True
-        cc.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
-        cc.mouse_click_condition = lambda: True
-        cc.mouse_click_action = self.click_action
+        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick attack target'
+        cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
+        cc1.mouse_click_condition = lambda: True
+        cc1.mouse_click_action = self.pick_attack_action
 
         click_configs = [
-            cc
+            cc1
         ]
 
         super().__init__(font, '', click_configs=click_configs)
 
-    def click_action(self):
-        print(self.label)
+    def pick_attack_action(self):
+        print('mogus')
+        client.ClientWindow.Instance.send_response('player')
 
 
 class InfoContainer(VerContainer):
@@ -155,6 +155,21 @@ class LanesContainer(VerContainer):
             unit.load(data[i])
 
 
+class TreasuresContainer(StackContainer):
+    def __init__(self, parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
+        # TODO configure optimal max_per_line
+        super().__init__(3, outline_color)
+
+    def load(self, data):
+        self.widgets = [RectWidget()]
+        self.last_container = None
+        for card in data:
+            w = TreasureWidget()
+            w.load(card)
+            self.add_widget(w)
+        # return super().load(data)
+
+
 class PlayerContainer(HorContainer):
     def __init__(self):
         super().__init__(RED)
@@ -165,9 +180,13 @@ class PlayerContainer(HorContainer):
         self.lanes_c = LanesContainer(self)
         self.add_widget(self.lanes_c)
 
+        self.treasures_c = TreasuresContainer(self)
+        self.add_widget(self.treasures_c)
+
     def load(self, data):
         self.info_c.load(data)
         self.lanes_c.load(data.units)
+        self.treasures_c.load(data.treasures)
 
 
 # TODO utilize
@@ -259,14 +278,18 @@ class ClientWindow(Window):
         coord = self.coord_dict[self.last_state.sourceID]
         util.draw_arrow(self.screen, (coord[0] + CARD_WIDTH/2, coord[1] + CARD_HEIGHT/2), pg.mouse.get_pos(), 3)
 
+    # fuze = 0
     def update(self):
         super().update()
         statej = self.read_msg()
         if statej != '':
             parsed = parse_state(statej)
             self.load(parsed)
+        # if self.fuze == 1:
+        #     return
         # state = test_state()
         # self.load(state)
+        # self.fuze = 1
 
     def load(self, state):
         self.last_state = state

@@ -53,7 +53,7 @@ class Window:
 
 
         self.key_map = {
-            pg.KSCAN_APOSTROPHE: self.configs.toggle_wireframe
+            pg.K_1: self.configs.toggle_wireframe
         }
         self.fps = 60
         self.set_screen_size(1000, 1000 * 6 / 8)
@@ -303,6 +303,7 @@ class RectWidget(Widget):
         # pg.display.flip()
         # pg.time.wait(60)
         return bounds.width, bounds.height
+SPACE_FILLER = RectWidget()
 
 
 class LabelComponent:
@@ -706,12 +707,14 @@ class StackContainer(VerContainer):
 
         self.max_per_line = max_per_line
         self.last_container: HorContainer = None
+        self.widgets += [SPACE_FILLER]
 
     def add_widget(self, w: Widget):
-        if self.last_container is None or len(self.last_container.widgets) == self.max_per_line:
+        if self.last_container is None or len(self.last_container.widgets) == self.max_per_line + 1:
             self.last_container = HorContainer()
-            self.add_widget(self.last_container)
-        self.last_container.add_widget(w)
+            self.last_container.add_widget(SPACE_FILLER)
+            self.widgets.insert(len(self.widgets)-1, self.last_container)
+        self.last_container.widgets.insert(len(self.last_container.widgets)-1, w)
             
 
 

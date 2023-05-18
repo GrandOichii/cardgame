@@ -219,6 +219,7 @@ namespace game.player {
         abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
         abstract public void Update(Player controlledPlayer, Match match);
         abstract public string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID);
+        abstract public string PickAttackTarget(Player controlledPlayer, Match match, CardW card); // possible results: IF TREASURE - id of the card being attacked, IF PLAYER - "player"
         abstract public void InformMatchEnd(Player controlledPlayer, Match match, bool won);
 
         protected string ShortInfo(Player player) {
@@ -248,6 +249,11 @@ namespace game.player {
 
 
     class TerminalPlayerController : PlayerController {
+        public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+            // TODO
+            return "";
+        }
+
 
         public override string PromptAction(Player player, Match match)
         {
