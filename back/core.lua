@@ -472,7 +472,7 @@ function Utility:TableLength(T)
     local count = 0
     for _ in pairs(T) do count = count + 1 end
     return count
-  end
+end
 
 
 
@@ -519,6 +519,7 @@ function CardCreation:CardObject(props)
     result.name = props.name
     result.type = props.type
     result.cost = props.cost
+    result.appendText = ''
     result.triggers = {}
 
     function result:CanPlay(player)
@@ -531,6 +532,7 @@ function CardCreation:CardObject(props)
 
     function result:Play(player)
         Log('Player '..player.name .. ' played card ' .. self.name)
+        RegisterLastPlayer(self.id, player.name)
     end
 
     function result:PowerUp()
@@ -581,6 +583,16 @@ function CardCreation:CardObject(props)
         end
         return false
     end
+
+    -- function result:AddConditional()
+    --     local conditional = {}
+
+    --     function conditional:()
+            
+    --     end
+
+    --     return conditional
+    -- end
 
     return result
 end
@@ -714,6 +726,12 @@ function CardCreation:Unit(props)
 
     return result
 end
+
+
+-- local card = CardCreation:Unit({name='Unit1', power=2, life=2})
+-- card:AddConditional()
+--     :WhileOwnerLifeGreaterThan(5)
+--     :IncreasePower(2)
 
 
 Keywords = {}

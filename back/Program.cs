@@ -33,7 +33,7 @@ struct BotMessage {
 
 class Program {
 
-    static private string DECK_PATH = "../decks/test.deck";
+    static private string DECK_PATH = "../decks/generated.deck";
 
     static private IPAddress ADDRESS = IPAddress.Any;
     static private int PORT = 8080;
@@ -217,6 +217,14 @@ static class MatchParsers {
         result.Args = args;
 
         result.SourceID = sourceID;
+
+        result.LastPlayed = null;
+        if (match.LastPlayed is object) {
+            var s = new LastPlayedState();
+            s.Card = CardStateFrom(match.LastPlayed);
+            s.PlayerName = match.LastPlayedPName;
+            result.LastPlayed = s;
+        }
         
         return result;
     }
@@ -282,7 +290,7 @@ static class MatchParsers {
         result.ID = card.ID;
         result.Name = card.Original.Name;
         result.Type = card.Original.Type;
-        result.Text = card.Original.Text;
+        result.Text = card.Original.Text + card.Info["appendText"];
         result.Cost = card.GetCost();
         if (result.Type == "Unit")
             result.Power = Utility.GetLong(card.Info, "power");
@@ -473,7 +481,7 @@ class LuaBotController : PlayerController
 
     public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
         // TODO
-        return "";
+        return "player";
     }
 
 }

@@ -13,6 +13,9 @@ public struct MatchState {
     public List<string> Args { get; set; }
     [JsonPropertyName("sourceID")]
     public string SourceID { get; set; }
+    [JsonPropertyName("lastPlayed")]
+    public LastPlayedState? LastPlayed { get; set; }
+
 
     // TODO add lane charms
     [JsonPropertyName("curPlayerI")]
@@ -36,13 +39,19 @@ public struct MatchState {
 
 }
 
+public struct LastPlayedState {
+    [JsonPropertyName("card")]
+    public CardState Card { get; set; }
+    [JsonPropertyName("playerName")]
+    public string PlayerName { get; set; }
+
+}
+
 public struct MyState {
     [JsonPropertyName("playerI")]
     public int PlayerI { get; set; }
     [JsonPropertyName("hand")]
     public CardState[] Hand { get; set; }
-
-    
 }
 
 public struct PlayerState {

@@ -96,6 +96,9 @@ namespace game.match {
 
         public CardManager AllCards { get; private set; }
 
+        public CardW? LastPlayed { get; set; }
+        public string LastPlayedPName { get; set; }="";
+
         public Match(Game game, MatchConfig config) {
             State = EMatchState.WaitingForPlayer;
             Game = game;

@@ -25,6 +25,7 @@
         "PlaceOnTopOfDeck",
         "ShuffleDeck",
         "RemoveFromHand",
-        "PlayerByID"
+        "PlayerByID",
+        "RegisterLastPlayer"
     ]
 }

@@ -334,5 +334,13 @@ namespace game.scripts
             var card = GetCard(cID);
             player.Hand.Cards.Remove(card);
         }
+
+
+        [LuaCommand]
+        public void RegisterLastPlayer(string cID, string playerName) {
+            var card = GetCard(cID);
+            _match.LastPlayed = card;
+            _match.LastPlayedPName = playerName;
+        }
     }
 }

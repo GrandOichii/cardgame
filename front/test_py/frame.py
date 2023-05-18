@@ -8,6 +8,8 @@ import os
 import random
 # random.seed(0)
 import pygame as pg
+# from front.test_py.frame import WHITE, ClickConfig
+# from front.test_py.frame import ClickConfig, Rect, WindowConfigs
 # from front.test_py.frame import Widget
 # from front.test_py.frame import Rect, WindowConfigs
 
@@ -716,6 +718,42 @@ class StackContainer(VerContainer):
             self.widgets.insert(len(self.widgets)-1, self.last_container)
         self.last_container.widgets.insert(len(self.last_container.widgets)-1, w)
             
+
+class ScrollWidget(RectWidget):
+    # def __init__(self, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1, click_configs: list[ClickConfig] = None):
+    #     super().__init__(pref_width, pref_height, min_width, min_height, max_width, max_height, click_configs)
+    def __init__(self, bg_color: tuple[int, int, int] = WHITE, pref_width: int = 50, pref_height: int = 50, min_width: int = 0, min_height: int = 0, max_width: int = -1, max_height: int = -1, click_configs: list[ClickConfig] = None):
+        super().__init__(bg_color, pref_width, pref_height, min_width, min_height, max_width, max_height, click_configs)
+
+        self.scroll = 0
+        self.widget: Widget = None
+
+    def set_widget(self, w: Widget):
+        self.widget = w
+
+    def _draw(self, surface: pg.Surface, context: Rect, configs: WindowConfigs) -> tuple[int, int]:
+        return super()._draw(surface, context, configs)
+
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
+        # self.widget.draw(surface, bounds, configs)
+        pwidth = self.widget.get_pref_width()
+        pheight = self.widget.get_pref_height()
+        surf = pg.Surface((bounds.width, bounds.height))
+        self.widget._draw(surf, Rect(0, 0+self.scroll, pwidth, pheight), configs)
+        surface.blit(surf, (bounds.x, bounds.y))
+        return bounds.width, bounds.height
+        # return super().draw(surface, bounds, configs)
+
+
+
+
+
+
+
+
+
+
+
 
 
 # w = Window()

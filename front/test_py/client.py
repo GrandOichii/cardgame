@@ -228,6 +228,10 @@ class ClientWindow(Window):
         self.set_title('client test')
 
         # connection
+
+        self.last_state = None
+
+    def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((HOST, PORT))
         sconfig = parse_state(self.read_msg())
@@ -235,7 +239,6 @@ class ClientWindow(Window):
 
         self.sock.settimeout(.01)
 
-        self.last_state = None
 
     def init_ui(self):
         # TODO remove, for easier debugging
@@ -247,11 +250,22 @@ class ClientWindow(Window):
             ContentPool.Instance.load_font('basic', 'front/test_py/fonts/Montserrat-Thin.ttf')
             self.font = ContentPool.Instance.get_font('basic', 14)
 
+        all_container = HorContainer()
+        self.container = all_container
+
+        # set up player data
+        self.init_player_data_ui()
+
+        # set up all other data data
+        self.init_other_data_ui()
+
+    def init_player_data_ui(self):
         container = VerContainer()
         self.top_player = PlayerContainer()
         self.bottom_player = PlayerContainer()
         self.hand = HandContainer()
-        self.container = container
+
+        self.container.add_widget(container)
 
         mid_container = HorContainer()
         self.mid_label = LabelWidget(self.font, ' ')
@@ -265,6 +279,18 @@ class ClientWindow(Window):
         container.add_widget(mid_container)
         container.add_widget(self.hand)
         container.add_widget(sep)
+
+    def init_other_data_ui(self):
+        container = VerContainer()
+        container.add_widget(SPACE_FILLER)
+        self.last_played_card = CardWidget([])
+        container.add_widget(LabelWidget(self.font, 'Last played:'))
+        self.last_played_label = LabelWidget(self.font, '')
+        container.add_widget(self.last_played_card)
+        container.add_widget(self.last_played_label)
+        container.add_widget(SPACE_FILLER)
+
+        self.container.add_widget(container)
 
     def draw(self):
         if self.last_state is None:
@@ -300,6 +326,10 @@ class ClientWindow(Window):
         self.hand.load(state.myData.hand)
 
         self.mid_label.set_text(f'({state.request}) {state.prompt}')
+
+        if state.lastPlayed is not None:
+            self.last_played_card.load(state.lastPlayed.card)
+            self.last_played_label.set_text(f'(player: {state.lastPlayed.playerName})')
   
     def send_response(self, response: str):
         self.send_msg(response)
