@@ -1,7 +1,7 @@
 {
     "name": "Angel's Halo",
     "type": "Treasure",
-    "text": "{Virtuous}\nAt the start of your turn, a random non-[Healing Light] card in your hand becomes {Virtuous}.",
+    "text": "{Virtuous}\nAt the start of your turn, a random non-[Healing Light], non-[Source] card in your hand becomes {Virtuous}.",
     "script": "script.lua",
 
     "refCards": [

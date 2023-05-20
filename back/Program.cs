@@ -49,15 +49,6 @@ class Program {
         string configPath = "../match_configs/normal.json";
         var config = MatchConfig.FromText(File.ReadAllText(configPath));
 
-        // TODO remove, fills matches with random matches
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            var m = g.MatchPool.NewMatch(g, config);
-
-            var values = Enum.GetValues(typeof(EMatchState));
-            m.State = (EMatchState)values.GetValue(random.Next(values.Length));
-        }
-
         Dictionary<string, Action<NetworkStream, string[]>> commands = new(){
             {"list", (stream, args) => {
                 var result = new Dictionary<string, string>();
@@ -226,6 +217,9 @@ static class MatchParsers {
             result.LastPlayed = s;
         }
         
+        result.NewLogs = player.LastLogs;
+        player.LastLogs = new();
+
         return result;
     }
 
@@ -398,11 +392,12 @@ class TCPPlayerController : PlayerController
     }
 
     public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
-        // TODO replace new() with available attacks
+        // TODO replace with available attacks
         var opponent = match.OpponentOf(controlledPlayer);
         var targets = new List<string>();
         foreach (var treasure in opponent.Treasures.Cards)
             targets.Add(treasure.GetCardWrapper().ID);
+
         Write(MatchParsers.CreateMState(controlledPlayer, match, "pick attack target", targets, "", card.ID).ToJson());
         return Read();
     }

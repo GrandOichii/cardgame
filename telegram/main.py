@@ -217,7 +217,6 @@ def connect_to_match(chatID, message, username):
         'payload': f'connect {m_id} {username}'
     }
     send_msg(SOCK, json.dumps(command))
-    # TODO remember user id
 
     m = read_msg(SOCK)
     o = parse(m)

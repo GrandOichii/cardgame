@@ -115,7 +115,6 @@ function Common:RequireField(table, fieldName)
 end
 
 
--- TODO not tested
 function Common:NoCost()
     return function (...)
         return true
@@ -605,7 +604,6 @@ function CardCreation:Spell(props)
         Log('Spell effect of ' .. result.name .. ', played by ' .. player.name)
     end
 
-    -- TODO not tested
     local prevPlay = result.Play;
     function result:Play(player)
         Emit(TRIGGERS.SPELL_CAST, {
@@ -646,10 +644,7 @@ end
 function CardCreation:InPlay(props)
     local result = CardCreation:CardObject(props)
 
-    -- TODO not currently in use by engine
     function result:LeavePlay(player)
-        -- print(Utility:TableToStr(self))
-        -- print(player)
         Log('Card ' .. self.name .. ', controlled by ' .. player.name .. ', is leaving play')
     end
 

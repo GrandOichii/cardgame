@@ -17,7 +17,6 @@ namespace game.player {
         public static readonly string DECK_ZONE_NAME = "deck";
         public static readonly string DISCARD_ZONE_NAME = "discard";
 
-
         static private int LastPid = 0;
 
         public int ID { get; }
@@ -71,8 +70,11 @@ namespace game.player {
 
         public PlayerController Controller { get; set; }
 
+        public List<string> LastLogs { get; set; }
+
 
         public Player(Match match, string name, Deck deck, PlayerController controller) {
+            LastLogs = new();
             var lState = match.LState;
             MaxSourcePerTurn = match.Config.BaseSourcePerTurn;
 

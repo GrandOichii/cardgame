@@ -50,6 +50,7 @@ namespace game.scripts
         [LuaCommand]
         public void Log(string message) {
             Logger.Instance.Log("LSTATE", message);
+            ClientLog(message);
         }
 
 
@@ -341,6 +342,16 @@ namespace game.scripts
             var card = GetCard(cID);
             _match.LastPlayed = card;
             _match.LastPlayedPName = playerName;
+        }
+
+
+        [LuaCommand]
+        public void ClientLog(string text) {
+            // TODO make better, will be slow
+            foreach (var player in _match.Players) {
+                // player.Controller.UpdateLog();
+                player.LastLogs.Add("" + DateTime.Now + text);
+            }
         }
     }
 }

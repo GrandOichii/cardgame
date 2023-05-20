@@ -15,6 +15,8 @@ public struct MatchState {
     public string SourceID { get; set; }
     [JsonPropertyName("lastPlayed")]
     public LastPlayedState? LastPlayed { get; set; }
+    [JsonPropertyName("newLogs")]
+    public List<string> NewLogs { get; set; }
 
 
     // TODO add lane charms

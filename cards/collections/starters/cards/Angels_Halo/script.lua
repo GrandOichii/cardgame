@@ -1,5 +1,3 @@
-
--- TODO not tested
 function _CreateCard(props)
     props.cost = 7
     props.life = 5
@@ -16,9 +14,12 @@ function _CreateCard(props)
         :Effect(function (player, args)
             local hand = {}
             for _, card in ipairs(player.hand) do
-                if card.name ~= 'Healing Light' then
+                if card.name ~= 'Healing Light' and card.name ~= 'Source' then
                     hand[#hand+1] = card
                 end
+            end
+            if #hand == 0 then
+                return
             end
             local card = hand[math.random(#hand)]
             card:AddKeyword('virtuous')

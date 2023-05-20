@@ -75,10 +75,6 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
         for i in good:
             a[i][1] += sub
 
-        # TODO don't know why this is here
-        # if dis_closest < dis_total:
-        #     closest[1] = closest[2]
-        # else:
         sub = min(max_sum / len(bad), (closest[1] - closest[2]) / len(bad))
         for i in bad:
             a[i][1] -= sub

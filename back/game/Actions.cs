@@ -62,7 +62,7 @@ namespace game.core.actions {
             var attackerPower = attacker.GetPower();
 
             var opponent = match.OpponentOf(player);
-            IDamageable target = opponent;
+            IDamageable? target = opponent;
             var defender = opponent.Lanes[lane];
 
             if (defender is null && opponent.Treasures.Cards.Count > 0) {

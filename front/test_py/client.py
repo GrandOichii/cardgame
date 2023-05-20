@@ -33,6 +33,19 @@ def random_string():
     return result
 
 
+class LogsContainer(ScrollWidget):
+    def __init__(self):
+        super().__init__(bg_color=LBLUE, max_height=200)
+        self.container = VerContainer()
+        self.container.add_widget(SPACE_FILLER)
+        self.set_widget(self.container)
+
+    def load(self, data):
+        for log in data:
+            l = LabelWidget(ClientWindow.Instance.font, log)
+            self.container.add_widget(l)
+
+
 class NameLabelWidget(LabelWidget):
     def __init__(self, font):
         font = ClientWindow.Instance.font
@@ -133,7 +146,7 @@ class LanesContainer(VerContainer):
         self.units: list[UnitContainer] = []
 
         # TODO should be done with match config
-        self.set_up_lanes(3)
+        # self.set_up_lanes(3)
 
     def set_up_lanes(self, lane_count: int):
         self.lanes_container = HorContainer()
@@ -189,7 +202,6 @@ class PlayerContainer(HorContainer):
         self.treasures_c.load(data.treasures)
 
 
-# TODO utilize
 BETWEEN_CARDS = 2
 class HandContainer(HorContainer):
     def __init__(self, outline_color: tuple[int, int, int] = None):
@@ -211,7 +223,7 @@ class HandContainer(HorContainer):
     def load(self, data):
         w = []
         for card in data:
-            w += [RectWidget(WHITE, max_width=5)]
+            w += [RectWidget(WHITE, max_width=BETWEEN_CARDS)]
             w += [CardInHandWidget.from_card(card)]
         self.set_widgets(w)
 
@@ -234,7 +246,9 @@ class ClientWindow(Window):
     def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((HOST, PORT))
-        sconfig = parse_state(self.read_msg())
+        self.sconfig = parse_state(self.read_msg())
+        self.top_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
+        self.bottom_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
         # TODO untilize match configuration
 
         self.sock.settimeout(.01)
@@ -289,6 +303,9 @@ class ClientWindow(Window):
         container.add_widget(self.last_played_card)
         container.add_widget(self.last_played_label)
         container.add_widget(SPACE_FILLER)
+        self.logs_container = LogsContainer()
+        container.add_widget(self.logs_container)
+        container.add_widget(SPACE_FILLER)
 
         self.container.add_widget(container)
 
@@ -325,11 +342,15 @@ class ClientWindow(Window):
         self.bottom_player.load(state.players[0])
         self.hand.load(state.myData.hand)
 
+        # print(state.newLogs)
+
         self.mid_label.set_text(f'({state.request}) {state.prompt}')
 
         if state.lastPlayed is not None:
             self.last_played_card.load(state.lastPlayed.card)
             self.last_played_label.set_text(f'(player: {state.lastPlayed.playerName})')
+
+        self.logs_container.load(state.newLogs)
   
     def send_response(self, response: str):
         self.send_msg(response)

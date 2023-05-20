@@ -427,6 +427,7 @@ class FlowContainer(Container):
             lambda w: self.config.extract_max_value(w)
             # lambda w: self.config.extract_pref_value(w)
         )
+            
 
         '''
         for widget in self.widgets:
