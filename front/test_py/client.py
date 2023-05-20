@@ -35,15 +35,23 @@ def random_string():
 
 class LogsContainer(ScrollWidget):
     def __init__(self):
-        super().__init__(bg_color=LBLUE, max_height=200)
+        super().__init__(max_height=200)
         self.container = VerContainer()
-        self.container.add_widget(SPACE_FILLER)
+        self.container.add_widget(RectWidget(max_height=0))
         self.set_widget(self.container)
 
     def load(self, data):
+        # TODO doesn't scroll
+        acc = 0 
         for log in data:
             l = LabelWidget(ClientWindow.Instance.font, log)
             self.container.add_widget(l)
+            acc += l.get_min_height()
+        if not self.fits():
+            self.scroll -= acc
+
+    def fits(self):
+        return self.container.get_min_height() > self.get_min_height()
 
 
 class NameLabelWidget(LabelWidget):
@@ -297,10 +305,15 @@ class ClientWindow(Window):
     def init_other_data_ui(self):
         container = VerContainer()
         container.add_widget(SPACE_FILLER)
+        
+        self.last_played_card_container = HorContainer()
         self.last_played_card = CardWidget([])
+        self.last_played_card_container.add_widget(SPACE_FILLER)
+        self.last_played_card_container.add_widget(self.last_played_card)
+        self.last_played_card_container.add_widget(SPACE_FILLER)
         container.add_widget(LabelWidget(self.font, 'Last played:'))
         self.last_played_label = LabelWidget(self.font, '')
-        container.add_widget(self.last_played_card)
+        container.add_widget(self.last_played_card_container)
         container.add_widget(self.last_played_label)
         container.add_widget(SPACE_FILLER)
         self.logs_container = LogsContainer()

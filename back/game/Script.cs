@@ -349,8 +349,7 @@ namespace game.scripts
         public void ClientLog(string text) {
             // TODO make better, will be slow
             foreach (var player in _match.Players) {
-                // player.Controller.UpdateLog();
-                player.LastLogs.Add("" + DateTime.Now + text);
+                player.LastLogs.Add(text);
             }
         }
     }

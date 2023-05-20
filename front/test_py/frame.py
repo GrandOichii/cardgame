@@ -740,6 +740,7 @@ class ScrollWidget(RectWidget):
         pwidth = self.widget.get_pref_width()
         pheight = self.widget.get_pref_height()
         surf = pg.Surface((bounds.width, bounds.height))
+        super().draw(surf, Rect(0, 0, bounds.width, bounds.height), configs)
         self.widget._draw(surf, Rect(0, 0+self.scroll, pwidth, pheight), configs)
         surface.blit(surf, (bounds.x, bounds.y))
         return bounds.width, bounds.height
