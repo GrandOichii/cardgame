@@ -503,7 +503,7 @@ end
 
 
 Pipeline = {}
-function Pipeline:New()
+function Pipeline.New()
     local result = {
         layers = {},
         collectFunc = nil,
@@ -514,7 +514,7 @@ function Pipeline:New()
         self.layers[#self.layers+1] = layer
     end
 
-    function result:exec( ... )
+    function result:Exec( ... )
         local res = self.collectInit
         for i, layer in ipairs(self.layers) do
             local returned, success = layer(...)
@@ -527,6 +527,10 @@ function Pipeline:New()
             end
         end
         return res, true
+    end
+
+    function result:Clear()
+        self.layers = {}
     end
 
     return result
@@ -552,19 +556,45 @@ function CardCreation:CardObject(props)
     result.appendText = ''
     result.triggers = {}
 
-    function result:CanPlay(player)
-        return Common:HasEnoughEnergy(self.cost)(player)
+    -- CanPlay pipeline
+    result.CanPlayP = Pipeline.New()
+    result.CanPlayP:AddLayer(
+        function (player)
+            return nil, Common:HasEnoughEnergy(self.cost)(player)
+        end
+    )
+    function result:CanPlay()
+        local _, res = self.CanPlayP:Exec()
+        return res
     end
-
+    
+    -- PayCosts pipeline
+    result.PayCostsP = Pipeline.New()
+    result.PayCostsP:AddLayer(
+        function (player)
+            return nil, Common:PayEnergy(self.cost)(player)
+        end
+    )
     function result:PayCosts(player)
-        return Common:PayEnergy(self.cost)(player)
+        local _, res = self.PayCostsP:Exec()
+        return res
     end
 
+
+    -- Play pipeline
+    result.PlayP = Pipeline.New()
+    result.PlayP:AddLayer(
+        function (player)
+            Log('Player '..player.name .. ' played card ' .. self.name)
+            RegisterLastPlayer(self.id, player.name)
+            return nil, true
+        end
+    )
     function result:Play(player)
-        Log('Player '..player.name .. ' played card ' .. self.name)
-        RegisterLastPlayer(self.id, player.name)
+        self.PlayP:Exec(player)
     end
 
+    -- TODO? needs pipeline
     function result:PowerUp()
         Log('Powering up '..self.id)
         for key, value in pairs(self.mutable) do
@@ -577,10 +607,12 @@ function CardCreation:CardObject(props)
         end
     end
 
+    -- TODO? needs pipeline
     function result:CanPowerUp()
         return Utility:TableLength(self.mutable) > 0
     end
 
+    -- TODO? needs pipeline
     function result:PowerDown()
         Log('Powering up '..self.id)
         for key, value in pairs(self.mutable) do
@@ -593,6 +625,7 @@ function CardCreation:CardObject(props)
         end
     end
 
+    -- TODO? needs pipeline
     function result:CanPowerDown()
         return Utility:TableLength(self.mutable) > 0
     end
@@ -614,16 +647,6 @@ function CardCreation:CardObject(props)
         return false
     end
 
-    -- function result:AddConditional()
-    --     local conditional = {}
-
-    --     function conditional:()
-            
-    --     end
-
-    --     return conditional
-    -- end
-
     return result
 end
 
@@ -631,20 +654,29 @@ end
 function CardCreation:Spell(props)
     local result = CardCreation:CardObject(props)
 
+    -- Spell effect pipeline
+    result.EffectP = Pipeline.New()
+    result.EffectP:AddLayer(
+        function(player)
+            Log('Spell effect of ' .. result.name .. ', played by ' .. player.name)
+            return nil, {}
+        end
+    )
     function result:Effect(player)
-        Log('Spell effect of ' .. result.name .. ', played by ' .. player.name)
+        self.EffectP:Exec(player)
     end
 
-    local prevPlay = result.Play;
-    function result:Play(player)
-        Emit(TRIGGERS.SPELL_CAST, {
-            card = self,
-            caster = player
-        })
-        prevPlay(self, player)
-        result:Effect(player)
-        PlaceIntoDiscard(self.id, player.id)
-    end
+    result.PlayP:AddLayer(
+        function (player)
+            Emit(TRIGGERS.SPELL_CAST, {
+                card = self,
+                caster = player
+            })
+            result:Effect(player)
+            PlaceIntoDiscard(self.id, player.id)
+            return nil, true
+        end
+    )
 
     return result
 end
@@ -654,18 +686,28 @@ function CardCreation:Source(props)
     props.cost = 0
     local result = CardCreation:Spell(props)
 
-    function result:Effect(player)
-        IncreaseMaxEnergy(player.id, 1)
-    end
+    result.EffectP:Clear()
+    result.EffectP:AddLayer(
+        function (player)
+            IncreaseMaxEnergy(player.id, 1)
+            return nil, true
+        end
+    )
 
-    function result:CanPlay(player)
-        return player.shared.sourceCount > 0
-    end
+    result.CanPlayP:Clear()
+    result.CanPlayP:AddLayer(
+        function (player)
+            return nil, player.shared.sourceCount > 0
+        end
+    )
 
-    function result:PayCosts(player)
-        player.shared.sourceCount = player.shared.sourceCount - 1
-        return true
-    end
+    result.PayCostsP:Clear()
+    result.PayCostsP:AddLayer(
+        function (player)
+            player.shared.sourceCount = player.shared.sourceCount - 1
+            return nil, true
+        end
+    )
 
     return result
 
@@ -675,12 +717,28 @@ end
 function CardCreation:InPlay(props)
     local result = CardCreation:CardObject(props)
 
+    -- LeavePlay pipeline
+    result.LeavePlayP = Pipeline.New()
+    result.LeavePlayP:AddLayer(
+        function (player)
+            Log('Card ' .. self.name .. ', controlled by ' .. player.name .. ', is leaving play')
+            return nil, true
+        end
+    )
     function result:LeavePlay(player)
-        Log('Card ' .. self.name .. ', controlled by ' .. player.name .. ', is leaving play')
+        result.LeavePlayP:Exec(player)
     end
 
+    -- OnEnter pipeline
+    result.OnEnterP = Pipeline.New()
+    result.OnEnterP:AddLayer(
+        function (player)
+            Log('Called OnEnter func of '..self.name)
+            return nil, true
+        end
+    )
     function result:OnEnter(player)
-        Log('Called OnEnter func of '..self.name)
+        result.OnEnterP:Exec()
     end
 
     return result
@@ -703,11 +761,12 @@ function CardCreation:Damageable(props)
     result.life = props.life
     result.baseLife = props.life
 
-    local prevLeave = result.LeavePlay
-    function result:LeavePlay(player)
-        prevLeave(self, player)
-        self.life = self.baseLife
-    end
+    result.LeavePlayP:AddLayer(
+        function (player)
+            self.life = self.baseLife
+            return nil, true
+        end
+    )
 
     return result
 end
@@ -716,11 +775,12 @@ end
 function CardCreation:Treasure(props)
     local result = CardCreation:Damageable(props)
 
-    local prevPlay = result.Play
-    function result:Play(player)
-        prevPlay(self, player)
-        PlaceInTreasures(self.id, player.id)
-    end
+    result.PlayP:AddLayer(
+        function (player)
+            PlaceInTreasures(self.id, player.id)
+            return nil, true
+        end
+    )
 
     return result
 end
@@ -734,20 +794,31 @@ function CardCreation:Unit(props)
     result.power = props.power
     result.basePower = props.power
 
-    local prevPlay = result.Play
-    function result:Play(player)
-        prevPlay(self, player)
-        RequestPlaceInUnits(self.id, player.id)
-    end
+    result.PlayP:AddLayer(
+        function (player)
+            RequestPlaceInUnits(self.id, player.id)
+            return nil, true
+        end
+    )
 
-    local prevLeave = result.LeavePlay
-    function result:LeavePlay(player)
-        prevLeave(self, player)
-        self.power = self.basePower
-    end
+    result.LeavePlayP:AddLayer(
+        function (player)
+            self.power = self.basePower
+            return nil, true
+        end
+    )
 
+    -- PreDeath pipeline
+    result.PreDeathP = Pipeline.New()
+    result.PreDeathP:AddLayer(
+        function ()
+            Log('Called PreDeath method of '..self.name)
+            return nil, true
+        end
+
+    )
     function result:PreDeath()
-        Log('Called PreDeath method of '..self.name)
+        result.LeavePlayP:Exec()
     end
 
     return result
