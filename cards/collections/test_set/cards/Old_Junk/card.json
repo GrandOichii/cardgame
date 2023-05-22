@@ -1,6 +1,0 @@
-{
-    "name": "Old Junk",
-    "type": "Treasure",
-    "text": "At the start of your turn, gain 1 life and [CARDNAME] 1 damage to itself.",
-    "script": "script.lua"
-}

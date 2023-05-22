@@ -29,21 +29,30 @@ class TestWindow(Window):
         self.set_title('amogus')
 
         amount = 100
-        c = VerContainer()
-        for i in range(amount):
-            l = LabelWidget(self.font, random_string(), bg_color=LGREEN)
-            c.add_widget(l)
-            c.add_widget(RectWidget(BLACK, max_height=1))
-        # c.move(1, 1)
+        self.ver_c = VerContainer()
+        self.ver_c.add_widget(RectWidget(max_height=0))
+        # for i in range(amount):
+        #     l = LabelWidget(self.font, random_string(), bg_color=LGREEN)
+        #     self.ver_c.add_widget(l)
+        #     self.ver_c.add_widget(RectWidget(BLACK, max_height=1))
+        # self.ver_c.move(1, 1)
 
         self.scroll = ScrollWidget(pref_height=200, pref_width=200)
-        self.scroll.set_widget(c)
+        self.scroll.set_widget(self.ver_c)
         self.scroll.move(10, 10)
+        # self.ver_c.add_widget(self.scroll)
+
         self.container.add_widget(self.scroll)
 
 
     def draw(self):
         super().draw()
+
+    def process_key(self, event: pg.event.Event):
+        if event.key == pg.K_SPACE:
+            print('mgous')
+            self.ver_c.add_widget(LabelWidget(self.font, random_string()))
+        return super().process_key(event)
 
     def update(self):
         self.scroll.scroll -= 2

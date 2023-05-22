@@ -1,0 +1,7 @@
+{
+    "name": "Angry Cook",
+    "type": "Unit",
+    "text": "At the start of your turn, another random Unit you control gains +1 life.",
+    "script": "script.lua",
+    "summoned": true
+}

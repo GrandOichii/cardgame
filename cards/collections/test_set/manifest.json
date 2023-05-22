@@ -3,7 +3,7 @@
     "cards": [
         "../_common/Source",
         "cards/Healer",
-        "cards/Old_Junk",
+        "cards/Lifegem",
         "cards/Basic_Bond",
         "cards/Healers_Gift",
         "cards/Reinforce",
@@ -30,6 +30,10 @@
         "cards/Young_Sphinx",
         "cards/First_Aid",
         "cards/Earthling",
+        "cards/Shawarma_Stand",
+        "cards/Crazed_Engineer",
+        "cards/Angry_Cook",
+        "cards/Doomsday_Mechanism",
         "cards/Brute"
     ],
     "add_these": [

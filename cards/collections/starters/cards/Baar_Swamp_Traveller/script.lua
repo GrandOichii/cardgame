@@ -22,6 +22,7 @@ function _CreateCard(props)
         Log('WARN: TRIED TO REMEBER LANE POS OF '..self.name..', BUT COULD NOT FIND IT')
     end
 
+    -- TODO replace with on destroy
     local prevLeave = result.LeavePlay
     function result:LeavePlay(player)
         prevLeave(self, player)

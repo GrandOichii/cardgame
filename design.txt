@@ -174,14 +174,6 @@ Answer Prayers
         At the start of your turn, [Peaseful Peasants] gains +1 life.
 
 
-[Crazed Engineer]
-    Type: Unit
-    Cost: 6
-    Power: 6
-    Life: 5
-    Text:
-        At the start of your turn, randomly {Power Up} (2/ 3 /5) cards in play.
-
 
 [Collective Prayer]
     Type: Bond
@@ -206,14 +198,6 @@ Answer Prayers
     Life: 4
     Text: 
         At the start of your turn, gain 3 life.
-
-
-(Summoned)
-[Healing Light]
-    Type: Spell
-    Cost: 2
-    Text: 
-        Restore 3 life.
 
 
 [Looming Shadow]
@@ -356,38 +340,6 @@ Answer Prayers
         {Power Up} a card in your discard 3 times.
 
 
-[Lifegem]
-    Type: Treasure
-    Life: 5
-    Text:
-        At the start of your turn, [Lifegem] deals 1 damage to itself, then you gain (1/ 1 /3) life.
-
-
-[Shawarma Stand]
-    Type: Treasure
-    Life: 5
-    Text:
-        At the start of your turn, all your units gain +1 life.
-        When [CARDNAME] is destroyed, summon an [Angry Cook] into play.
-
-
-(Summoned)
-[Angry Cook]
-    Type: Unit
-    Power: 3
-    Life: 2
-    Text:
-        At the start of your turn, a random unit you control gains +1 life.
-
-
-[Doomsday Mechanism]
-    Type: Treasure
-    Life: 6
-    Text:
-        At the end of your turn, {Power Up} [Doomsday Mechanism], then it deals (1/ 1 /5) damage to itself.
-        When [Doomsday Mechanism] is destroyed, deal (0/ 2 /7) damage to all units and players.
-
-
 [Rock Launcher]
     Type: Treasure
     Cost: 4
@@ -516,12 +468,38 @@ Answer Prayers
 
 
 [TODO]
-    Type: Creature
+    Type: Unit
     Cost: 2
     Life: 2
     Power: 2
     Text:
         While [CARDNAME] is in the center lane, it gains +2 power.
+
+
+[Innocent Scrub]
+    Type: Unit
+    Cost: 1
+    Power: 0
+    Life: 1
+    Text:
+        When [CARDNAME] dies, summon a [TODO1] card into your hand.
+
+
+[TODO1]
+    Type: Unit
+    Cost: 2
+    Power: 3
+    Life: 3
+    Text:
+        When [CARDNAME] dies, summon a [TODO2] card into your hand.
+
+
+[TODO2]
+    Type: Unit
+    Cost: 5
+    Power: 7
+    Life: 7
+
 
 
 // Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)

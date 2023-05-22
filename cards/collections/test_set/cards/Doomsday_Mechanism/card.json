@@ -1,0 +1,6 @@
+{
+    "name": "Doomsday Mechanism",
+    "type": "Treasure",
+    "text": "At the end of your turn, {Power Up} [CARDNAME], then it deals [damageMyself] damage to itself.\nWhen [Doomsday Mechanism] is destroyed, deal [damageAll] damage to all units and players.",
+    "script": "script.lua"
+}

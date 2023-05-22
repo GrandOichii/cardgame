@@ -1,0 +1,10 @@
+{
+    "name": "Shawarma Stand",
+    "type": "Treasure",
+    "text": "At the start of your turn, all your units gain +1 life.\nWhen [CARDNAME] is destroyed, summon an [Angry Cook] into play.",
+    "script": "script.lua",
+
+    "refCards": [
+        "test_set::Angry Cook"
+    ]
+}

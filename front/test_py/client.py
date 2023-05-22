@@ -7,7 +7,7 @@ import pygame as pg
 
 
 from front.test_py.frame import *
-from front.test_py.frame import WHITE, ClickConfig
+from front.test_py.frame import WHITE, ClickConfig, Rect, WindowConfigs
 from front.test_py.sprites import *
 # from frame import *
 # from sprites import *
@@ -35,23 +35,24 @@ def random_string():
 
 class LogsContainer(ScrollWidget):
     def __init__(self):
-        super().__init__(max_height=200)
+        super().__init__(RED, min_height=200)
         self.container = VerContainer()
         self.container.add_widget(RectWidget(max_height=0))
         self.set_widget(self.container)
 
+        self.fuze = True
+
     def load(self, data):
-        # TODO doesn't scroll
-        acc = 0 
         for log in data:
             l = LabelWidget(ClientWindow.Instance.font, log)
             self.container.add_widget(l)
-            acc += l.get_min_height()
-        if not self.fits():
-            self.scroll -= acc
 
-    def fits(self):
-        return self.container.get_min_height() > self.get_min_height()
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
+        diff = self.container.get_pref_height() - bounds.height
+        print(self.container.get_pref_height(), bounds.height, self.container.get_pref_height() - bounds.height)
+        if diff > 0:
+            self.scroll = -diff
+        return super().draw(surface, bounds, configs)
 
 
 class NameLabelWidget(LabelWidget):

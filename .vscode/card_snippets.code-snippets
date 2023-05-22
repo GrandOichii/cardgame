@@ -56,6 +56,37 @@
 		],
 		"description": "create script for spell card"
 	},
+
+	"on turn start": {
+		"scope": "lua",
+		"prefix": "onturnstart",
+		"description": "on the start of your turn",
+		"body": [
+			"result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()",
+			"\t:Check(Common:IsOwnersTurn(result))",
+			"\t:Cost(${1:Common:NoCost()})",
+			"\t:IsSilent(false)",
+			"\t:On(TRIGGERS.TURN_START)",
+			"\t:Zone(ZONES.${2:UNITS})",
+			"\t:Effect(function (player, args)",
+			"\t\t$0",
+			"\tend)",
+			"\t:Build()"
+		]
+	},
+
+	"on leave play": {
+		"scope": "lua",
+		"prefix": "onleave",
+		"description": "on leaving play",
+		"body": [
+			"local prevLeave = result.LeavePlay",
+			"function result:LeavePlay(player)",
+			"\tprevLeave(self, player)",
+			"\t$0",
+			"end"
+		]
+	},
 	
 	"mutable": {
 		"scope": "lua",

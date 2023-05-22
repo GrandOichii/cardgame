@@ -1,21 +1,26 @@
 
-
+-- TODO not tested
 function _CreateCard(props)
-    -- props.cost = 3
-    props.cost = 1
-    props.life = 2
+    props.cost = 3
+    props.life = 5
 
     local result = CardCreation:Treasure(props)
 
+    result.mutable.lifeGain = {
+        min = 1,
+        current = 1,
+        max = 3
+    }
+
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
         :Check(Common:IsOwnersTurn(result))
+        :Cost(Common:NoCost())
         :IsSilent(false)
         :On(TRIGGERS.TURN_START)
         :Zone(ZONES.TREASURES)
-        :Cost(Common:NoCost())
         :Effect(function (player, args)
-            GainLife(player.id, 1)
             DealDamage(result.id, result.id, 1)
+            GainLife(player.id, result.mutable.lifeGain.current)
         end)
         :Build()
 

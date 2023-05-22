@@ -502,6 +502,37 @@ end
 -- print(Utility:TableToStr(triggered))
 
 
+Pipeline = {}
+function Pipeline:New()
+    local result = {
+        layers = {},
+        collectFunc = nil,
+        collectInit = 0
+    }
+
+    function result:AddLayer( layer )
+        self.layers[#self.layers+1] = layer
+    end
+
+    function result:exec( ... )
+        local res = self.collectInit
+        for i, layer in ipairs(self.layers) do
+            local returned, success = layer(...)
+            if not success then
+                -- TODO
+                return res, false
+            end
+            if self.collectFunc ~= nil then
+                self.collectFunc(returned)
+            end
+        end
+        return res, true
+    end
+
+    return result
+end
+
+
 -- Card Creation
 CardCreation = {}
 
