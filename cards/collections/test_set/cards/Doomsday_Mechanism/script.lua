@@ -24,6 +24,7 @@ function _CreateCard(props)
         :On(TRIGGERS.TURN_START)
         :Zone(ZONES.TREASURES)
         :Effect(function (player, args)
+            result:PowerUp()
             local damage = result.mutable.damageMyself.current
             DealDamage(result.id, result.id, damage)
         end)

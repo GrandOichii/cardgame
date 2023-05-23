@@ -738,7 +738,7 @@ function CardCreation:InPlay(props)
         end
     )
     function result:OnEnter(player)
-        result.OnEnterP:Exec()
+        result.OnEnterP:Exec(player)
     end
 
     return result
@@ -818,7 +818,7 @@ function CardCreation:Unit(props)
 
     )
     function result:PreDeath()
-        result.LeavePlayP:Exec()
+        result.PreDeathP:Exec()
     end
 
     return result
