@@ -1,16 +1,17 @@
 
--- TODO untested
+-- TODO not tested
 function _CreateCard(props)
     props.cost = 3
 
     local result = CardCreation:Spell(props)
 
-    local prevEffect = result.Effect
-    function result:Effect(player)
-        prevEffect(self, player)
-        local opponent = OpponentOf(player.id)
-        DealDamageToPlayer(self.id, opponent.id, 5)
-    end
+    result.EffectP:AddLayer(
+        function (player)
+            local opponent = OpponentOf(player.id)
+            DealDamageToPlayer(result.id, opponent.id, 5)
+            return nil, true
+        end
+    )
 
     return result
 end

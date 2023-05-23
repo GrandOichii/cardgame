@@ -26,6 +26,6 @@ function _CreateCard(props)
             card.appendText = card.appendText..'\n{Virtuous}'
         end)
     :Build()
-    
+
     return result
 end

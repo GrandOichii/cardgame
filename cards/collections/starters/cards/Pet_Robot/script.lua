@@ -1,5 +1,6 @@
 
 -- TODO not tested
+-- TODO change to pipeline
 function _CreateCard(props)
     props.cost = 1
     props.power = 1

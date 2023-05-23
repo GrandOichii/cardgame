@@ -7,12 +7,13 @@ function _CreateCard(props)
 
     local result = CardCreation:Unit(props)
 
-    local prevOnEnter = result.OnEnter
-    function result:OnEnter(player)
-        prevOnEnter(self, player)
-        DrawCards(player.id, 1)
-        GainLife(player.id, 1)
-    end
+    result.OnEnterP:AddLayer(
+        function (player)
+            DrawCards(player.id, 1)
+            GainLife(player.id, 1)
+            return nil, true
+        end
+    )
 
     return result
 end

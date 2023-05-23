@@ -30,18 +30,17 @@ function _CreateCard(props)
         :Build()
 
     -- TODO replace with on destroy
-    local prevLeave = result.LeavePlay
-    function result:LeavePlay(player)
-        prevLeave(self, player.id)
-        local players = GetPlayers()
-        for _, p in ipairs(players) do
-            DealDamageToPlayer(self.id, p.id, self.mutable.damageAll.current)
-            for _, unit in ipairs(p.units) do
-                DealDamage(self.id, unit.id, self.mutable.damageAll.current)
+    result.LeavePlayP:AddLayer(
+        function (player)
+            local players = GetPlayers()
+            for _, p in ipairs(players) do
+                DealDamageToPlayer(result.id, p.id, result.mutable.damageAll.current)
+                for _, unit in ipairs(p.units) do
+                    DealDamage(result.id, unit.id, result.mutable.damageAll.current)
+                end
             end
         end
-
-    end
+    )
 
     return result
 end

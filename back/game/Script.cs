@@ -185,6 +185,8 @@ namespace game.scripts
         public void RequestPlaceInUnits(string cID, int pID) {
             var player = GetPlayer(pID);
             var card = GetCard(cID);
+            Console.WriteLine(cID);
+            Console.WriteLine(pID);
             var cName = card.GetCardWrapper().Original.Name;
             if (card.GetCardWrapper().Original.Type != "Unit") throw new Exception("Player " + player.ShortStr() + " tried to place a non-unit card " + card.ShortStr() + " into a lane");
             var result = player.Controller.PromptLane("Choose where to place " + cName, player, _match);

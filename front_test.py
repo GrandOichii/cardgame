@@ -50,7 +50,6 @@ class TestWindow(Window):
 
     def process_key(self, event: pg.event.Event):
         if event.key == pg.K_SPACE:
-            print('mgous')
             self.ver_c.add_widget(LabelWidget(self.font, random_string()))
         return super().process_key(event)
 

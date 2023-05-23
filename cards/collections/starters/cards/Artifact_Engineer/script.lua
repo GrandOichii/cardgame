@@ -7,15 +7,17 @@ function _CreateCard(props)
     props.life = 5
 
     local result = CardCreation:Unit(props)
-    local prevOnEnter = result.OnEnter
-    function result:OnEnter(player)
-        prevOnEnter(self, prevOnEnter)
-        local treasures = player.treasures
-        for _, card in ipairs(treasures) do
-            if card:CanPowerUp() then
-                card:PowerUp()
+
+    result.OnEnterP:AddLayer(
+        function (player)
+            local treasures = player.treasures
+            for _, card in ipairs(treasures) do
+                if card:CanPowerUp() then
+                    card:PowerUp()
+                end
             end
+            return nil, true
         end
-    end
+    )
     return result
 end

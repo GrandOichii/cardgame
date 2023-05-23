@@ -21,12 +21,12 @@ function _CreateCard(props)
         :Build()
 
     -- TODO should change, has to be a separate trigger for "destroyed"
-    local prevLeave = result.LeavePlay
-    function result:LeavePlay(player)
-        prevLeave(self, player)
-        local card = SummonCard('test_set', 'Angry Cook')
-        RequestPlaceInUnits(card.id, player.id)
-    end
+    result.LeavePlayP:AddLayer(
+        function (player)
+            local card = SummonCard('test_set', 'Angry Cook')
+            RequestPlaceInUnits(card.id, player.id)
+        end
+    )
 
     return result
 end

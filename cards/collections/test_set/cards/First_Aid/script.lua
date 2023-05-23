@@ -5,12 +5,13 @@ function _CreateCard(props)
 
     local result = CardCreation:Spell(props)
 
-    local prevEffect = result.Effect
-    function result:Effect(player)
-        prevEffect(self, player)
-        GainLife(player.id, 2)
-        DrawCards(player.id, 1)
-    end
-    
+    result.EffectP:AddLayer(
+        function (player)
+            GainLife(player.id, 2)
+            DrawCards(player.id, 1)
+            return nil, true
+        end
+    )
+
     return result
 end

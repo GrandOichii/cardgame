@@ -5,16 +5,17 @@ function _CreateCard(props)
 
     local result = CardCreation:Spell(props)
 
-    local prevEffect = result.Effect
-    function result:Effect(player)
-        prevEffect(self, player)
-        local players = GetPlayers()
-        for _, p in ipairs(players) do
-            for _, treasure in ipairs(p.treasures) do
-                Destroy(treasure.id)
+    result.EffectP:AddLayer(
+        function (player)
+            local players = GetPlayers()
+            for _, p in ipairs(players) do
+                for _, treasure in ipairs(p.treasures) do
+                    Destroy(treasure.id)
+                end
             end
+            return nil, true
         end
-    end
+    )
 
     return result
 end

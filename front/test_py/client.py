@@ -49,7 +49,7 @@ class LogsContainer(ScrollWidget):
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
         diff = self.container.get_pref_height() - bounds.height
-        print(self.container.get_pref_height(), bounds.height, self.container.get_pref_height() - bounds.height)
+        # print(self.container.get_pref_height(), bounds.height, self.container.get_pref_height() - bounds.height)
         if diff > 0:
             self.scroll = -diff
         return super().draw(surface, bounds, configs)

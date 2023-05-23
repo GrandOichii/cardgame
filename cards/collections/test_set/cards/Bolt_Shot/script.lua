@@ -5,21 +5,20 @@ function _CreateCard(props)
 
     local result = CardCreation:Spell(props)
 
-    local prevEffect = result.Effect
-    function result:Effect(player)
-        prevEffect(self, player)
-        local unit = Common.Targeting:Unit('Select target Unit for '..self.name, player.id, result.id)
-        DealDamage(self.id, unit.id, 3)
-    end
-
-    local prevCanPlay = result.CanPlay
-    function result:CanPlay(player)
-        local prev = prevCanPlay(self, player)
-        if not prev then
-            return false
+    result.EffectP:AddLayer(
+        function (player)
+            local unit = Common.Targeting:Unit('Select target Unit for '..result.name, player.id, result.id)
+            -- TODO caused an exception
+            DealDamage(result.id, unit.id, 3)
+            return nil, true
         end
-        return Common:AtLeastOneUnitInPlay()
-    end
+    )
+
+    result.CanPlayP:AddLayer(
+        function (player)
+            return nil, Common:AtLeastOneUnitInPlay()
+        end
+    )
 
     return result
 end

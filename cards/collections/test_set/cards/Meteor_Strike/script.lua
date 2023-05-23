@@ -5,21 +5,24 @@ function _CreateCard(props)
 
     local result = CardCreation:Spell(props)
 
-    local prevEffect = result.Effect
-    function result:Effect(player)
-        prevEffect(self, player)
-
-        -- TODO caused exception
-        local laneI = PickLane(player.id)
-        local players = GetPlayers()
-        for _, p in ipairs(players) do
-            local lane = p.lanes[laneI+1]
-            
-            if lane.isSet then
-                DealDamage(self.id, lane.unit.id, 4)
+    result.EffectP:AddLayer(
+        function (player)
+            -- TODO caused exception
+            local laneI = PickLane(player.id)
+            local players = GetPlayers()
+            for _, p in ipairs(players) do
+                local lane = p.lanes[laneI+1]
+                
+                if lane.isSet then
+                    -- TODO caused exception
+                    print(result.id)
+                    print(lane.unit.id)
+                    DealDamage(result.id, lane.unit.id, 4)
+                end
             end
+            return nil, true
         end
-    end
-    
+    )
+
     return result
 end

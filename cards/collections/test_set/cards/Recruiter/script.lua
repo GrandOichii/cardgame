@@ -5,12 +5,13 @@ function _CreateCard(props)
 
     local result = CardCreation:Unit(props)
 
-    local prevOnEnter = result.OnEnter
-    function result:OnEnter(player)
-        prevOnEnter(self, player)
-        local card = SummonCard('test_set', 'Recruit')
-        PlaceIntoHand(card.id, player.id)
-    end
+    result.OnEnterP:AddLayer(
+        function (player)
+            local card = SummonCard('test_set', 'Recruit')
+            PlaceIntoHand(card.id, player.id)
+            return nil, true
+        end
+    )
 
     return result
 end

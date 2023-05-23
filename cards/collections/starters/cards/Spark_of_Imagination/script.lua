@@ -10,11 +10,12 @@ function _CreateCard(props)
         max = 4
     }
 
-    local prevEffect = result.Effect
-    function result:Effect(player)
-        prevEffect(self, player)
+    result.EffectP:AddLayer(
+        function (player)
+            DrawCards(player.id, result.mutable.cardDraw.current)
+            return nil, true
+        end
+    )
 
-        DrawCards(player.id, result.mutable.cardDraw.current)
-    end
     return result
 end

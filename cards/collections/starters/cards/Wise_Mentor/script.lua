@@ -7,16 +7,15 @@ function _CreateCard(props)
     props.life = 3
 
     local result = CardCreation:Unit(props)
-
-    local prevOnEnter = result.OnEnter
-    function result:OnEnter(player)
-        prevOnEnter(self, player)
-        local hand = player.hand
-        for _, card in ipairs(hand) do
-            card:PowerUp()
+    result.OnEnterP:AddLayer(
+        function (player)
+            local hand = player.hand
+            for _, card in ipairs(hand) do
+                card:PowerUp()
+            end
+            return nil, true
         end
-    end
-
+    )
 
     return result
 end

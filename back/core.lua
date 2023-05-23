@@ -560,11 +560,11 @@ function CardCreation:CardObject(props)
     result.CanPlayP = Pipeline.New()
     result.CanPlayP:AddLayer(
         function (player)
-            return nil, Common:HasEnoughEnergy(self.cost)(player)
+            return nil, Common:HasEnoughEnergy(result.cost)(player)
         end
     )
-    function result:CanPlay()
-        local _, res = self.CanPlayP:Exec()
+    function result:CanPlay(player)
+        local _, res = self.CanPlayP:Exec(player)
         return res
     end
     
@@ -572,11 +572,11 @@ function CardCreation:CardObject(props)
     result.PayCostsP = Pipeline.New()
     result.PayCostsP:AddLayer(
         function (player)
-            return nil, Common:PayEnergy(self.cost)(player)
+            return nil, Common:PayEnergy(result.cost)(player)
         end
     )
     function result:PayCosts(player)
-        local _, res = self.PayCostsP:Exec()
+        local _, res = self.PayCostsP:Exec(player)
         return res
     end
 
@@ -585,8 +585,8 @@ function CardCreation:CardObject(props)
     result.PlayP = Pipeline.New()
     result.PlayP:AddLayer(
         function (player)
-            Log('Player '..player.name .. ' played card ' .. self.name)
-            RegisterLastPlayer(self.id, player.name)
+            Log('Player '..player.name .. ' played card ' .. result.name)
+            RegisterLastPlayer(result.id, player.name)
             return nil, true
         end
     )
@@ -673,7 +673,7 @@ function CardCreation:Spell(props)
                 caster = player
             })
             result:Effect(player)
-            PlaceIntoDiscard(self.id, player.id)
+            PlaceIntoDiscard(result.id, player.id)
             return nil, true
         end
     )
@@ -721,7 +721,7 @@ function CardCreation:InPlay(props)
     result.LeavePlayP = Pipeline.New()
     result.LeavePlayP:AddLayer(
         function (player)
-            Log('Card ' .. self.name .. ', controlled by ' .. player.name .. ', is leaving play')
+            Log('Card ' .. result.name .. ', controlled by ' .. player.name .. ', is leaving play')
             return nil, true
         end
     )
@@ -733,7 +733,7 @@ function CardCreation:InPlay(props)
     result.OnEnterP = Pipeline.New()
     result.OnEnterP:AddLayer(
         function (player)
-            Log('Called OnEnter func of '..self.name)
+            Log('Called OnEnter func of '..result.name)
             return nil, true
         end
     )
@@ -763,7 +763,7 @@ function CardCreation:Damageable(props)
 
     result.LeavePlayP:AddLayer(
         function (player)
-            self.life = self.baseLife
+            result.life = result.baseLife
             return nil, true
         end
     )
@@ -777,7 +777,7 @@ function CardCreation:Treasure(props)
 
     result.PlayP:AddLayer(
         function (player)
-            PlaceInTreasures(self.id, player.id)
+            PlaceInTreasures(result.id, player.id)
             return nil, true
         end
     )
@@ -796,7 +796,7 @@ function CardCreation:Unit(props)
 
     result.PlayP:AddLayer(
         function (player)
-            RequestPlaceInUnits(self.id, player.id)
+            RequestPlaceInUnits(result.id, player.id)
             return nil, true
         end
     )
@@ -812,7 +812,7 @@ function CardCreation:Unit(props)
     result.PreDeathP = Pipeline.New()
     result.PreDeathP:AddLayer(
         function ()
-            Log('Called PreDeath method of '..self.name)
+            Log('Called PreDeath method of '..result.name)
             return nil, true
         end
 
@@ -837,26 +837,24 @@ Keywords.Map = {
         modFunc = function (card)
             card.labels[#card.labels+1] = 'virtuous'
 
-            local prevPlay = card.Play
-            function card:Play(player)
-                prevPlay(card, player)
-
-                local c = SummonCard('starters', 'Healing Light')
-                PlaceIntoHand(c.id, player.id)
-            end
+            card.PlayP:AddLayer(
+                function (player)
+                    local c = SummonCard('starters', 'Healing Light')
+                    PlaceIntoHand(c.id, player.id)
+                end
+            )
         end
     },
     evil = {
         modFunc = function (card)
             card.labels[#card.labels+1] = 'evil'
 
-            local prevPlay = card.Play
-            function card:Play(player)
-                prevPlay(card, player)
-
-                local c = SummonCard('starters', 'Corrupting Darkness')
-                PlaceIntoHand(c.id, player.id)
-            end
+            card.PlayP:AddLayer(
+                function (player)
+                    local c = SummonCard('starters', 'Corrupting Darkness')
+                    PlaceIntoHand(c.id, player.id)
+                end
+            )
         end
     }
 }
