@@ -189,7 +189,7 @@ class Program {
 
 
 static class MatchParsers {
-    static public MatchState CreateMState(Player player, Match match, string request, List<string> args, string prompt="", string sourceID="") {
+    static public MatchState CreateMState(Player player, Match match, string request, List<string> args, string prompt="", string sourceID="", CardW? cursorCard=null) {
         var result = new MatchState();
         result.Players = new PlayerState[match.Players.Count];
         for (int i = 0; i < match.Players.Count; i++) {
@@ -219,6 +219,10 @@ static class MatchParsers {
         
         result.NewLogs = player.LastLogs;
         player.LastLogs = new();
+
+        if (cursorCard is object) {
+            result.CursorCard = CardStateFrom(cursorCard);
+        }
 
         return result;
     }
@@ -368,12 +372,12 @@ class TCPPlayerController : PlayerController
         return Read();
     }
 
-    public override int PromptLane(string prompt, Player controlledPlayer, Match match)
+    public override int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
     {
         // Write(prompt);
 
         // TODO? args are available lanes
-        Write(MatchParsers.CreateMState(controlledPlayer, match, "pick lane", new()).ToJson());
+        Write(MatchParsers.CreateMState(controlledPlayer, match, "pick lane", new(), "", "", cursorCard).ToJson());
         return int.Parse(Read());
     }
 
@@ -458,7 +462,7 @@ class LuaBotController : PlayerController
         return Utility.GetReturnAs<string>(result);
     }
 
-    public override int PromptLane(string prompt, Player controlledPlayer, Match match)
+    public override int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
     {
         var result = PromptLaneF.Call(MatchParsers.CreateMState(controlledPlayer, match, prompt, new()).ToJson());
         var rInt = Utility.GetReturnAsLong(result);

@@ -15,7 +15,7 @@ function _CreateCard(props)
         :Effect(function (player, args)
             local units = player.units
             for _, unit in ipairs(units) do
-                unit.power = unit.power + 1
+                unit.life = unit.life + 1
             end
         end)
         :Build()

@@ -251,6 +251,7 @@ class ClientWindow(Window):
         # connection
 
         self.last_state = None
+        self.cursor_card_widget = CardWidget([])
 
     def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -261,7 +262,6 @@ class ClientWindow(Window):
         # TODO untilize match configuration
 
         self.sock.settimeout(.01)
-
 
     def init_ui(self):
         # TODO remove, for easier debugging
@@ -329,11 +329,14 @@ class ClientWindow(Window):
         
         self.coord_dict = {}
         super().draw()
-        if self.last_state is not None and not self.last_state.sourceID in self.coord_dict:
-            return
-        
-        coord = self.coord_dict[self.last_state.sourceID]
-        util.draw_arrow(self.screen, (coord[0] + CARD_WIDTH/2, coord[1] + CARD_HEIGHT/2), pg.mouse.get_pos(), 3)
+        if self.last_state.sourceID in self.coord_dict:
+            coord = self.coord_dict[self.last_state.sourceID]
+            util.draw_arrow(self.screen, (coord[0] + CARD_WIDTH/2, coord[1] + CARD_HEIGHT/2), pg.mouse.get_pos(), 3)
+            
+        if self.last_state.cursorCard is not None:
+            mx, my = pg.mouse.get_pos()
+            w = self.cursor_card_widget
+            w._draw(self.screen, Rect(mx - CARD_WIDTH/2, my - CARD_HEIGHT/2, CARD_WIDTH, CARD_HEIGHT), self.configs)
 
     # fuze = 0
     def update(self):
@@ -365,6 +368,8 @@ class ClientWindow(Window):
             self.last_played_label.set_text(f'(player: {state.lastPlayed.playerName})')
 
         self.logs_container.load(state.newLogs)
+
+        self.cursor_card_widget.load(state.cursorCard)
   
     def send_response(self, response: str):
         self.send_msg(response)

@@ -218,7 +218,7 @@ namespace game.player {
     #region Player Controllers
     abstract class PlayerController {
         abstract public string PromptAction(Player controlledPlayer, Match match);
-        abstract public int PromptLane(string prompt, Player controlledPlayer, Match match);
+        abstract public int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null);
         abstract public void Update(Player controlledPlayer, Match match);
         abstract public string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID);
         abstract public string PickAttackTarget(Player controlledPlayer, Match match, CardW card); // possible results: IF TREASURE - id of the card being attacked, IF PLAYER - "player"
@@ -268,7 +268,7 @@ namespace game.player {
             return result;
         }
 
-        public override int PromptLane(string prompt, Player controlledPlayer, Match match)
+        public override int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
         {
             string? result;
             do {

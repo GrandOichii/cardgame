@@ -17,6 +17,8 @@ public struct MatchState {
     public LastPlayedState? LastPlayed { get; set; }
     [JsonPropertyName("newLogs")]
     public List<string> NewLogs { get; set; }
+    [JsonPropertyName("cursorCard")]
+    public CardState? CursorCard { get; set; }
 
 
     // TODO add lane charms

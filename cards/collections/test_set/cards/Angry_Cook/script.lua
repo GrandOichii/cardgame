@@ -25,6 +25,9 @@ function _CreateCard(props)
                 return
             end
             local card = can[math.random( #can )]
+            print(Utility:TableToStr(can))
+            print(Utility:TableToStr(card))
+            -- TODO caused exception
             card.health = card.health + 1
         end)
         :Build()

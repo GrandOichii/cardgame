@@ -189,7 +189,7 @@ namespace game.scripts
             Console.WriteLine(pID);
             var cName = card.GetCardWrapper().Original.Name;
             if (card.GetCardWrapper().Original.Type != "Unit") throw new Exception("Player " + player.ShortStr() + " tried to place a non-unit card " + card.ShortStr() + " into a lane");
-            var result = player.Controller.PromptLane("Choose where to place " + cName, player, _match);
+            var result = player.Controller.PromptLane("Choose where to place " + cName, player, _match, card);
 
             // TODO replace with simple re-request
             if (result >= _match.Config.LaneCount) throw new Exception("Player " + player.ShortStr() + " tried to place unit " + card.ShortStr() + " in lane " + result);
