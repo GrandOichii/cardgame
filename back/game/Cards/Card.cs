@@ -227,15 +227,20 @@ namespace game.cards {
         protected override string requiredCardType => "Unit";
 
         public int AvailableAttacks { get; set; }
-        public UnitW(CardW card) : base(card)
+        private Lua LState;
+        public UnitW(CardW card, Lua lState) : base(card)
         {
+            LState = lState;
             AvailableAttacks = 0;
             // check that it has power
             GetPower();
+
         }
 
         public long GetPower() {
-            return Utility.GetLong(Card.Info, "power");
+            var func = Utility.GetGlobalF(LState, "PowerOf");
+            var returned = func.Call(Card.Info);
+            return Utility.GetReturnAsLong(returned);
         }
 
         public string ToShortStr() {

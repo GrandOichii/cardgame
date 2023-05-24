@@ -212,7 +212,7 @@ namespace game.scripts
                 player.PlaceIntoDiscard(replaced);
             }
 
-            lanes[lane] = new UnitW(card);
+            lanes[lane] = new UnitW(card, _match.LState);
             Logger.Instance.Log("ScriptMaster", "Player " + player.ShortStr() + " placed unit " + card.ShortStr() + " into lane " + lane + (replaced is not null ? ", replacing unit " + replaced.Card.ShortStr() : ""));
             card.ExecFunc("OnEnter", card.Info, player.ToLuaTable(_match.LState));
             if (replaced is null) return;

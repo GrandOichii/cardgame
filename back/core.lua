@@ -837,6 +837,15 @@ function CardCreation:Unit(props)
 end
 
 
+PowerP = Pipeline.New()
+PowerP:AddLayer(
+    function (card)
+        return card.power, true
+    end
+)
+PowerP.collectFunc = function ()
+end
+
 -- local card = CardCreation:Unit({name='Unit1', power=2, life=2})
 -- card:AddConditional()
 --     :WhileOwnerLifeGreaterThan(5)
