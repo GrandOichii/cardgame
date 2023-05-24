@@ -3,6 +3,7 @@ using NLua;
 using game.core;
 using game.util;
 using game.cards;
+using game.player;
 
 namespace game.decks {
     class Deck {
@@ -70,13 +71,13 @@ namespace game.decks {
             return new Deck(bond, cards);
         }
     
-        public CardW CreateBond(Lua lState) => Bond.ConstructWrapper(lState);
+        public CardW CreateBond(Player owner, Lua lState) => Bond.ConstructWrapper(owner, lState);
 
-        public Zone<CardW> ToDeckZone(Lua lState) {
+        public Zone<CardW> ToDeckZone(Player owner, Lua lState) {
             var result = new Zone<CardW>(new());
             foreach (var pair in MainDeck) {
                 for (int i = 0; i < pair.Value; i++)
-                    result.AddToBack(pair.Key.ConstructWrapper(lState));
+                    result.AddToBack(pair.Key.ConstructWrapper(owner, lState));
             }
             return result;
         }

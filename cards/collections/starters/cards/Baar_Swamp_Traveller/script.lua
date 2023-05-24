@@ -25,7 +25,7 @@ function _CreateCard(props)
     -- TODO replace with on destroy
     result.LeavePlayP:AddLayer(
         function (player)
-            local c = SummonCard('starters', 'Risen Dead')
+            local c = SummonCard(player.id, 'starters', 'Risen Dead')
             if rememberedLane ~= nil then
                 PlaceInUnits(c.id, player.id, rememberedLane-1)
             end

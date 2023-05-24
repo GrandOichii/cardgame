@@ -37,7 +37,8 @@ function _CreateCard(props)
             PowerP:AddLayer(function( card )
                 local add = 0
                 local myCID = player.id
-                if card.id ~= result.id and GetController(card.id).id == myCID then
+                local otherCID = GetController(card.id).id
+                if card.id ~= result.id and otherCID == myCID then
                     add = 1
                 end
                 return add, true

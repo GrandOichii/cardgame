@@ -4,6 +4,7 @@ using game.core;
 using game.util;
 using game.match;
 using game.cards.loaders;
+using game.player;
 
 namespace game.cards {
 
@@ -115,13 +116,13 @@ namespace game.cards {
             return result;
         }
 
-        public CardW ConstructWrapper(Lua lState, bool summoned=false) {
+        public CardW ConstructWrapper(Player owner, Lua lState, bool summoned=false) {
             lState.DoFile(ScriptPath);
             var creationF = Utility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
             var props = GetProps(lState);
             var returned = creationF.Call(props);
             var table = Utility.GetReturnAs<LuaTable>(returned);
-            return new CardW(this, table);
+            return new CardW(owner, this, table, lState);
         }
     }
 
@@ -142,12 +143,22 @@ namespace game.cards {
         public string ID { get; private set; }
         public Card Original { get; private set; }
         public LuaTable Info { get; private set; }
-        public CardW(Card original, LuaTable info) {
+        public Player Owner { get; }
+        private Lua LState;
+        public CardW(Player owner, Card original, LuaTable info, Lua lState) {
+            Owner = owner;
+            LState = lState;
             ID = IDCreator.Next();
             Original = original;
             Info = info;
 
             Info["id"] = ID;
+        }
+
+        public long GetPower() {
+            var func = Utility.GetGlobalF(LState, "PowerOf");
+            var returned = func.Call(Info);
+            return Utility.GetReturnAsLong(returned);
         }
 
         public string ShortStr() => Original.Name + " (" + ID + ")";
@@ -233,18 +244,12 @@ namespace game.cards {
             LState = lState;
             AvailableAttacks = 0;
             // check that it has power
-            GetPower();
+            card.GetPower();
 
-        }
-
-        public long GetPower() {
-            var func = Utility.GetGlobalF(LState, "PowerOf");
-            var returned = func.Call(Card.Info);
-            return Utility.GetReturnAsLong(returned);
         }
 
         public string ToShortStr() {
-            return Card.Original.Name + ": " + GetPower() + "/" + Life;
+            return Card.Original.Name + ": " + Card.GetPower() + "/" + Life;
         }
 
         public void ResetAvailableAttacks() {

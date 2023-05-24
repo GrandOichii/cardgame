@@ -95,9 +95,9 @@ namespace game.player {
             Name = name;
 
             Logger.Instance.Log("Player", "Creating bond");
-            Bond = deck.CreateBond(lState);
+            Bond = deck.CreateBond(this, lState);
             Logger.Instance.Log("Player", "Creating deck");
-            Deck = deck.ToDeckZone(lState);
+            Deck = deck.ToDeckZone(this, lState);
             Deck.Shuffle(match.Rand);
 
             Hand = new(new());
@@ -185,10 +185,10 @@ namespace game.player {
             result.Add(Bond, Zones.BOND);
             foreach (var unit in Lanes) {
                 if (unit is null) continue;
-                result.Add(unit.GetCardWrapper(), Zones.UNITS);
+                result.Add(unit.Card, Zones.UNITS);
             }
             foreach (var treasure in Treasures.Cards)
-                result.Add(treasure.GetCardWrapper(), Zones.TREASURES);
+                result.Add(treasure.Card, Zones.TREASURES);
 
             foreach (var card in Hand.Cards)
                 result.Add(card, Zones.HAND);

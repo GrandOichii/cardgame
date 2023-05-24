@@ -884,7 +884,7 @@ Keywords.Map = {
 
             card.PlayP:AddLayer(
                 function (player)
-                    local c = SummonCard('starters', 'Healing Light')
+                    local c = SummonCard(player.id, 'starters', 'Healing Light')
                     PlaceIntoHand(c.id, player.id)
                     return nil, true
                 end
@@ -897,7 +897,7 @@ Keywords.Map = {
 
             card.PlayP:AddLayer(
                 function (player)
-                    local c = SummonCard('starters', 'Corrupting Darkness')
+                    local c = SummonCard(player.id, 'starters', 'Corrupting Darkness')
                     PlaceIntoHand(c.id, player.id)
                     return nil, true
                 end

@@ -339,7 +339,7 @@ static class MatchParsers {
         result.Text = card.Original.Text + card.Info["appendText"];
         result.Cost = card.GetCost();
         if (result.Type == "Unit")
-            result.Power = Utility.GetLong(card.Info, "power");
+            result.Power = card.GetPower();
         if (result.Type == "Unit" || result.Type == "Treasure")
             result.Life = Utility.GetLong(card.Info, "life");
         result.Mutable = new();

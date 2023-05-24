@@ -12,7 +12,7 @@ function _CreateCard(props)
             local lanes = player.lanes
             for i, lane in ipairs(lanes) do
                 if lane.isSet and lane.unit.id == result.id and i ~= #lanes then
-                    local c = SummonCard('starters', 'New Recruit')
+                    local c = SummonCard(player.id, 'starters', 'New Recruit')
                     PlaceInUnits(c.id, player.id, i)
                     break
                 end

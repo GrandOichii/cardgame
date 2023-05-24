@@ -10,7 +10,7 @@ function _CreateCard(props)
     result.OnEnterP:AddLayer(
         function (player)
             for i=1,3 do
-                local card = SummonCard('test_set', 'Throw Rock')
+                local card = SummonCard(player.id, 'test_set', 'Throw Rock')
     
                 PlaceOnTopOfDeck(player.id, card.id)
                 ShuffleDeck(player.id)

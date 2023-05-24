@@ -23,7 +23,7 @@ function _CreateCard(props)
     -- TODO should change, has to be a separate trigger for "destroyed"
     result.LeavePlayP:AddLayer(
         function (player)
-            local card = SummonCard('test_set', 'Angry Cook')
+            local card = SummonCard(player.id, 'test_set', 'Angry Cook')
             RequestPlaceInUnits(card.id, player.id)
         end
     )

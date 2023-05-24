@@ -142,7 +142,8 @@ namespace game.scripts
 
         [LuaCommand]
         public LuaTable GetController(string cID) {
-            return _match.OwnerOf(cID).ToLuaTable(_match.LState);
+            var card = GetCard(cID);
+            return card.Owner.ToLuaTable(_match.LState);
         }
 
 
@@ -208,8 +209,9 @@ namespace game.scripts
             var lanes = player.Lanes;
             UnitW? replaced = lanes[lane];
             if (replaced is not null) {
-                replaced.Card.ExecFunc("LeavePlay", replaced.Card.Info, player.ToLuaTable(_match.LState));
+                lanes[lane] = null;
                 player.PlaceIntoDiscard(replaced);
+                replaced.Card.ExecFunc("LeavePlay", replaced.Card.Info, player.ToLuaTable(_match.LState));
             }
 
             lanes[lane] = new UnitW(card, _match.LState);
@@ -307,9 +309,10 @@ namespace game.scripts
 
 
         [LuaCommand]
-        public LuaTable SummonCard(string colName, string cName) {
+        public LuaTable SummonCard(int ownerID, string colName, string cName) {
+            var owner = GetPlayer(ownerID);
             var template = _match.Game.CardMaster.Get(cName, colName);
-            var t = template.ConstructWrapper(_match.LState, true);
+            var t = template.ConstructWrapper(owner, _match.LState, true);
             _match.AllCards.Add(t);
             return t.Info;
         }
