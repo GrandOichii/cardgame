@@ -363,7 +363,7 @@ class TCPPlayerController : PlayerController
         return result;
     }
 
-    public override string PromptAction(Player controlledPlayer, Match match)
+    public override string ProcessPromptAction(Player controlledPlayer, Match match)
     {
         // Write("Enter command for " + controlledPlayer.Name + "\n" + ShortInfo(controlledPlayer));
         
@@ -372,7 +372,7 @@ class TCPPlayerController : PlayerController
         return Read();
     }
 
-    public override int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
+    public override int ProcessPromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
     {
         // Write(prompt);
 
@@ -381,7 +381,7 @@ class TCPPlayerController : PlayerController
         return int.Parse(Read());
     }
 
-    public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID) {
+    public override string ProcessPrompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID) {
         Write(MatchParsers.CreateMState(controlledPlayer, match, type, args, prompt, sourceID).ToJson());
         return Read();        
     }
@@ -395,7 +395,7 @@ class TCPPlayerController : PlayerController
         Write(MatchParsers.CreateMState(controlledPlayer, match, (won ? "won" : "lost"), new()).ToJson());
     }
 
-    public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+    public override string ProcessPickAttackTarget(Player controlledPlayer, Match match, CardW card) {
         // TODO replace with available attacks
         var opponent = match.OpponentOf(controlledPlayer);
         var targets = new List<string>();
@@ -449,20 +449,20 @@ class LuaBotController : PlayerController
     }
 
 
-    public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID)
+    public override string ProcessPrompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID)
     {
         // TODO change to created luatable
         var result = PromptF.Call(MatchParsers.CreateMState(controlledPlayer, match, type, args).ToJson());
         return Utility.GetReturnAs<string>(result);
     }
 
-    public override string PromptAction(Player controlledPlayer, Match match)
+    public override string ProcessPromptAction(Player controlledPlayer, Match match)
     {
         var result = PromptActionF.Call(MatchParsers.CreateMState(controlledPlayer, match, "prompt action", new()).ToJson());
         return Utility.GetReturnAs<string>(result);
     }
 
-    public override int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
+    public override int ProcessPromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
     {
         var result = PromptLaneF.Call(MatchParsers.CreateMState(controlledPlayer, match, prompt, new()).ToJson());
         var rInt = Utility.GetReturnAsLong(result);
@@ -478,7 +478,7 @@ class LuaBotController : PlayerController
         // TODO
     }
 
-    public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+    public override string ProcessPickAttackTarget(Player controlledPlayer, Match match, CardW card) {
         // TODO
         return "player";
     }

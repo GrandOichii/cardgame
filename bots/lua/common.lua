@@ -1,12 +1,12 @@
-Utility = {}
+Util = {}
 
 
-function Utility:TableToStr(t)
+function Util:TableToStr(t)
     if type(t) == 'table' then
         local s = '{ '
         for k,v in pairs(t) do
             if type(k) ~= 'number' then k = '"'..k..'"' end
-            s = s .. '['..k..'] = ' .. Utility:TableToStr(v) .. ','
+            s = s .. '['..k..'] = ' .. Util:TableToStr(v) .. ','
         end
         return s .. '} '
     else
@@ -14,4 +14,4 @@ function Utility:TableToStr(t)
     end
 end
 
-return Utility
+return Util

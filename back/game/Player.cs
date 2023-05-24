@@ -221,11 +221,35 @@ namespace game.player {
 
     #region Player Controllers
     abstract class PlayerController {
-        abstract public string PromptAction(Player controlledPlayer, Match match);
-        abstract public int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null);
+        public string PromptAction(Player controlledPlayer, Match match) {
+            var result = ProcessPromptAction(controlledPlayer, match);
+            match.RecordPlayerAction(controlledPlayer, result);
+            return result;
+        }
+
+        public int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null) {
+            var result = ProcessPromptLane(prompt, controlledPlayer, match, cursorCard);
+            match.RecordPlayerAction(controlledPlayer, ""+result);
+            return result;
+        }
+
+        public string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID) {
+            var result = ProcessPrompt(type, prompt, args, controlledPlayer, match, sourceID);
+            match.RecordPlayerAction(controlledPlayer, result);
+            return result;
+        }
+
+        public string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+            var result = ProcessPickAttackTarget(controlledPlayer, match, card);
+            match.RecordPlayerAction(controlledPlayer, result);
+            return result;
+        }
+
+        abstract public string ProcessPromptAction(Player controlledPlayer, Match match);
+        abstract public int ProcessPromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null);
         abstract public void Update(Player controlledPlayer, Match match);
-        abstract public string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID);
-        abstract public string PickAttackTarget(Player controlledPlayer, Match match, CardW card); // possible results: IF TREASURE - id of the card being attacked, IF PLAYER - "player"
+        abstract public string ProcessPrompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID);
+        abstract public string ProcessPickAttackTarget(Player controlledPlayer, Match match, CardW card); // possible results: IF TREASURE - id of the card being attacked, IF PLAYER - "player"
         abstract public void InformMatchEnd(Player controlledPlayer, Match match, bool won);
 
         protected string ShortInfo(Player player) {
@@ -255,13 +279,13 @@ namespace game.player {
 
 
     class TerminalPlayerController : PlayerController {
-        public override string PickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+        public override string ProcessPickAttackTarget(Player controlledPlayer, Match match, CardW card) {
             // TODO
             return "";
         }
 
 
-        public override string PromptAction(Player player, Match match)
+        public override string ProcessPromptAction(Player player, Match match)
         {
             System.Console.WriteLine(ShortInfo(player));
             System.Console.Write("\tEnter action for " + player.Name + ": ");
@@ -272,7 +296,7 @@ namespace game.player {
             return result;
         }
 
-        public override int PromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
+        public override int ProcessPromptLane(string prompt, Player controlledPlayer, Match match, CardW? cursorCard=null)
         {
             string? result;
             do {
@@ -283,7 +307,7 @@ namespace game.player {
             return int.Parse(result);
         }
 
-        public override string Prompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID)
+        public override string ProcessPrompt(string type, string prompt, List<string> args, Player controlledPlayer, Match match, string sourceID)
         {
             return "";
             // throw new NotImplementedException();

@@ -220,9 +220,9 @@ namespace game.match {
             State = EMatchState.Ended;
 
             // save state
-            var data = JsonSerializer.Serialize<MatchRecord>(Record, new JsonSerializerOptions { WriteIndented = true });
-            // TODO change location
-            File.WriteAllText("../records/match" + Record.Config.Seed + ".json", data);
+            // var data = JsonSerializer.Serialize<MatchRecord>(Record, new JsonSerializerOptions { WriteIndented = true });
+            // // TODO change location
+            // File.WriteAllText("../records/match" + Record.Config.Seed + ".json", data);
         }
 
         public void Emit(string signal, Dictionary<string, object> args) {
@@ -307,6 +307,15 @@ namespace game.match {
             foreach (var player in Players)
                 result.Add(player, player.HasMarkedDamageCards());
             return result;
+        }
+
+        public void RecordPlayerAction(Player player, string action) {
+            var record = player.Record;
+            record.Responses.Add(action);
+            // save the recording
+            var data = JsonSerializer.Serialize<MatchRecord>(Record, new JsonSerializerOptions { WriteIndented = true });
+            // TODO change location
+            File.WriteAllText("../records/match" + Record.TimeStamp + ".json", data);
         }
     }
 

@@ -18,9 +18,13 @@ namespace game.recording {
         [JsonPropertyName("config")]
         public MatchConfig Config { get; set; }
 
+        [JsonPropertyName("timestamp")]
+        public string TimeStamp { get; set; }
+
         public MatchRecord(MatchConfig config) {
             Config = config;
             Players = new();
+            TimeStamp = DateTime.Now.ToString("yyyyMMddHHmmssffff");
         }
     }
 
