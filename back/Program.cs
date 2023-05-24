@@ -13,7 +13,7 @@ using game.player;
 using game.decks;
 
 using Shared;
-
+using game.recording;
 
 struct BotMessage {
     [JsonPropertyName("header")]
@@ -126,8 +126,56 @@ class Program {
         }
     }
 
+    static void PlaybackMatch(string recordPath) {
+        var data = File.ReadAllText(recordPath);
+        var record = MatchRecord.FromJson(data);
+
+        #region Game Creation
+        var g = new Game("../cards");
+
+        #region Server Config
+        listener.Start();
+        #endregion
+
+        #region Match Creation
+        var config = record.Config;
+        var m = g.MatchPool.NewMatch(g, config);
+        m.IsRecording = false;
+
+        var pr1 = record.Players[0];
+        var deck1 = Deck.FromText(g.CardMaster, pr1.DeckList);
+        var p1 = new Player(m, "Igor", deck1, new PlaybackPlayerController(pr1));
+
+        var pr2 = record.Players[1];
+        var deck2 = Deck.FromText(g.CardMaster, pr2.DeckList);
+        var p2 = new Player(m, "Nastya", deck2, new PlaybackPlayerController(pr2));
+        
+        g.CardMaster.LogContents();
+
+        m.AddPlayer(p1);
+        m.AddPlayer(p2);
+        m.Start();
+        
+        deck1.UnloadCards(g.CardMaster);
+        deck2.UnloadCards(g.CardMaster);
+        
+        #endregion
+
+        bool clear = g.CardMaster.CheckEmpty();
+        if (clear) return;
+
+        g.CardMaster.LogContents();
+        throw new Exception("Not all cards are unloaded from CardMaster");
+        #endregion
+    }
+
+
     static void Main(string[] args)
     {
+        if (args.Length == 1) {
+            PlaybackMatch(args[0]);
+            return;
+        }
         // RunMatchPool(args);
         // return;
         

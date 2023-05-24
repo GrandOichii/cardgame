@@ -108,6 +108,7 @@ namespace game.match {
         public Game Game { get; }
 
         public MatchRecord Record { get; }
+        public bool IsRecording { get; set; }=true;
         public MatchConfig Config { get; private set; }
         public Lua LState { get; private set; }
         public Player? Winner { get; set; }
@@ -315,6 +316,7 @@ namespace game.match {
             // save the recording
             var data = JsonSerializer.Serialize<MatchRecord>(Record, new JsonSerializerOptions { WriteIndented = true });
             // TODO change location
+            if (!IsRecording) return;
             File.WriteAllText("../records/match" + Record.TimeStamp + ".json", data);
         }
     }

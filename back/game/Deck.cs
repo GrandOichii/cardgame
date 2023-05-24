@@ -93,7 +93,7 @@ namespace game.decks {
         private static string CardToString(Card card, int amount=-1) {
             var result = card.Collection + "::" + card.Name;
             if (amount != -1)
-                result += " " + amount;
+                result = "" + amount + " " + result;
             return result;
         }
     }
