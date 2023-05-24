@@ -1,5 +1,5 @@
 
--- TODO not tested
+-- TODO didn't work when casting spells
 function _CreateCard(props)
     props.cost = 2
     props.power = 2

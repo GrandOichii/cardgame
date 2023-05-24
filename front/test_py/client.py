@@ -75,7 +75,6 @@ class NameLabelWidget(LabelWidget):
         super().__init__(font, '', click_configs=click_configs)
 
     def pick_attack_action(self):
-        print('mogus')
         client.ClientWindow.Instance.send_response('player')
 
 
@@ -402,6 +401,6 @@ class ClientWindow(Window):
 
     def process_key(self, event: pg.event.Event):
         super().process_key(event)
-        if event.key == pg.K_SPACE:
+        if self.last_state.request == 'enter command' and event.key == pg.K_SPACE:
             self.send_response('pass')
             return

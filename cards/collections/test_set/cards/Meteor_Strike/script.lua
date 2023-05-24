@@ -14,9 +14,6 @@ function _CreateCard(props)
                 local lane = p.lanes[laneI+1]
                 
                 if lane.isSet then
-                    -- TODO caused exception
-                    print(result.id)
-                    print(lane.unit.id)
                     DealDamage(result.id, lane.unit.id, 4)
                 end
             end

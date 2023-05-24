@@ -9,10 +9,10 @@ using game.scripts;
 using game.core.phases;
 using game.core.effects;
 using game.core;
+using game.recording;
 
 namespace game.match {
-    class CardManager
-    {
+    class CardManager{
         public Dictionary<string, CardW> Cards { get; } = new();
 
         public CardW? this[string cID]
@@ -36,7 +36,10 @@ namespace game.match {
         }
     }
 
+
     struct MatchConfig {
+        private static Random GRand = new();
+
         [JsonPropertyName("base_source_per_turn")]  public int BaseSourcePerTurn { get; set; }
         [JsonPropertyName("lane_count")]            public int LaneCount { get; set; }
         [JsonPropertyName("starting_energy")]       public int StartingEnergy { get; set; }
@@ -44,6 +47,24 @@ namespace game.match {
         [JsonPropertyName("turn_start_card_draw")]  public int TurnStartCardDraw { get; set; }
         [JsonPropertyName("starting_hand_size")]    public int StartingHandSize { get; set; }
         [JsonPropertyName("max_hand_size")]         public int MaxHandSize { get; set; }
+        [JsonPropertyName("seed")]                  public int Seed { get; set; }
+
+        public MatchConfig() {
+            Seed = GRand.Next();
+        }
+
+        public MatchConfig Copy() {
+            var result = new MatchConfig();
+            result.BaseSourcePerTurn = BaseSourcePerTurn;
+            result.LaneCount = LaneCount;
+            result.StartingEnergy = StartingEnergy;
+            result.StartingLifeTotal = StartingLifeTotal;
+            result.TurnStartCardDraw = TurnStartCardDraw;
+            result.StartingHandSize = StartingHandSize;
+            result.MaxHandSize = MaxHandSize;
+            result.Seed = Seed;
+            return result;
+        }
 
         static public MatchConfig FromText(string text) {
             var result = JsonSerializer.Deserialize<MatchConfig>(text);
@@ -66,8 +87,8 @@ namespace game.match {
         public string ToJson() => JsonSerializer.Serialize<MatchConfig>(this);
     }
 
-    enum EMatchState
-    {
+
+    enum EMatchState {
         WaitingForPlayer,
         InProgress,
         Ended
@@ -80,12 +101,13 @@ namespace game.match {
             new TurnEnd()
         };
 
-        private static Random Rand = new();
+        public Random Rand { get; }
 
         public EMatchState State { get; set; }
 
         public Game Game { get; }
 
+        public MatchRecord Record { get; }
         public MatchConfig Config { get; private set; }
         public Lua LState { get; private set; }
         public Player? Winner { get; set; }
@@ -100,6 +122,7 @@ namespace game.match {
         public string LastPlayedPName { get; set; }="";
 
         public Match(Game game, MatchConfig config) {
+            Rand = new(config.Seed);
             State = EMatchState.WaitingForPlayer;
             Game = game;
             Config = config;
@@ -112,12 +135,15 @@ namespace game.match {
             AllCards = new();
 
             Players = new();
+
+            Record = new(config.Copy());
         }
         
         public bool AddPlayer(Player player) {
             if (Players.Count >= 2) return false;
             Logger.Instance.Log("Match", "Added player " + player.Name);
             Players.Add(player);
+            Record.Players.Add(player.Record);
             return true;
         }
 
@@ -159,7 +185,7 @@ namespace game.match {
                             count++;
                     if (count >= 2) break;
                     player.Deck.AddToBack(player.Hand.PopTop(Config.StartingHandSize));
-                    player.Deck.Shuffle();
+                    player.Deck.Shuffle(Rand);
                 }
             }
             Logger.Instance.Log("Match", "Setup concluded");
@@ -192,6 +218,11 @@ namespace game.match {
             Logger.Instance.Log("Match", "Clean up concluded");
             
             State = EMatchState.Ended;
+
+            // save state
+            var data = JsonSerializer.Serialize<MatchRecord>(Record, new JsonSerializerOptions { WriteIndented = true });
+            // TODO change location
+            File.WriteAllText("../records/match" + Record.Config.Seed + ".json", data);
         }
 
         public void Emit(string signal, Dictionary<string, object> args) {

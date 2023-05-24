@@ -1,6 +1,6 @@
 {
     "name": "Crazed Engineer",
-    "type": "unit",
+    "type": "Unit",
     "cost": 6,
     "power": 6,
     "life": 5,

@@ -9,7 +9,7 @@ function _CreateCard(props)
 
     result.EffectP:AddLayer(
         function (player)
-            local target = Common.Targeting:CardInHand('Choose a card to discard to '..self.name, player, function(card) return card.name == requiredCardName end)
+            local target = Common.Targeting:CardInHand('Choose a card to discard to '..result.name, player, function(card) return card.name == requiredCardName end)
             if target ~= nil then
                 RemoveFromHand(target.id, player.id)
                 PlaceIntoDiscard(target.id, player.id)

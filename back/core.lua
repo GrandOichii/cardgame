@@ -108,6 +108,18 @@ end
 Common = {}
 
 
+function Common:FilterInPlay(player, delegate)
+    local cards = {player.bond, table.unpack(player.units), table.unpack(player.treasures)}
+    local result = {}
+    for _, card in ipairs(cards) do
+        if delegate(card) then
+            result[#result+1] = card
+        end
+    end
+    return result
+end
+
+
 function Common:RequireField(table, fieldName)
     if table[fieldName] == nil then
         error('Table' .. Utility:TableToStr(table) .. 'does not have field ' .. fieldName)
@@ -669,7 +681,7 @@ function CardCreation:Spell(props)
     result.PlayP:AddLayer(
         function (player)
             Emit(TRIGGERS.SPELL_CAST, {
-                card = self,
+                card = result,
                 caster = player
             })
             result:Effect(player)
@@ -841,6 +853,7 @@ Keywords.Map = {
                 function (player)
                     local c = SummonCard('starters', 'Healing Light')
                     PlaceIntoHand(c.id, player.id)
+                    return nil, true
                 end
             )
         end
@@ -853,6 +866,7 @@ Keywords.Map = {
                 function (player)
                     local c = SummonCard('starters', 'Corrupting Darkness')
                     PlaceIntoHand(c.id, player.id)
+                    return nil, true
                 end
             )
         end

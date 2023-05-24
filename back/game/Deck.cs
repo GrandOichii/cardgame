@@ -80,6 +80,22 @@ namespace game.decks {
             }
             return result;
         }
+
+        public string ToText() {
+            string result = "";
+            result += CardToString(Bond);
+            foreach (var pair in MainDeck) {
+                result += "\n" + CardToString(pair.Key, pair.Value);
+            }
+            return result;
+        }
+
+        private static string CardToString(Card card, int amount=-1) {
+            var result = card.Collection + "::" + card.Name;
+            if (amount != -1)
+                result += " " + amount;
+            return result;
+        }
     }
 
     // class DeckZone : Zone<CardW> {

@@ -327,7 +327,7 @@ namespace game.scripts
         [LuaCommand]
         public void ShuffleDeck(int pID) {
             var player = GetPlayer(pID);
-            player.Deck.Shuffle();
+            player.Deck.Shuffle(_match.Rand);
         }
 
 

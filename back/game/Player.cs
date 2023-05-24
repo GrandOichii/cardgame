@@ -5,6 +5,7 @@ using game.core;
 using game.cards;
 using game.match;
 using game.decks;
+using game.recording;
 
 
 namespace game.player {
@@ -69,11 +70,15 @@ namespace game.player {
 
 
         public PlayerController Controller { get; set; }
+        public PlayerRecord Record { get; set; }
 
         public List<string> LastLogs { get; set; }
 
 
         public Player(Match match, string name, Deck deck, PlayerController controller) {
+            Record = new();
+            Record.DeckList = deck.ToText();
+
             LastLogs = new();
             var lState = match.LState;
             MaxSourcePerTurn = match.Config.BaseSourcePerTurn;
@@ -93,7 +98,7 @@ namespace game.player {
             Bond = deck.CreateBond(lState);
             Logger.Instance.Log("Player", "Creating deck");
             Deck = deck.ToDeckZone(lState);
-            Deck.Shuffle();
+            Deck.Shuffle(match.Rand);
 
             Hand = new(new());
             Discard = new(new());
@@ -105,8 +110,7 @@ namespace game.player {
             Logger.Instance.Log("Player", "Finished creating player " + name);
         }
 
-        public long ProcessDamage(Match match, long damage)
-        {
+        public long ProcessDamage(Match match, long damage){
             Life -= damage;
             if (Life <= 0) {
                 var opponent = match.OpponentOf(this);

@@ -49,8 +49,8 @@ namespace game.core {
             Cards = cards;
         }
 
-        public void Shuffle() {
-            Cards = Utility.Shuffled(Cards);
+        public void Shuffle(Random rnd) {
+            Cards = Utility.Shuffled(Cards, rnd);
         }
 
         public List<T> PopTop(int amount) {
