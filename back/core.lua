@@ -513,36 +513,53 @@ end
 
 -- print(Utility:TableToStr(triggered))
 
+PipelineLayer = {}
+function PipelineLayer.New(delegate, id)
+    local result = {delegate=delegate, id=id}
+    return result
+end
 
 Pipeline = {}
 function Pipeline.New()
     local result = {
         layers = {},
         collectFunc = nil,
-        collectInit = 0
+        collectInit = 0,
+        result = 0
     }
 
-    function result:AddLayer( layer )
-        self.layers[#self.layers+1] = layer
+    function result:AddLayer( delegate, id )
+        id = id or nil
+        self.layers[#self.layers+1] = PipelineLayer.New(delegate, id)
     end
 
     function result:Exec( ... )
-        local res = self.collectInit
+        self.result = self.collectInit
         for i, layer in ipairs(self.layers) do
-            local returned, success = layer(...)
+            local returned, success = layer.delegate(...)
             if not success then
                 -- TODO
-                return res, false
+                return self.result, false
             end
             if self.collectFunc ~= nil then
                 self.collectFunc(returned)
             end
         end
-        return res, true
+        return self.result, true
     end
 
     function result:Clear()
         self.layers = {}
+    end
+
+    function result:RemoveWithID( id )
+        for i, layer in ipairs(self.layers) do
+            if layer.id == id then
+                table.remove(self.layers, i)
+                return
+            end
+        end
+        Log('WARN: TRIED TO REMOVE LAYER WITH ID '..' FROM TABLE, BUT FAILED')
     end
 
     return result
@@ -579,7 +596,7 @@ function CardCreation:CardObject(props)
         local _, res = self.CanPlayP:Exec(player)
         return res
     end
-    
+
     -- PayCosts pipeline
     result.PayCostsP = Pipeline.New()
     result.PayCostsP:AddLayer(
@@ -843,7 +860,14 @@ PowerP:AddLayer(
         return card.power, true
     end
 )
-PowerP.collectFunc = function ()
+
+PowerP.collectFunc = function (returned)
+    PowerP.result = PowerP.result + returned
+end
+
+function PowerOf(card)
+    local result, _ = PowerP:Exec(card)
+    return result
 end
 
 -- local card = CardCreation:Unit({name='Unit1', power=2, life=2})

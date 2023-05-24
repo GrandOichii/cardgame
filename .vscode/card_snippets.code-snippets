@@ -81,11 +81,12 @@
 		"prefix": "onleave",
 		"description": "on leaving play",
 		"body": [
-			"local prevLeave = result.LeavePlay",
-			"function result:LeavePlay(player)",
-			"\tprevLeave(self, player)",
-			"\t$0",
-			"end"
+			"result.LeavePlayP:AddLayer(",
+			"\tfunction (player)",
+			"\t\t$0",
+			"\t\treturn nil, true",
+			"\tend",
+			")"
 		]
 	},
 	
@@ -146,6 +147,36 @@
 	
 		],
 		"description": "triggered effect"
+	},
+
+	"power modifier": {
+		"scope": "lua",
+		"prefix": "powermod",
+		"description": "add a power modifier while in play",
+		"body": [
+			"local powerLayerID = nil",
+			"result.OnEnterP:AddLayer(",
+			"\tfunction (player)",
+			"\t\tpowerLayerID = result.id",
+			"\t\tPowerP:AddLayer(function( card )",
+			"\t\t\tlocal add = 0",
+			"\t\t\t${1:local myCID = GetController(card.id)",
+			"\t\t\tif ${2:GetController(card.id).id == myCID} then",
+			"\t\t\t\tadd = ${3:1}",
+			"\t\t\tend}",
+			"\t\t\treturn add, true",
+			"\t\tend, powerLayerID)",
+			"\t\treturn nil, true",
+			"\tend",
+			")",
+			"result.LeavePlayP:AddLayer(",
+			"\tfunction (player)",
+			"\t\tPowerP:RemoveWithID(powerLayerID)",
+			"\t\treturn nil, true",
+			"\tend",
+			")",
+
+		]
 	}
 	// Place your cardgame workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
 	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
