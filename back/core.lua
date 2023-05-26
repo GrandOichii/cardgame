@@ -903,5 +903,24 @@ Keywords.Map = {
                 end
             )
         end
+    },
+    fast = {
+        modFunc = function (card)
+            card.labels[#card.labels+1] = 'fast'
+
+            card.OnEnterP:AddLayer(
+                function (player)
+                    for i, lane in ipairs(player.lanes) do
+                        if lane.isSet and lane.unit.id == card.id then
+                            -- TODO change to max available attacks
+                            SetAvailableAttacks(player.id, card.id, 1)
+                            break
+                        end
+                    end
+        
+                    return nil, true
+                end
+            )
+        end
     }
 }

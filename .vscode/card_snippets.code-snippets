@@ -107,7 +107,7 @@
 		"scope": "lua",
 		"prefix": "onenter",
 		"body": [
-			"result.OnEnterP:AddLayer(",
+			"${1:result}.OnEnterP:AddLayer(",
 			"\tfunction (player)",
 			"\t\t$0",
 			"\t\treturn nil, true",

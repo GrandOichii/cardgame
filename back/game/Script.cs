@@ -357,5 +357,19 @@ namespace game.scripts
                 player.LastLogs.Add(text);
             }
         }
+
+
+        [LuaCommand]
+        public void SetAvailableAttacks(int pID, string cID, int amount) {
+            var player = GetPlayer(pID);
+            foreach (var lane in player.Lanes) {
+                if (lane is null) continue;
+                if (lane.Card.ID != cID) continue;
+
+                lane.AvailableAttacks = amount;
+                return;
+            }
+            Logger.Instance.Log("WARN", "Tried to increase number of attacks of card with id " + cID + " of player " + player.ShortStr() + ", but it's not present in of their lanes");
+        }
     }
 }

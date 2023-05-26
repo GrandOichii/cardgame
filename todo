@@ -1,3 +1,4 @@
+- client: fix highlighting opponent's lanes when placing units
 - add targeting players
 - add charms
 - add condition-based life boosting
@@ -6,7 +7,6 @@
 - add viewing discarded cards
 - add targeting cards in discard
 - add activated effects
-- add {Fast} keyword - can attack as soon as entered
 - add {Aggressive} keyword - has to attack each turn
 - add ingoring of defending units
 - add condition-based keyword/ability granting
