@@ -1,0 +1,10 @@
+{
+    "name": "Powerstone_Crafter",
+    "type": "Unit",
+    "text": "At the start of your turn, {Power down} [CARDNAME]. Then if [powerstones] is greater than 0, summon a [Weakened Powerstone] treasure card into your treasures.",
+    "script": "script.lua",
+
+    "refCards": [
+        "starters::Weakened Powerstone"
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "name": "Weakened Powerstone",
+    "type": "Treasure",
+    "text": "",
+    "script": "script.lua",
+    "summoned": true
+}

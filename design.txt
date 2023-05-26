@@ -135,7 +135,7 @@ Answer Prayers
 
 [Landslide]
     Type: Spell
-    Cost: TODO 3
+    Cost: TODO 1
     Text: Shift all charms to their left.
     (Moves all charms on lanes to a lane to their left. TODO The right-most is moved to discard or left-most?)
 
@@ -264,15 +264,6 @@ Answer Prayers
         Whenever an opoonent's unit is destroyed, summon a [Coin Pouch] treasure into play.
 
 
-[Earth Elemental]
-    Type: Unit
-    Cost: 4
-    Power: 6
-    Life: 6
-    Text:
-        When [CARDNAME] enters play, summon (6/ 8 /9) [Throw Rock] cards and shuffle them into your deck.
-
-
 [Fire Elemental]
     Type: Unit
     Cost: 5
@@ -322,15 +313,6 @@ Answer Prayers
     Life: 1
     Text:
         Pay 2 energy: Destroy [Coin Pouch] and draw (0/ 2 /5) cards.
-
-
-[Powerstone]
-    Type: Treasure
-    Cost: 3
-    Life: 5
-    Text:
-        Units you control have +2 power.
-        At the start of your turn, {Power Down} [CARDNAME]. If (0/ 3 /10) is equal to 0, destroy [CARDNAME].
 
 
 [Remember the old times]
@@ -391,24 +373,6 @@ Answer Prayers
     Life: 4
     Text:
         At the start of your turn, burn a card in your discard. If you can't, destroy [CARDNAME].
-
-
-[Powerstone Crafter]
-    Type: Unit
-    Cost: 4
-    Power: 1
-    Life: 3
-    Text:
-        At the start of your turn, {Power down} [CARDNAME]. Then if (0/ 3 /3) is greater than 0, summon a [Weakened Powerstone] treasure card into your treasures.
-
-
-(Summoned)
-[Weakened Powerstone]
-    Type: Treasure
-    Life: 2
-    Text:
-        Units you control have +2 power.
-        At the start of your turn, {Power Down} [CARDNAME]. If (0/ 2 /3) is equal to 0, destroy [CARDNAME].
 
 
 [Hot Springs]

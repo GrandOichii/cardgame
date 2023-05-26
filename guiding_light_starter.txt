@@ -116,7 +116,7 @@ v [Courier]
         Discard a [Healing Light] card: destroy the opponent's Unit in this lane.
 
 
-[Loyal Knight]
+v [Loyal Knight]
     Type: Unit
     Cost: 3
     Life: 3
@@ -126,7 +126,7 @@ v [Courier]
 
 
 (Summoned)
-[New Recruit]
+v [New Recruit]
     Type: Unit
     Cost: 1
     Life: 1
