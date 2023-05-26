@@ -666,7 +666,7 @@ function CardCreation:CardObject(props)
 
     function result:HasLabel(label)
         print(label)
-        print(self.name)
+        print(self)
         print(Utility:TableToStr(self.labels))
         for _, l in ipairs(self.labels) do
             if label == l then
@@ -921,6 +921,12 @@ Keywords.Map = {
                     return nil, true
                 end
             )
+        end
+    },
+    -- ingores defending unit
+    idu = {
+        modFunc = function (card)
+            card.labels[#card.labels+1] = 'idu'
         end
     }
 }

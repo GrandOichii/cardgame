@@ -1,5 +1,5 @@
 {
-    "name": "Earth_Elemental",
+    "name": "Earth Elemental",
     "type": "Unit",
     "text": "When [CARDNAME] enters play, summon [summonAmount] [Throw Rock] cards and shuffle them into your deck.",
     "script": "script.lua",

@@ -264,16 +264,6 @@ Answer Prayers
         Whenever an opoonent's unit is destroyed, summon a [Coin Pouch] treasure into play.
 
 
-[Fire Elemental]
-    Type: Unit
-    Cost: 5
-    Power: 8
-    Life: 8
-    Text:
-        {Fast}
-        At the start of your turn, [CARDNAME]s power becomes half of it's power, and it's life becomes half of it's life. Round down each time.
-
-
 [Goblin Provocateurs]
     Type: Unit
     Cost: 4
@@ -288,24 +278,7 @@ Answer Prayers
     Cost: 5
     Text:
         Units can't attack on this lane.
-
-    
-[Cursed Totem]
-    Type: Treasure
-    Cost: 5
-    Text:
-        At the start of your turn, [Cursed Totem] deals (1/ 1 /3) damage to all units. If your unit dies this way, destroy [CARDNAME] and summon an [Ancient Spirit] card into play.
-
-
-(Summoned)
-[Ancient Spirit]
-    Type: Unit
-    Power: 5
-    Life: 3
-    Text:
-        {Fast}
-        Ingores the defending unit.
-
+        
 
 (Summoned)
 [Coin Pouch]

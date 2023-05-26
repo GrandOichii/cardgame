@@ -60,12 +60,13 @@ namespace game.core.actions {
             if (attacker.AvailableAttacks == 0) throw new Exception("Player " + player.ShortStr() + " tried to attack with " + attacker.Card.ShortStr() + ", which can't attack");
             attacker.AvailableAttacks--;
             var attackerPower = attacker.Card.GetPower();
+            bool idu = attacker.Card.ExecCheckerFunc("HasLabel", attacker.Card.Info, "idu");
 
             var opponent = match.OpponentOf(player);
             IDamageable? target = opponent;
             var defender = opponent.Lanes[lane];
 
-            if (defender is null && opponent.Treasures.Cards.Count > 0) {
+            if ((defender is null || idu) && opponent.Treasures.Cards.Count > 0) {
                 // determine, whether the player will attack the treasure or the player
                 var attackedID = player.Controller.PickAttackTarget(player, match, attacker.GetCardWrapper());
                 if (attackedID != "player") {
@@ -89,7 +90,7 @@ namespace game.core.actions {
             long dealt;
 
             // TODO ignore action
-            if (defender is not null) {
+            if (defender is not null && !idu) {
                 // deal damage to attacker
                 target = defender;
                 dealt = attacker.ProcessDamage(match, defender.Card.GetPower());

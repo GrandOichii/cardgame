@@ -39,7 +39,6 @@ namespace game.scripts
             return player;
         }
 
-
         private CardW GetCard(string cID) {
             var card = _match.AllCards[cID];
             if (card is null) throw new Exception("No card with ID " + cID);
