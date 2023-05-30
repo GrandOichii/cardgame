@@ -1,0 +1,11 @@
+{
+    "name": "Power Engine",
+    "type": "Bond",
+    "text": "While [power] is equal to 10, units you control have +8 power.",
+    "script": "script.lua",
+
+    "summoned": "false",
+    "refCards": [
+        
+    ]
+}

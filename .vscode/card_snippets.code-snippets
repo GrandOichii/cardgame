@@ -1,4 +1,22 @@
 {
+	"card": {
+		"scope": "json",
+		"prefix": "card",
+		"description": "create card body",
+		"body": [
+			"{",
+			"\t\"name\": \"$1\",",
+			"\t\"type\": \"$2\",",
+			"\t\"text\": \"$3\",",
+			"\t\"script\": \"$script.lua\",",
+			"",
+			"\t\"summoned\": \"${4:false}\",",
+			"\t\"refCards\": [",
+			"\t\t$0",
+			"\t]",
+			"}"
+		]
+	},
 	"spell": {
 		"scope": "lua",
 		"prefix": "spell",

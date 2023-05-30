@@ -1,0 +1,11 @@
+{
+    "name": "Power Emitter",
+    "type": "Treasure",
+    "text": "At the start of your turn, {Power Up} target Treasure or Unit you control [powerUpAmount] times.",
+    "script": "script.lua",
+
+    "summoned": "false",
+    "refCards": [
+        
+    ]
+}

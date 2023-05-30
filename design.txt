@@ -438,6 +438,15 @@ Answer Prayers
     Life: 7
 
 
+[TODO]
+    Type: Unit
+    Cost: TODO
+    Life: TODO
+    Power: TODO
+    Text:
+        When [CARDNAME] deals damage to a player, {Power Down} target Bond 3 times.
+
+
 
 // Deal 1 damage to each Treasure you control. For each damage dealt, draw a card. (NAME: Look inside)
 

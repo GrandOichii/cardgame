@@ -20,7 +20,7 @@ starters::Power Engine
 3 starters::Hired Thug // Unit, vanilla
 
 
-[Power Engine]
+v [Power Engine]
     Type: Bond
     Text:
         While (0/ 3 /10) is equal to 10, units you control have +8 power.
@@ -83,7 +83,7 @@ v [Pet Robot]
         Whenever you {Power Up} [CARDNAME], it gains +2 power and +2 life.
 
 
-[Power Emitter]
+v [Power Emitter]
     Type: Treasure
     Life: 3
     Cost: 3
@@ -113,7 +113,7 @@ v [Assembled Monstrosity]
     Text:
 
 
-[Powerstone]
+v [Powerstone]
     Type: Tresure
     Cost: 3
     Life: 4
@@ -121,7 +121,7 @@ v [Assembled Monstrosity]
         Units you control have +(0/ 1 /3) power.
 
 
-[Powerstone Creator]
+v [Powerstone Creator]
     Type: Unit
     Cost: 4
     Power: 4
@@ -131,7 +131,7 @@ v [Assembled Monstrosity]
 
 
 (Summoned)
-[Weakened Powerstone]
+v [Weakened Powerstone]
     Type: Treasure
     Cost: 2
     Life: 3
