@@ -8,16 +8,19 @@ function _CreateCard(props)
 
     local result = CardCreation:Unit(props)
 
-    function result:CanPowerUp()
-        return true
-    end
+    result.CanPowerUpP:Clear()
+    result.CanPowerUpP:AddLayer(
+        function ()
+            return nil, true
+        end
+    )
 
-    local prevPowerUp = result.PowerUp
-    function result:PowerUp()
-        prevPowerUp(self)
-        self.power = self.power + 2
-        self.life = self.life + 2
-    end
+    result.PowerUpP:AddLayer(
+        function ()
+            result.power = result.power + 2
+            result.life = result.life + 2
+        end
+    )
 
     return result
 end

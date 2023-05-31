@@ -13,17 +13,16 @@ function _CreateCard(props)
         max = 1
     }
 
-    local prevPowerUp = result.PowerUp
-    function result:PowerUp()
-        prevPowerUp(self)
-
-        if self.mutable.charge.current == 1 then
-            local owner = GetController(self.id)
-            Destroy(self.id)
-            local target = Common.Targeting:Unit('Select target Unit or Treasure for '..self.name, owner.id, result.id)
-            Destroy(target.id)
+    result.PowerUpP:AddLayer(
+        function ()
+            if result.mutable.charge.current == 1 then
+                local owner = GetController(result.id)
+                Destroy(result.id)
+                local target = Common.Targeting:Unit('Select target Unit or Treasure for '..self.name, owner.id, result.id)
+                Destroy(target.id)
+            end
         end
-    end
+    )
     
     return result
 end

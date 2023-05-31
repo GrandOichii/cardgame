@@ -624,39 +624,68 @@ function CardCreation:CardObject(props)
     end
 
     -- TODO? needs pipeline
+    result.PowerUpP = Pipeline.New()
+    result.PowerUpP:AddLayer(
+        function ()
+            Log('Powering up '..self.id)
+            for key, value in pairs(self.mutable) do
+                local new = value.current + 1
+                if new <= value.max then
+                    self.mutable[key].current = new
+                else
+                    Log('Did not power up value '..key..': '..value.current..' is the max')
+                end
+            end
+            return nil, true
+        end
+
+    )
     function result:PowerUp()
-        Log('Powering up '..self.id)
-        for key, value in pairs(self.mutable) do
-            local new = value.current + 1
-            if new <= value.max then
-                self.mutable[key].current = new
-            else
-                Log('Did not power up value '..key..': '..value.current..' is the max')
-            end
-        end
+        result.PowerUpP:Exec()
     end
 
     -- TODO? needs pipeline
+    result.CanPowerUpP = Pipeline.New()
+    result.CanPowerUpP:AddLayer(
+        function ()
+            return nil, Utility:TableLength(self.mutable) > 0
+        end
+    )
     function result:CanPowerUp()
-        return Utility:TableLength(self.mutable) > 0
+        local _, r = result.CanPowerUpP:Exec()
+        return r
     end
 
     -- TODO? needs pipeline
-    function result:PowerDown()
-        Log('Powering up '..self.id)
-        for key, value in pairs(self.mutable) do
-            local new = value.current - 1
-            if new >= value.min then
-                self.mutable[key].current = new
-            else
-                Log('Did not power down value '..key..': '..value.current..' is the min')
+    result.PowerDownP = Pipeline.New()
+    result.PowerDownP:AddLayer(
+        function ()
+            Log('Powering up '..self.id)
+            for key, value in pairs(self.mutable) do
+                local new = value.current - 1
+                if new >= value.min then
+                    self.mutable[key].current = new
+                else
+                    Log('Did not power down value '..key..': '..value.current..' is the min')
+                end
             end
+            return nil, true
         end
+    )
+    function result:PowerDown()
+        result.PowerDownP:Exec()
     end
 
     -- TODO? needs pipeline
+    result.CanPowerDownP = Pipeline.New()
+    result.CanPowerDownP:AddLayer(
+        function ()
+            return nil, Utility:TableLength(self.mutable) > 0
+        end
+    )
     function result:CanPowerDown()
-        return Utility:TableLength(self.mutable) > 0
+        local _, r = result.CanPowerDownP:Exec()
+        return r
     end
 
     function result:AddKeyword(keywordName)
