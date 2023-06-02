@@ -5,7 +5,7 @@ using game.util;
 
 namespace game.cards.loaders {
 
-    abstract class CardLoader {
+    public abstract class CardLoader {
         abstract public Card Load(string cName, string colName);
     } 
 

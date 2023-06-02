@@ -10,7 +10,7 @@ namespace game.cards {
 
     
 
-    class CardMaster {
+    public class CardMaster {
         private CardLoader _loader;
         private Dictionary<string, Card> _cardIndex;
         private Dictionary<string, int> _refCount;
@@ -87,8 +87,8 @@ namespace game.cards {
         }
     }
 
-    // card template class
-    class Card {
+    // card template public class
+    public class Card {
         static public readonly string WRAPPER_CREATION_FNAME = "_CreateCard";
         
         public string Name { get; private set; }
@@ -127,14 +127,14 @@ namespace game.cards {
     }
 
 
-    interface IHasCardW {
+    public interface IHasCardW {
         public CardW GetCardWrapper();
 
         public string InfoStr();
     }
 
     // card wrapper object
-    class CardW  : IHasCardW {
+    public class CardW  : IHasCardW {
         static public string CAN_PLAY_FNAME = "CanPlay";
         static public string PLAY_FNAME = "Play";
         static public string PAY_COSTS_FNAME = "PayCosts";
@@ -188,7 +188,7 @@ namespace game.cards {
     }
 
 
-    abstract class HasMarkedDamage : IDamageable, IHasCardW
+    abstract public class HasMarkedDamage : IDamageable, IHasCardW
     {
         protected virtual string requiredCardType { get; }
         public CardW Card { get; private set; }
@@ -233,7 +233,7 @@ namespace game.cards {
     }
 
 
-    class UnitW : HasMarkedDamage
+    public class UnitW : HasMarkedDamage
     {
         protected override string requiredCardType => "Unit";
 
@@ -289,7 +289,7 @@ namespace game.cards {
         }
     }
 
-    class TreasureW : HasMarkedDamage
+    public class TreasureW : HasMarkedDamage
     {
         protected override string requiredCardType => "Treasure";
         public TreasureW(CardW card) : base(card)

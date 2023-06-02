@@ -11,7 +11,7 @@ using game.recording;
 namespace game.player {
 
     // A match partisipating player
-    class Player : IDamageable {
+    public class Player : IDamageable {
         public static readonly string ANYWHERE_ZONE = "anywhere";
         public static readonly string HAND_ZONE_NAME = "hand";
         public static readonly string TREASURES_ZONE_NAME = "treasures";
@@ -220,7 +220,7 @@ namespace game.player {
     }
 
     #region Player Controllers
-    abstract class PlayerController {
+    public abstract class PlayerController {
         public string PromptAction(Player controlledPlayer, Match match) {
             var result = ProcessPromptAction(controlledPlayer, match);
             match.RecordPlayerAction(controlledPlayer, result);

@@ -1,0 +1,28 @@
+This is a collection/deck manager tool.
+On start, connects to game server.
+Game server should be able to:
+    - Be connected to
+    - Send collection data
+    - Start a match upon request
+        - Match can be started with fresh seed, or with preconfigured seed, match config and decks
+        - Send over the record of the match
+        - Send the logs of the match
+        - Configure the players of the match
+        - Upon starting match, a separate window will be opened, displaying the match
+        - Use the data, collected from the match, to configure the stability level of the cards
+            - Shows a window of all the cards that were used, will try to guess how they performed, player will have to check all cards, whose stability should be 
+    - Send cards in all collections
+        - Cards should have a stability label: Low (Red, crashes the game when played), Medium (Yellow), High (Green)
+        - Should be able to reset all stability
+    - Send all available decks upon request
+        - Decks can be editable
+        - Should autogenerate different decks
+            - Clean-up generation - generates a deck of low and medium stability cards, for cleaning up their stability
+    - Reload all cards on request
+
+The main app should:
+    - Implement all of the above mentioned functionality
+    - Should have a configuration file
+        - Has to have a different object for each card
+            - Has to remember it's stability score, and any other notes, written by the user
+    - After each session, should save the configuration

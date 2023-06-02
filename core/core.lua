@@ -279,16 +279,22 @@ function Common.Targeting:Target(prompt, playerID, configs, sourceID)
         local zoneMap = {
             treasures = player.treasures,
             units = player.units,
-            bond = {},
+            bond = {player.bond},
+            players = {player}
         }
-        zoneMap.bond[#zoneMap.bond+1] = player.bond
+        -- zoneMap.bond[#zoneMap.bond+1] = player.bond
 
         for _, config in ipairs(configs) do
             local zone = zoneMap[config.what]
             local add = config.which(zone)
             for _, card in ipairs(add) do
+                if zone == 'player' then
+                    args[#args+1] = '.'..tostring(card.id)
+                    goto continue
+                end
                 d[card.id] = card
                 args[#args+1] = tostring(card.id)
+                ::continue::
             end
         end
     end
@@ -296,6 +302,24 @@ function Common.Targeting:Target(prompt, playerID, configs, sourceID)
     local uID = PromptPlayer(playerID, prompt, 'target', args, sourceID)
     local result = d[uID]
     return result
+end
+
+
+function Common.Targeting:Damageable(prompt, playerID, sourceID)
+    return Common.Targeting:Target(prompt, playerID, {
+        {
+            what = 'units',
+            which = Common.Targeting.Selectors:All()
+        },
+        {
+            what = 'treasures',
+            which = Common.Targeting.Selectors:All()
+        },
+        {
+            what = 'players',
+            which = Common.Targeting.Selectors:All()
+        }
+    }, sourceID)
 end
 
 

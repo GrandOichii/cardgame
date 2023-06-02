@@ -6,11 +6,11 @@ using game.util;
 using game.cards.loaders;
 
 namespace game.core {
-    interface IDCreator {
+    public interface IDCreator {
         public string Next();
     }
 
-    class BasicIDCreator : IDCreator
+    public class BasicIDCreator : IDCreator
     {
         int _last = 0;
         public string Next()
@@ -20,12 +20,12 @@ namespace game.core {
         }
     }
 
-    interface IDamageable {
+    public interface IDamageable {
         public long ProcessDamage(Match match, long damage);
         
     }
 
-    class Game {
+    public class Game {
         public MatchPool MatchPool { get; private set; }
         public CardMaster CardMaster { get; private set; }
 
@@ -36,7 +36,7 @@ namespace game.core {
         }
     }
 
-    class Zone<T> where T : IHasCardW {
+    public class Zone<T> where T : IHasCardW {
 
         public List<T> Cards { get; private set; }
 
@@ -81,7 +81,7 @@ namespace game.core {
         }
     }
 
-    static class Zones {
+    static public class Zones {
         static public readonly string TREASURES = "treasures";
         static public readonly string BURNED = "burned";
         static public readonly string DISCARD = "discard";

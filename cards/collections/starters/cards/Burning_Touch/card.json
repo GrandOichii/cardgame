@@ -1,0 +1,11 @@
+{
+    "name": "Burning Touch",
+    "type": "Spell",
+    "text": "Deal [damage] damage to any target.",
+    "script": "script.lua",
+
+    "summoned": "false",
+    "refCards": [
+        
+    ]
+}

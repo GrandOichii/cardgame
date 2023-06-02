@@ -12,7 +12,7 @@ using game.core;
 using game.recording;
 
 namespace game.match {
-    class CardManager{
+    public class CardManager{
         public Dictionary<string, CardW> Cards { get; } = new();
 
         public CardW? this[string cID]
@@ -37,7 +37,7 @@ namespace game.match {
     }
 
 
-    struct MatchConfig {
+    public struct MatchConfig {
         private static Random GRand = new();
 
         [JsonPropertyName("base_source_per_turn")]  public int BaseSourcePerTurn { get; set; }
@@ -88,13 +88,13 @@ namespace game.match {
     }
 
 
-    enum EMatchState {
+    public enum EMatchState {
         WaitingForPlayer,
         InProgress,
         Ended
     }
 
-    class Match {
+    public class Match {
         static private List<GamePhase> _phases = new(){
             new TurnStart(),
             new MainPhase(),
@@ -122,7 +122,7 @@ namespace game.match {
         public CardW? LastPlayed { get; set; }
         public string LastPlayedPName { get; set; }="";
 
-        public Match(Game game, MatchConfig config) {
+        public Match(Game game, MatchConfig config, string coreFilePath) {
             Rand = new(config.Seed);
             State = EMatchState.WaitingForPlayer;
             Game = game;
@@ -131,7 +131,7 @@ namespace game.match {
             // load scripts
             LState = new();
             new ScriptMaster(this);
-            LState.DoFile("core.lua");
+            LState.DoFile(coreFilePath);
 
             AllCards = new();
 
@@ -321,7 +321,7 @@ namespace game.match {
         }
     }
 
-    class MatchPool {
+    public class MatchPool {
         private IDCreator MatchIDCreator;
         public Dictionary<string, Match> Matches { get; private set; }
 
@@ -332,7 +332,7 @@ namespace game.match {
 
         public Match NewMatch(Game game, MatchConfig config) {
             Logger.Instance.Log("MatchPool", "Requested to create new match");
-            var match = new Match(game, config);
+            var match = new Match(game, config, "../core/core.lua");
             var id = MatchIDCreator.Next();
             Matches.Add("#" + id, match);
             return match;

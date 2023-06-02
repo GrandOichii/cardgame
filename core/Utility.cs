@@ -3,7 +3,7 @@ using NLua;
 using game.exceptions;
 
 namespace game.util {
-    static class Utility {
+    public static class Utility {
         static public List<T> Shuffled<T>(List<T> list, Random rnd) {
             return list.OrderBy(a => rnd.Next()).ToList();
         }
@@ -107,7 +107,7 @@ namespace game.util {
         }
     }
     
-    class Logger {
+    public class Logger {
         static public Logger Instance { get; private set; }=new();
         
         private Logger() {

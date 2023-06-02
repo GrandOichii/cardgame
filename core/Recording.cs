@@ -6,7 +6,7 @@ using game.player;
 
 namespace game.recording {
 
-    class PlayerRecord {
+    public class PlayerRecord {
         [JsonPropertyName("deckList")]
         public string DeckList { get; set; }="";
 
@@ -14,7 +14,7 @@ namespace game.recording {
         public List<string> Responses { get; set;}=new();
     }
 
-    class MatchRecord {
+    public class MatchRecord {
         [JsonPropertyName("players")]
         public List<PlayerRecord> Players { get; set; }
 
@@ -37,7 +37,7 @@ namespace game.recording {
         }
     }
 
-    class PlaybackPlayerController : PlayerController
+    public class PlaybackPlayerController : PlayerController
     {
         public override void InformMatchEnd(Player controlledPlayer, Match match, bool won)
         {

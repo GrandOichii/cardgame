@@ -6,7 +6,7 @@ using game.cards;
 using game.player;
 
 namespace game.decks {
-    class Deck {
+    public class Deck {
 
         public Card Bond { get; private set; }
         public Dictionary<Card, int> MainDeck { get; private set; }
