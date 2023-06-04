@@ -1,0 +1,6 @@
+{
+    "name": "Spark of Imagination",
+    "type": "Spell",
+    "text": "Draw [cardDraw] cards.",
+    "script": "script.lua"
+}

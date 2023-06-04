@@ -1,0 +1,6 @@
+{
+    "name": "Steel Leaf Shaman",
+    "type": "Unit",
+    "text": "All your other units have +1 power.",
+    "script": "script.lua"
+}

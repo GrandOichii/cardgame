@@ -1,0 +1,8 @@
+{
+    "name": "Throw Rock",
+    "type": "Spell",
+    "text": "Deal 1 damage to target Treasure.",
+    "script": "script.lua",
+
+    "summoned": true
+}

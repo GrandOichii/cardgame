@@ -1,0 +1,10 @@
+{
+    "name": "Faithful Cleric",
+    "type": "Unit",
+    "text": "{Virtuous}",
+    "script": "script.lua",
+
+    "refCards": [
+        "starters::Healing Light"
+    ]
+}

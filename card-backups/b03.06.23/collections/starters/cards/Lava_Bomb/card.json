@@ -1,0 +1,6 @@
+{
+    "name": "Lava Bomb",
+    "type": "Spell",
+    "text": "[CARDNAME] deals 5 damage to your opponent.",
+    "script": "script.lua"
+}

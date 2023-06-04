@@ -1,0 +1,6 @@
+{
+    "name": "Undead Cleric",
+    "type": "Unit",
+    "text": "When you gain life, return [Undead Cleric] from your discard to your hand.",
+    "script": "script.lua"
+}

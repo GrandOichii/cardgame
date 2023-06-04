@@ -1,0 +1,6 @@
+{
+    "name": "Wise Mentor",
+    "type": "Unit",
+    "text": "When [WISE MENTOR] enters play, {Power Up} all cards in your hand.",
+    "script": "Script.lua"
+}

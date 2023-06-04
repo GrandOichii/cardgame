@@ -4,6 +4,8 @@ from PyQt5.QtGui import *
 
 import json
 import widgets
+import requests
+import core
 
 CONFIG_PATH = 'config.json'
 
@@ -19,12 +21,17 @@ class Config:
         return result
 
 
+SERVER_ADDR = 'http://localhost:5026/'
 class CollectionEditor(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # self.fetch_cards_signal = pyqtSignal(list[core.Card])
+        # self.fetch_decks_signal = pyqtSignal(list[core.Deck])
+
+        self.fetch_cards()
+        self.fetch_decks()
         self.init_ui()
-        self.load()
 
     # ui
     def init_ui(self):
@@ -38,21 +45,30 @@ class CollectionEditor(QMainWindow):
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
 
-        self.collections_tab = widgets.CollectionsTab(self)
-        self.tabs.addTab(self.collections_tab, 'Collections')
-
         self.decks_tab = widgets.DecksTab(self)
         self.tabs.addTab(self.decks_tab, 'Decks')
 
-        self.card_templates_tab = widgets.CardTemplatesTab(self)
-        self.tabs.addTab(self.card_templates_tab, 'Card Templates')
+        self.cards_tab = widgets.CardsTab(self)
+        self.tabs.addTab(self.cards_tab, 'Cards')
 
-    # configuration loading
-    def load(self):
-        try:
-            config = Config.load(CONFIG_PATH)
-            # TODO
-        except:
-            QMessageBox.warning(self, 'Configuration loading', 'Failed to load configuration file')
-            # TODO doesn't close
-            self.close()
+        # self.card_templates_tab = widgets.CardTemplatesTab(self)
+        # self.tabs.addTab(self.card_templates_tab, 'Card Templates')
+
+    # data fetching
+    def fetch_cards(self):
+        self.card_name_index = {}
+        cards = requests.get(SERVER_ADDR + 'cards').json()
+        self.cards = []
+        for card in cards:
+            self.cards += [core.Card.from_json(card)]
+        self.collections = set()
+        for card in self.cards:
+            self.collections.add(card.collection)
+            self.card_name_index[card.collection + '::' + card.name] = card
+
+    def fetch_decks(self):
+        self.decks = []
+        decks_raw = requests.get(SERVER_ADDR + 'decks').json()
+        for deck_raw in decks_raw:
+            deck = core.Deck.from_json(deck_raw)
+            self.decks += [deck]

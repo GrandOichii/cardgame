@@ -1,0 +1,6 @@
+{
+    "name": "A Critical Flaw",
+    "type": "Spell",
+    "text": "Destroy all Treasures.",
+    "script": "script.lua"
+}

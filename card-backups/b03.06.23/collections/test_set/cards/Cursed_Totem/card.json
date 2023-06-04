@@ -1,0 +1,10 @@
+{
+    "name": "Cursed Totem",
+    "type": "Treasure",
+    "text": "At the start of your turn, [CARDNAME] deals [damageDealt] to all units. If your unit dies this way, destroy [CARDNAME] and summon an [Angry Spirit] card into play.",
+    "script": "script.lua",
+
+    "refCards": [
+        "test_set::Angry Spirit"
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "name": "Brute",
+    "type": "Unit",
+    "text": "",
+    "script": "script.lua"
+}

@@ -1,0 +1,6 @@
+{
+    "name": "Shadowcrafter Elf",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, discard a [Corrupting Darkness] card. If you don't, destroy [CARDNAME].",
+    "script": "script.lua"
+}

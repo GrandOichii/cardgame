@@ -1,0 +1,10 @@
+{
+    "name": "Earthling",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, summon 3 [Throw Rock] cards and shuffle them into your deck",
+    "script": "script.lua",
+    
+    "refCards": [
+        "test_set::Throw Rock"
+    ]
+}

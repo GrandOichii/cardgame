@@ -1,0 +1,6 @@
+{
+    "name": "Power Tester",
+    "type": "Unit",
+    "text": "At the start of your turn, {Power Up} [CARDNAME], then gain [perTurnLifeGain] life.",
+    "script": "script.lua"
+}

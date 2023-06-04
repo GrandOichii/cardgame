@@ -10,7 +10,7 @@
 			"\t\"text\": \"$3\",",
 			"\t\"script\": \"script.lua\",",
 			"",
-			"\t\"summoned\": \"${4:false}\",",
+			"\t\"summoned\": ${4:false},",
 			"\t\"refCards\": [",
 			"\t\t$0",
 			"\t]",

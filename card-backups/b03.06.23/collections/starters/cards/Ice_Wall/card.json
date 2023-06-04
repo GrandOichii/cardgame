@@ -1,0 +1,6 @@
+{
+    "name": "Ice Wall",
+    "type": "Unit",
+    "text": "",
+    "script": "script.lua"
+}

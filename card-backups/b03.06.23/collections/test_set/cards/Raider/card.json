@@ -1,0 +1,6 @@
+{
+    "name": "Raider",
+    "type": "Unit",
+    "text": "{Fast}",
+    "script": "script.lua"
+}

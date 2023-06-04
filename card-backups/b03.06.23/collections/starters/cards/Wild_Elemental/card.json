@@ -1,0 +1,6 @@
+{
+    "name": "Wild Elemental",
+    "type": "Unit",
+    "text": "When you cast a Spell, [CARDNAME] gains +1 power and +1 life.",
+    "script": "script.lua"
+}

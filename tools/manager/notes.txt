@@ -26,3 +26,9 @@ The main app should:
         - Has to have a different object for each card
             - Has to remember it's stability score, and any other notes, written by the user
     - After each session, should save the configuration
+
+
+Endpoints:
+    GET /cards - returns all the cards
+    GET /decks - returns all the decks
+    

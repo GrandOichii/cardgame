@@ -1,0 +1,6 @@
+{
+    "name": "Bolt Shot",
+    "type": "Spell",
+    "text": "Deal 3 damage to target Unit.",
+    "script": "script.lua"
+}

@@ -1,0 +1,6 @@
+{
+    "name": "Lifegem",
+    "type": "Treasure",
+    "text": "At the start of your turn, [CARDNAME] deals 1 damage to itself, then you gain [lifeGain] life.",
+    "script": "script.lua"
+}

@@ -1,0 +1,6 @@
+{
+    "name": "Powerstone",
+    "type": "Treasure",
+    "text": "At the start of your turn, {Power Down} [CARDNAME]. If [power] is equal to 0, destroy [CARDNAME].",
+    "script": "script.lua"
+}

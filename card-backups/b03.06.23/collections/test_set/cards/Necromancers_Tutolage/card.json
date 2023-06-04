@@ -1,0 +1,6 @@
+{
+    "name": "Necromancer's Tutolage",
+    "type": "Bond",
+    "text": "At the start of your turn, return a random unit which costs 3 or less from your discard to your hand.",
+    "script": "script.lua"
+}

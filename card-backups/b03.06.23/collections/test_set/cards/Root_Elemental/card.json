@@ -1,0 +1,6 @@
+{
+    "name": "Root Elemental",
+    "type": "Unit",
+    "text": "At the start of your turn, [CARDNAME] gains +1 power and +1 life.",
+    "script": "script.lua"
+}

@@ -1,0 +1,10 @@
+{
+    "name": "Loyal Knight",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, summon a [New Recruit] card to the right of [CARDNAME].",
+    "script": "script.lua",
+
+    "refCards": [
+        "starters::New Recruit"
+    ]
+}

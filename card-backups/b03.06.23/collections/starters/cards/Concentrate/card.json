@@ -1,0 +1,6 @@
+{
+    "name": "Concentrate",
+    "type": "Spell",
+    "text": "{Power up} a card in play [howMany] times.",
+    "script": "script.lua"
+}

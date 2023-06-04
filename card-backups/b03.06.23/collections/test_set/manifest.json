@@ -1,0 +1,47 @@
+{
+    "name": "test_set",
+    "cards": [
+        "../_common/Source",
+        "cards/Healer",
+        "cards/Lifegem",
+        "cards/Basic_Bond",
+        "cards/Healers_Gift",
+        "cards/Reinforce",
+        "cards/Necromancers_Tutolage",
+        "cards/Undead_Cleric",
+        "cards/Risen_Dead",
+        "cards/Life_Drain",
+        "cards/Root_Elemental",
+        "cards/Shieldmate",
+        "cards/Recruiter",
+        "cards/Recruit",
+        "cards/Meteor_Strike",
+        "cards/Faithful_Cleric",
+        "cards/Reward_Devotion",
+        "cards/Infestation",
+        "cards/Invasive_Critter",
+        "cards/Growth_Chant",
+        "cards/Grant_Power",
+        "cards/Dark_Dealings",
+        "cards/Bolt_Shot",
+        "cards/Black_Market_Trade",
+        "cards/Throw_Rock",
+        "cards/Inspiration",
+        "cards/Young_Sphinx",
+        "cards/First_Aid",
+        "cards/Earthling",
+        "cards/Shawarma_Stand",
+        "cards/Crazed_Engineer",
+        "cards/Angry_Cook",
+        "cards/Doomsday_Mechanism",
+        "cards/Steel_Leaf_Shaman",
+        "cards/Raider",
+        "cards/Ancient_Spirit",
+        "cards/Brute"
+    ],
+    "add_these": [
+    ],
+    "for_testing": [
+        "cards/Power_Tester"
+    ]
+}

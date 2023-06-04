@@ -1,0 +1,6 @@
+{
+    "name": "Fire Archmage",
+    "type": "Unit",
+    "text": "When you cast a Spell, [CARDNAME] deals 4 damage to target Unit or Treasure.",
+    "script": "script.lua"
+}

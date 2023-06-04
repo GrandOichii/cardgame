@@ -1,0 +1,6 @@
+{
+    "name": "First Aid",
+    "type": "Spell",
+    "text": "Gain 2 life and draw a card.",
+    "script": "script.lua"
+}

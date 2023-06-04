@@ -1,0 +1,6 @@
+{
+    "name": "Fire_Elemental",
+    "type": "Unit",
+    "text": "{Fast}\nAt the start of your turn, [CARDNAME]s power becomes half of it's power, and it's life becomes half of it's life. Round down each time.",
+    "script": "script.lua"
+}

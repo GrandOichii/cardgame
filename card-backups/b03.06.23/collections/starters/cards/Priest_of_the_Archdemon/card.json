@@ -1,0 +1,10 @@
+{
+    "name": "Priest of the Archdemon",
+    "type": "Unit",
+    "text": "{Evil}",
+    "script": "script.lua",
+    
+    "refCards": [
+        "starters::Corrupting Darkness"
+    ]
+}

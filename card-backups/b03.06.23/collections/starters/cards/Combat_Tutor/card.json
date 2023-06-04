@@ -1,0 +1,6 @@
+{
+    "name": "Combat Tutor",
+    "type": "Unit",
+    "text": "When [CARDNAME] enters play, {Power Up} all of your other Units. For each that you can't, give it +1 power and +1 life.",
+    "script": "script.lua"
+}

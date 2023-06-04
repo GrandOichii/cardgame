@@ -1,0 +1,6 @@
+{
+    "name": "Inspiration",
+    "type": "Spell",
+    "text": "Draw 2 cards.",
+    "script": "script.lua"
+}

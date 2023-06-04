@@ -1,0 +1,9 @@
+{
+    "name": "Crazed Engineer",
+    "type": "Unit",
+    "cost": 6,
+    "power": 6,
+    "life": 5,
+    "text": "At the start of your turn, randomly {Power Up} [powerUpAmount] cards in play.",
+    "script": "script.lua"
+}

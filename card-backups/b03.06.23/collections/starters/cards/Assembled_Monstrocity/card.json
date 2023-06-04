@@ -1,0 +1,6 @@
+{
+    "name": "Assembled Monstrosity",
+    "type": "Unit",
+    "text": "",
+    "script": "script.lua"
+}

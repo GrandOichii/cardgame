@@ -1,0 +1,6 @@
+{
+    "name": "Pet Robot",
+    "type": "Unit",
+    "text": "[CARDNAME] can be {Powered Up}.\nWhen you {Power Up} [CARDNAME], it gains +2 power and +2 life.",
+    "script": "script.lua"
+}

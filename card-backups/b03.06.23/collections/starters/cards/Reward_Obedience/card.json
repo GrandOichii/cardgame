@@ -1,0 +1,10 @@
+{
+    "name": "Reward Obedience",
+    "type": "Spell",
+    "text": "Discard a [Corrupting Darkness] card and gain +1 energy.",
+    "script": "script.lua",
+
+    "refCards": [
+        "starters::Corrupting Darkness"
+    ]
+}

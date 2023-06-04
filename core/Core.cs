@@ -28,11 +28,13 @@ namespace game.core {
     public class Game {
         public MatchPool MatchPool { get; private set; }
         public CardMaster CardMaster { get; private set; }
+        public CardLoader CardLoader { get; set; }
 
         public Game(string collectionsPath) {
             MatchPool = new();
             // TODO replace with DB when implemented
-            CardMaster = new(new FileCardLoader(collectionsPath));
+            CardLoader = new FileCardLoader(collectionsPath);
+            CardMaster = new(CardLoader);
         }
     }
 

@@ -1,0 +1,7 @@
+{
+    "name": "Ancient Spirit",
+    "type": "Unit",
+    "text": "{Fast}\nIngores the defending unit.",
+    "script": "script.lua",
+    "summoned": true
+}

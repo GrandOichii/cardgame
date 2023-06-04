@@ -7,6 +7,7 @@ namespace game.cards.loaders {
 
     public abstract class CardLoader {
         abstract public Card Load(string cName, string colName);
+        abstract public List<Card> All();
     } 
 
 
@@ -117,17 +118,30 @@ namespace game.cards.loaders {
                 template.RefCards
             );
         }
+
+        public override List<Card> All()
+        {
+            var result = new List<Card>();
+            // System.Console.WriteLine;
+            foreach (var pair in _cardIndex) {
+                var split = pair.Key.Split("::");
+                var card = Load(split[1], split[0]);
+                result.Add(card);
+            }
+            return result;
+            // throw new NotImplementedException();
+        }
     }
     #endregion
 
 
-    class DBCardLoader : CardLoader
-    {
-        public override Card Load(string cName, string colName)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-    }
+    // class DBCardLoader : CardLoader
+    // {
+    //     public override Card Load(string cName, string colName)
+    //     {
+    //         // TODO
+    //         throw new NotImplementedException();
+    //     }
+    // }
 
 }

@@ -1,0 +1,6 @@
+{
+    "name": "Risen Dead",
+    "type": "Unit",
+    "text": "",
+    "script": "script.lua"
+}

@@ -7,14 +7,43 @@ class Card:
         self.name: str = ''
         self.type: str = ''
         self.text: str = ''
+        self.collection: str = ''
+        self.power: int = 0
+        self.life: int = 0
         self.script: str = ''
         # TODO
         self.ref_cards: list = []
 
         self.summoned = False
 
-    def load(dir: str) -> 'Card':
-        # TODO
+    def from_json(j: dict) -> 'Card':
         result = Card()
+        result.name = j['name']
+        result.type = j['type']
+        result.collection = j['collection']
+        result.text = j['text']
 
+        # result.power = j['power']
+        # result.life = j['life']
+        # TODO
+        
+        return result
+    
+class DeckCard:
+    def __init__(self, name: str, amount: int):
+        self.name: str = name
+        self.amount: int = amount
+    
+class Deck:
+    def __init__(self):
+        self.name: str = ''
+        self.bond: str = ''
+        self.cards: list[DeckCard] = []
+
+    def from_json(t: dict):
+        result = Deck()
+        result.name = t['name']
+        result.bond = t['bond']
+        for card in t['cards'].items():
+            result.cards += [DeckCard(card[0], card[1])]
         return result

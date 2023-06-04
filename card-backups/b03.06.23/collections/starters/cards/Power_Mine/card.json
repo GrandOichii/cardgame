@@ -1,0 +1,6 @@
+{
+    "name": "Power Mine",
+    "type": "Treasure",
+    "text": "When [charge] is equal to 1, destroy [CARDNAME] and target Unit.",
+    "script": "script.lua"
+}
