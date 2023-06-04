@@ -83,6 +83,7 @@ class MatchPlayerEdit(CEComponent, QWidget):
     def init_ui(self):
         layout = QHBoxLayout()
 
+        # TODO add on click to reset the other button
         self.is_bot_box = QRadioButton('bot')
         self.is_bot_box.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         deck_label = QLabel(f'P{self.player_i} deck')
@@ -92,6 +93,31 @@ class MatchPlayerEdit(CEComponent, QWidget):
         layout.addWidget(self.is_bot_box)
         layout.addWidget(deck_label)
         layout.addWidget(self.deck_box)
+
+        self.setLayout(layout)
+
+
+class MatchPlayerRecordWidget(CEComponent, QWidget):
+    def __init__(self, parent_window: 'ce.ManagerEditor', player_i: int):
+        CEComponent.__init__(self, parent_window)
+        QWidget.__init__(self)
+
+        self.player_i = player_i
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QVBoxLayout()
+
+        actions_label = QLabel(f'P{self.player_i} actions')
+        self.actions_list = QListWidget()
+        played_card_label = QLabel('Played card')
+        self.played_card = CardWidget(self.m_window)
+
+        layout.addWidget(actions_label)
+        layout.addWidget(self.actions_list)
+        layout.addWidget(played_card_label)
+        layout.addWidget(self.played_card)
+        
 
         self.setLayout(layout)
 
@@ -106,8 +132,9 @@ class MatchesTab(CEComponent, QWidget):
     def init_ui(self):
         layout = QHBoxLayout()
 
-        # matches data
+        # TODO weird spacing in left_layout
         left_layout = QVBoxLayout()
+        left_layout.setSpacing(6)
         seed_layout = QHBoxLayout()
         seed_layout.addWidget(QLabel('Seed:'))
         self.seed_edit = QLineEdit()
@@ -128,10 +155,12 @@ class MatchesTab(CEComponent, QWidget):
         self.create_table()
         left_layout.addWidget(self.table)
 
-
-        # players' data
-
-        layout.addLayout(left_layout)
+        layout.addLayout(left_layout, 3)
+        self.match_player_record_widgets: list[MatchPlayerRecordWidget] = []
+        for i in [1, 2]:
+            mpr = MatchPlayerRecordWidget(self.m_window, i)
+            self.match_player_record_widgets += [mpr]
+            layout.addWidget(mpr)
 
         self.setLayout(layout)
 
@@ -139,9 +168,9 @@ class MatchesTab(CEComponent, QWidget):
         self.table = QTableWidget()
 
         self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(['Match ID', 'Seed', 'Status', 'Winner', 'Start', 'End'])
 
         return self.table
-
 
 
 class CardsTab(CEComponent, QWidget):
@@ -473,13 +502,15 @@ class CardText(QTextEdit):
 
 SIZE_SCALE = 5
 class CardWidget(CEComponent, QFrame):
-    def __init__(self, parent_window: 'ce.ManagerEditor', card: 'core.Card'):
+    def __init__(self, parent_window: 'ce.ManagerEditor', card: 'core.Card'=None):
         # TODO card type
 
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
 
         self.card: core.Card = card
+        if self.card is None:
+            self.card = core.Card()
         self.setObjectName('cardWidget')
 
         self.init_ui()
