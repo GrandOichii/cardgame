@@ -10,20 +10,21 @@ import window as ce
 import core
 import pyperclip
 
+
 class CEComponent:
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
-        self.ce_window = parent_window
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
+        self.m_window = parent_window
 
 
 class BondComboBox(CEComponent, QComboBox):
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
         CEComponent.__init__(self, parent_window)
         QComboBox.__init__(self)
 
         self.populate()
 
     def populate(self):
-        cards = self.ce_window.cards
+        cards = self.m_window.cards
         bonds = [f'{card.collection}::{card.name}' for card in cards if card.type == 'Bond']
         self.addItem('')
         self.addItems(bonds)
@@ -59,8 +60,92 @@ class SpecificCollectionListItem(CollectionListItem):
         return card['collection'] == self.col_name
 
 
+class DeckComboBox(CEComponent, QComboBox):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
+        CEComponent.__init__(self, parent_window)
+        QComboBox.__init__(self)
+
+        self.populate()
+
+    def populate(self):
+        decks = self.m_window.decks
+        self.addItems([deck.name for deck in decks])
+
+
+class MatchPlayerEdit(CEComponent, QWidget):
+    def __init__(self, parent_window: 'ce.ManagerEditor', player_i: int):
+        CEComponent.__init__(self, parent_window)
+        QWidget.__init__(self)
+
+        self.player_i = player_i
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QHBoxLayout()
+
+        self.is_bot_box = QRadioButton('bot')
+        self.is_bot_box.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        deck_label = QLabel(f'P{self.player_i} deck')
+        deck_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.deck_box = DeckComboBox(self.m_window)
+
+        layout.addWidget(self.is_bot_box)
+        layout.addWidget(deck_label)
+        layout.addWidget(self.deck_box)
+
+        self.setLayout(layout)
+
+
+class MatchesTab(CEComponent, QWidget):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
+        QWidget.__init__(self)
+        CEComponent.__init__(self, parent_window)
+
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QHBoxLayout()
+
+        # matches data
+        left_layout = QVBoxLayout()
+        seed_layout = QHBoxLayout()
+        seed_layout.addWidget(QLabel('Seed:'))
+        self.seed_edit = QLineEdit()
+        seed_layout.addWidget(self.seed_edit)
+
+        self.match_player_edits: list[MatchPlayerEdit] = []
+        
+        left_layout.addLayout(seed_layout)
+        for i in [1, 2]:
+            mpe = MatchPlayerEdit(self.m_window, i)
+            left_layout.addWidget(mpe)
+            self.match_player_edits += [mpe]
+
+        start_match_button = QPushButton('Start match')
+        # TODO
+        left_layout.addWidget(start_match_button)
+
+        self.create_table()
+        left_layout.addWidget(self.table)
+
+
+        # players' data
+
+        layout.addLayout(left_layout)
+
+        self.setLayout(layout)
+
+    def create_table(self):
+        self.table = QTableWidget()
+
+        self.table.setColumnCount(6)
+
+        return self.table
+
+
+
 class CardsTab(CEComponent, QWidget):
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
 
@@ -83,7 +168,7 @@ class CardsTab(CEComponent, QWidget):
         self.collections_list_widget = QListWidget()
         self.collections_list_widget.itemClicked.connect(self.collection_list_item_clicked_action)
         self.collections_list_widget.addItem(AllCollectionListItem(self.collections_list_widget))
-        for col in self.ce_window.collections:
+        for col in self.m_window.collections:
             self.collections_list_widget.addItem(SpecificCollectionListItem(self.collections_list_widget, col))
 
         self.add_collection_button = QPushButton('Add')
@@ -111,15 +196,15 @@ class CardsTab(CEComponent, QWidget):
         self.cards_scroll.setWidgetResizable(True)
 
         self.cards_buttons_layout = QHBoxLayout()
-        self.cards = CardsLayout(self.ce_window)
+        self.cards = CardsLayout(self.m_window)
         self.cards_widget.setStyleSheet('''
         #cardWidget:hover {
             border: 1px solid red;            
         }
         ''')
 
-        for card in self.ce_window.cards:
-            w = CardWidget(self.ce_window, card)
+        for card in self.m_window.cards:
+            w = CardWidget(self.m_window, card)
             self.cards.add_card(w)
 
         cards_widget = QWidget()
@@ -149,18 +234,18 @@ class CardsTab(CEComponent, QWidget):
         self.cards.empty()
         # self.cards_scroll.repaint()
         t = self.search_line.text()
-        for card in self.ce_window.cards:
+        for card in self.m_window.cards:
             if t in card.name:
-                w = CardWidget(self.ce_window, card)
+                w = CardWidget(self.m_window, card)
                 self.cards.add_card(w)
 
     def collection_list_item_clicked_action(self, item: CollectionListItem):
         # l = self.collections_list_widget
         # l.clear()
         self.cards.empty()
-        for card in self.ce_window.cards:
+        for card in self.m_window.cards:
             if item.add_card_condition(card):
-                w = CardWidget(self.ce_window, core.Card.from_json(card))
+                w = CardWidget(self.m_window, core.Card.from_json(card))
                 self.cards.add_card(w)
 
 
@@ -193,7 +278,7 @@ class DeckCardListItem(QListWidgetItem):
 
 
 class DeckCardWidget(CEComponent, QWidget):
-    def __init__(self, parent_window: 'ce.CollectionEditor', card: core.DeckCard):
+    def __init__(self, parent_window: 'ce.ManagerEditor', card: core.DeckCard):
         CEComponent.__init__(self, parent_window)
         QWidget.__init__(self)
 
@@ -204,8 +289,8 @@ class DeckCardWidget(CEComponent, QWidget):
     def init_ui(self):
         layout = QVBoxLayout()
 
-        card = self.ce_window.card_name_index[self.card.name]
-        self.card_widget = CardWidget(self.ce_window, card)
+        card = self.m_window.card_name_index[self.card.name]
+        self.card_widget = CardWidget(self.m_window, card)
         self.amount_widget = QSpinBox()
         self.amount_widget.setValue(self.card.amount)
 
@@ -229,7 +314,7 @@ class AddCardToDeckButton(QLabel):
         ''')
         # self.setObjectName('cardWidget')
         image = QPixmap('content/plus.png')
-        image = image.scaledToWidth(128).scaledToHeight(128)
+        image = image.scaledToWidth(96).scaledToHeight(96)
 
         self.setPixmap(image)
 
@@ -239,7 +324,7 @@ class AddCardToDeckButton(QLabel):
 
 
 class DeckEditArea(CEComponent, QWidget):
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
         CEComponent.__init__(self, parent_window)
         QWidget.__init__(self)
 
@@ -256,7 +341,7 @@ class DeckEditArea(CEComponent, QWidget):
         bond_label = QLabel('Bond')
         bond_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
 
-        self.bond_box = BondComboBox(self.ce_window)
+        self.bond_box = BondComboBox(self.m_window)
 
         bond_layout.addWidget(bond_label)
         bond_layout.addWidget(self.bond_box)
@@ -290,7 +375,7 @@ class DeckEditArea(CEComponent, QWidget):
         self.cards_list.empty()
 
         for card in deck.cards:
-            cw = DeckCardWidget(self.ce_window, card)
+            cw = DeckCardWidget(self.m_window, card)
             self.cards_list.addWidget(cw)
         # add plus button
         add_button = AddCardToDeckButton()
@@ -322,7 +407,7 @@ class DeckListItem(QListWidgetItem):
 
 
 class DecksTab(CEComponent, QWidget):
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
 
@@ -335,7 +420,7 @@ class DecksTab(CEComponent, QWidget):
         self.decks_list = QListWidget()
         self.decks_list.itemClicked.connect(self.list_item_clicked_action)
         # populate
-        for deck in self.ce_window.decks:
+        for deck in self.m_window.decks:
             li = DeckListItem(deck)
             self.decks_list.addItem(li)
 
@@ -350,7 +435,7 @@ class DecksTab(CEComponent, QWidget):
         
         layout.addLayout(decks_list_layout, 1)
         
-        self.deck_edit_area = DeckEditArea(self.ce_window)
+        self.deck_edit_area = DeckEditArea(self.m_window)
         self.deck_edit_area.setEnabled(False)
         layout.addWidget(self.deck_edit_area, 3)
         self.setLayout(layout)
@@ -363,7 +448,7 @@ class DecksTab(CEComponent, QWidget):
 
 
 class CardTemplatesTab(CEComponent, QWidget):
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
 
@@ -388,7 +473,7 @@ class CardText(QTextEdit):
 
 SIZE_SCALE = 5
 class CardWidget(CEComponent, QFrame):
-    def __init__(self, parent_window: 'ce.CollectionEditor', card: 'core.Card'):
+    def __init__(self, parent_window: 'ce.ManagerEditor', card: 'core.Card'):
         # TODO card type
 
         QWidget.__init__(self)
@@ -437,7 +522,7 @@ class CardWidget(CEComponent, QFrame):
 
 
 class CardsLayout(CEComponent, FlowLayout):
-    def __init__(self, parent_window: 'ce.CollectionEditor'):
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
         CEComponent.__init__(self, parent_window)
         FlowLayout.__init__(self)
 

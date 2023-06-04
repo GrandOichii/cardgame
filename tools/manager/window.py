@@ -10,7 +10,7 @@ import core
 CONFIG_PATH = 'config.json'
 
 class CEComponent:
-    def __init__(self, parent_window: 'CollectionEditor'):
+    def __init__(self, parent_window: 'ManagerEditor'):
         self.ce_window = parent_window
 
 
@@ -22,7 +22,7 @@ class Config:
 
 
 SERVER_ADDR = 'http://localhost:5026/'
-class CollectionEditor(QMainWindow):
+class ManagerEditor(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -44,6 +44,9 @@ class CollectionEditor(QMainWindow):
     def init_tabs(self):
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
+
+        self.matches_tab = widgets.MatchesTab(self)
+        self.tabs.addTab(self.matches_tab, 'Decks')
 
         self.decks_tab = widgets.DecksTab(self)
         self.tabs.addTab(self.decks_tab, 'Decks')
