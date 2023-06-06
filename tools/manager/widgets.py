@@ -9,7 +9,7 @@ from flow import FlowLayout
 import window as ce
 import core
 import pyperclip
-
+import requests
 
 class CEComponent:
     def __init__(self, parent_window: 'ce.ManagerEditor'):
@@ -126,6 +126,8 @@ class MatchesTab(CEComponent, QWidget):
     def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
+        self.table_columns = ['Match ID', 'Seed', 'Status', 'Winner', 'Start', 'End']
+
 
         self.init_ui()
 
@@ -138,6 +140,7 @@ class MatchesTab(CEComponent, QWidget):
         seed_layout = QHBoxLayout()
         seed_layout.addWidget(QLabel('Seed:'))
         self.seed_edit = QLineEdit()
+        self.seed_edit.setValidator(QIntValidator())
         seed_layout.addWidget(self.seed_edit)
 
         self.match_player_edits: list[MatchPlayerEdit] = []
@@ -149,7 +152,7 @@ class MatchesTab(CEComponent, QWidget):
             self.match_player_edits += [mpe]
 
         start_match_button = QPushButton('Start match')
-        # TODO
+        start_match_button.clicked.connect(self.start_match_action)
         left_layout.addWidget(start_match_button)
 
         self.create_table()
@@ -167,10 +170,43 @@ class MatchesTab(CEComponent, QWidget):
     def create_table(self):
         self.table = QTableWidget()
 
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(['Match ID', 'Seed', 'Status', 'Winner', 'Start', 'End'])
+        self.table.setColumnCount(len(self.table_columns))
+        self.table.setHorizontalHeaderLabels(self.table_columns)
+
+        header = self.table.horizontalHeader()
+        for i in range(len(self.table_columns)):
+            header.setSectionResizeMode(i, QHeaderView.Stretch)
+        # header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        # header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+
 
         return self.table
+    
+    # actions
+    def start_match_action(self):
+        data = {}
+        data['seed'] = int(self.seed_edit.text())
+        for i in [1, 2]:
+            p = self.match_player_edits[i-1]
+            data[f'deckList{i}'] = self.m_window.deck_index[p.deck_box.currentText()].to_text()
+            data[f'p{i}IsBot'] = p.is_bot_box.isChecked()
+        print(data)
+        # TODO the stinky \r\n ruins everything
+        result = requests.post(ce.SERVER_ADDR + 'matches', json=data).json()
+        self.add_match_record(result)
+        print(result)
+        # .json()
+
+    def add_match_record(self, record: dict):
+        # TODO keep track of all matches, perhaps use web socket?
+        i = self.table.rowCount()
+        self.table.setRowCount(i+1)
+        self.table.setItem(i, 0, QTableWidgetItem(record['id']))
+        self.table.setItem(i, 1, QTableWidgetItem(str(record['seed'])))
+        self.table.setItem(i, 2, QTableWidgetItem(record['status']))
+        self.table.setItem(i, 3, QTableWidgetItem(record['winner']))
+        self.table.setItem(i, 4, QTableWidgetItem(record['timeStart']))
+        self.table.setItem(i, 5, QTableWidgetItem(record['timeEnd']))
 
 
 class CardsTab(CEComponent, QWidget):

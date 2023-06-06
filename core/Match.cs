@@ -1,9 +1,11 @@
 using NLua;
+using Shared;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using game.util;
 using game.player;
+using game.match;
 using game.cards;
 using game.scripts;
 using game.core.phases;
@@ -332,6 +334,7 @@ namespace game.match {
 
         public Match NewMatch(Game game, MatchConfig config) {
             Logger.Instance.Log("MatchPool", "Requested to create new match");
+            // var match = new Match(game, config, "C:\\Users\\ihawk\\code\\cardgame\\core\\core.lua");
             var match = new Match(game, config, "../core/core.lua");
             var id = MatchIDCreator.Next();
             Matches.Add("#" + id, match);
@@ -341,6 +344,148 @@ namespace game.match {
         public Match GetMatch(string mID) => Matches[mID];
 
         public string IDOf(Match match) => Matches.FirstOrDefault(p => p.Value == match).Key;
+
+    }
+
+
+    public static class MatchParsers {
+        static public MatchState CreateMState(Player player, Match match, string request, List<string> args, string prompt="", string sourceID="", CardW? cursorCard=null) {
+            var result = new MatchState();
+            result.Players = new PlayerState[match.Players.Count];
+            for (int i = 0; i < match.Players.Count; i++) {
+                var pData = PlayerStateFrom(match.Players[i]);
+                result.Players[i] = pData;
+            }
+
+            result.CurrentPlayerI = match.CurPlayerI;
+
+            result.My = MyStateFrom(match, player);
+
+            result.Request = request;
+
+            result.Prompt = prompt;
+
+            result.Args = args;
+
+            result.SourceID = sourceID;
+
+            result.LastPlayed = null;
+            if (match.LastPlayed is object) {
+                var s = new LastPlayedState();
+                s.Card = CardStateFrom(match.LastPlayed);
+                s.PlayerName = match.LastPlayedPName;
+                result.LastPlayed = s;
+            }
+            
+            result.NewLogs = player.LastLogs;
+            player.LastLogs = new();
+
+            if (cursorCard is object) {
+                result.CursorCard = CardStateFrom(cursorCard);
+            }
+
+            return result;
+        }
+
+        static public MyState MyStateFrom(Match match, Player player) {
+            var result = new MyState();
+            
+            result.Hand = new CardState[player.Hand.Cards.Count];
+            for (int i = 0; i < player.Hand.Cards.Count; i++) {
+                var cData = CardStateFrom(player.Hand.Cards[i]);
+                result.Hand[i] = cData;
+            }
+            
+            result.PlayerI = match.Players.IndexOf(player);
+            return result;
+        }
+
+        static public PlayerState PlayerStateFrom(Player player) {
+            var result = new PlayerState();
+
+            result.Name = player.Name;
+            result.HandCount = player.Hand.Cards.Count;
+            result.DeckCount = player.Deck.Cards.Count;
+            result.Life = player.Life;
+            result.Energy = player.Energy;
+            result.MaxEnergy = player.MaxEnergy;
+
+            result.Bond = CardStateFrom(player.Bond);
+            
+            result.Discard = new CardState[player.Discard.Cards.Count];
+            for (int i = 0; i < player.Discard.Cards.Count; i++) {
+                var cData = CardStateFrom(player.Discard.Cards[i]);
+                result.Discard[i] = cData;
+            }
+            
+            result.Burned = new CardState[player.Burned.Cards.Count];
+            for (int i = 0; i < player.Burned.Cards.Count; i++) {
+                var cData = CardStateFrom(player.Burned.Cards[i]);
+                result.Burned[i] = cData;
+            }
+
+            result.Treasures = new CardState[player.Treasures.Cards.Count];
+            for (int i = 0; i < player.Treasures.Cards.Count; i++) {
+                var cData = CardStateFrom(player.Treasures.Cards[i].Card);
+                result.Treasures[i] = cData;
+            }
+
+            result.Units = new UnitState?[player.Lanes.Length];
+            for (int i = 0; i < player.Lanes.Length; i++) {
+                var u = player.Lanes[i];
+                if (u is null) continue;
+
+                var uData = UnitStateFrom(u);
+                result.Units[i] = uData;
+            }
+
+            return result;
+        }
+
+        static public CardState CardStateFrom(CardW card) {
+            var result = new CardState();
+
+            result.ID = card.ID;
+            result.Name = card.Original.Name;
+            result.Type = card.Original.Type;
+            result.Text = card.Original.Text + card.Info["appendText"];
+            result.Cost = card.GetCost();
+            if (result.Type == "Unit")
+                result.Power = card.GetPower();
+            if (result.Type == "Unit" || result.Type == "Treasure")
+                result.Life = Utility.GetLong(card.Info, "life");
+            result.Mutable = new();
+            var mutable = Utility.TableGet<LuaTable>(card.Info, "mutable");
+            foreach (var key in mutable.Keys) {
+                var sKey = key as string;
+                if (sKey is null) throw new Exception("Key " + key + " is not string");
+                result.Mutable.Add(sKey, MutableStateFrom(mutable[key]));
+            }
+            return result;
+        }
+
+        static public UnitState UnitStateFrom(UnitW card) {
+            var result = new UnitState();
+
+            result.AttackLeft = card.AvailableAttacks;
+            result.Card = CardStateFrom(card.Card);
+
+            return result;
+        }
+
+        static public MutableState MutableStateFrom(object o)
+        {
+            var table = o as LuaTable;
+            if (table is null) throw new Exception("Object " + o + " is not a table");
+
+            var result = new MutableState();
+            result.Current = Utility.GetLong(table, "current");
+            result.Min = Utility.GetLong(table, "min");
+            result.Max= Utility.GetLong(table, "max");
+            return result;
+        }
+
+
 
     }
 

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="NLua" Version="1.6.2" />
+    <ProjectReference Include="..\shared\shared.csproj" />
   </ItemGroup>
 
 </Project>

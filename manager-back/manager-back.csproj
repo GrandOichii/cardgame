@@ -13,9 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="core">
-      <HintPath>..\core\bin\Debug\net7.0\core.dll</HintPath>
-    </Reference>
+    <!-- <Reference Include="core">
+      <HintPath>..\core\core.csproj</HintPath>
+    </Reference> -->
+    <ProjectReference Include="..\core\core.csproj" />
+
   </ItemGroup>
 
 

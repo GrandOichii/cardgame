@@ -39,7 +39,7 @@ class ManagerEditor(QMainWindow):
 
         self.init_tabs()
 
-        self.setMinimumSize(QSize(800, 600))
+        self.setMinimumSize(QSize(1000, 600))
 
     def init_tabs(self):
         self.tabs = QTabWidget()
@@ -71,7 +71,9 @@ class ManagerEditor(QMainWindow):
 
     def fetch_decks(self):
         self.decks = []
+        self.deck_index = {}
         decks_raw = requests.get(SERVER_ADDR + 'decks').json()
         for deck_raw in decks_raw:
             deck = core.Deck.from_json(deck_raw)
             self.decks += [deck]
+            self.deck_index[deck.name] = deck

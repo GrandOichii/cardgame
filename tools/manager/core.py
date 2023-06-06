@@ -47,3 +47,10 @@ class Deck:
         for card in t['cards'].items():
             result.cards += [DeckCard(card[0], card[1])]
         return result
+    
+    def to_text(self):
+        # TODO BAD
+        result = self.bond
+        for card in self.cards:
+            result += f'\r\n{card.amount} {card.name}'
+        return result

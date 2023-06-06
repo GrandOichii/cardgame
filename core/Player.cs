@@ -74,8 +74,11 @@ namespace game.player {
 
         public List<string> LastLogs { get; set; }
 
+        public Deck OriginalDeck { get; }
 
         public Player(Match match, string name, Deck deck, PlayerController controller) {
+            OriginalDeck = deck;
+
             Record = new();
             Record.DeckList = deck.ToText();
 

@@ -3,7 +3,6 @@
 using game.cards;
 using game.core;
 using game.decks;
-using Microsoft.OpenApi.Validations.Rules;
 
 class SingletonGame : Game
 {
