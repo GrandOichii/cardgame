@@ -33,6 +33,7 @@ class DeckCard:
     def __init__(self, name: str, amount: int):
         self.name: str = name
         self.amount: int = amount
+
     
 class Deck:
     def __init__(self):
@@ -54,3 +55,20 @@ class Deck:
         for card in self.cards:
             result += f'\r\n{card.amount} {card.name}'
         return result
+    
+
+class MatchRecord:
+    def __init__(self):
+        # TODO
+        self.id: str = ''
+        self.seed: int = ''
+        self.status: str = ''
+        self.winner: str = ''
+        self.timeStart: str = ''
+        self.timeEnd: str = ''
+
+    def from_json(d: dict):
+        result = MatchRecord()
+        result.__dict__ = d
+        return result
+    

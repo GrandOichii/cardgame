@@ -29,6 +29,8 @@ class ManagerEditor(QMainWindow):
         # self.fetch_cards_signal = pyqtSignal(list[core.Card])
         # self.fetch_decks_signal = pyqtSignal(list[core.Deck])
 
+        self.thread_pool = QThreadPool()
+
         self.fetch_cards()
         self.fetch_decks()
         self.init_ui()

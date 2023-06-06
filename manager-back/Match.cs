@@ -25,6 +25,7 @@ namespace manager_back
         public MatchRecord(Match match)
         {
             Guid g = Guid.NewGuid();
+            
             ID = Convert.ToBase64String(g.ToByteArray());
             ID = ID.Replace("=","");
             ID = ID.Replace("+","");

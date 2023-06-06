@@ -9,6 +9,7 @@ from flow import FlowLayout
 import window as ce
 import core
 import pyperclip
+import time
 import requests
 
 class CEComponent:
@@ -122,12 +123,48 @@ class MatchPlayerRecordWidget(CEComponent, QWidget):
         self.setLayout(layout)
 
 
+class MatchFetcherThreadSignals(QObject):
+    matches_signal = pyqtSignal(list)
+
+
+class MatchFetcherThread(CEComponent, QRunnable):
+
+    def __init__(self, parent_window: 'ce.ManagerEditor'):
+        QRunnable.__init__(self)
+        CEComponent.__init__(self, parent_window)
+        self.signals = MatchFetcherThreadSignals()
+
+        self.running = True
+        self.timeout = .5
+
+    @pyqtSlot()
+    def run(self):
+        while self.running:
+            time.sleep(self.timeout)
+            data = requests.get(ce.SERVER_ADDR + 'matches').json()
+            matches = []
+            for d in data:
+                matches += [core.MatchRecord.from_json(d)]
+                
+            # TODO threw this exception for some ungodly reason
+            # RuntimeError: wrapped C/C++ object of type MatchFetcherThreadSignals has been deleted
+            self.signals.matches_signal.emit(matches)
+
+    def stop(self):
+        self.running = False
+
+
 class MatchesTab(CEComponent, QWidget):
     def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
         self.table_columns = ['Match ID', 'Seed', 'Status', 'Winner', 'Start', 'End']
 
+        self.match_fetch_thread = MatchFetcherThread(parent_window)
+        # self.match_fetch_thread.matches_signal
+        self.match_fetch_thread.signals.matches_signal.connect(self.update_matches_action)
+        qApp.aboutToQuit.connect(self.match_fetch_thread.stop)
+        parent_window.thread_pool.start(self.match_fetch_thread)
 
         self.init_ui()
 
@@ -182,6 +219,17 @@ class MatchesTab(CEComponent, QWidget):
 
         return self.table
     
+    def add_match_record(self, record: dict):
+        # TODO keep track of all matches, perhaps use web socket?
+        i = self.table.rowCount()
+        self.table.setRowCount(i+1)
+        self.table.setItem(i, 0, QTableWidgetItem(record.id))
+        self.table.setItem(i, 1, QTableWidgetItem(str(record.seed)))
+        self.table.setItem(i, 2, QTableWidgetItem(record.status))
+        self.table.setItem(i, 3, QTableWidgetItem(record.winner))
+        self.table.setItem(i, 4, QTableWidgetItem(record.timeStart))
+        self.table.setItem(i, 5, QTableWidgetItem(record.timeEnd))
+
     # actions
     def start_match_action(self):
         data = {}
@@ -193,20 +241,20 @@ class MatchesTab(CEComponent, QWidget):
         print(data)
         # TODO the stinky \r\n ruins everything
         result = requests.post(ce.SERVER_ADDR + 'matches', json=data).json()
-        self.add_match_record(result)
-        print(result)
+        record = core.MatchRecord.from_json(result)
+        self.add_match_record(record)
         # .json()
 
-    def add_match_record(self, record: dict):
-        # TODO keep track of all matches, perhaps use web socket?
-        i = self.table.rowCount()
-        self.table.setRowCount(i+1)
-        self.table.setItem(i, 0, QTableWidgetItem(record['id']))
-        self.table.setItem(i, 1, QTableWidgetItem(str(record['seed'])))
-        self.table.setItem(i, 2, QTableWidgetItem(record['status']))
-        self.table.setItem(i, 3, QTableWidgetItem(record['winner']))
-        self.table.setItem(i, 4, QTableWidgetItem(record['timeStart']))
-        self.table.setItem(i, 5, QTableWidgetItem(record['timeEnd']))
+    def update_matches_action(self, matches: list[core.MatchRecord]):
+        # TODO bad, can't focus on match for more than timeout, fix to have:
+        # delete - local matches, whose id's are not present should be deleted
+        # update - local matches, whose id's are present, should be updated
+        # add - new matches, that are not in local matches, should be added
+        while self.table.rowCount() > 0:
+            self.table.removeRow(0)
+        for record in matches:
+            self.add_match_record(record)
+
 
 
 class CardsTab(CEComponent, QWidget):

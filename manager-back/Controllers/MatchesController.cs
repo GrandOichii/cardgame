@@ -22,7 +22,7 @@ namespace manager_back.Controllers
 
         private async void RunMatch(MatchRecord record, Match match)
         {
-            // await Task.Delay(2000);
+            await Task.Delay(10000);
             try
             {
                 match.Start();
