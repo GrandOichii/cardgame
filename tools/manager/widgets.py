@@ -145,13 +145,32 @@ class MatchFetcherThread(CEComponent, QRunnable):
             matches = []
             for d in data:
                 matches += [core.MatchRecord.from_json(d)]
-                
+
             # TODO threw this exception for some ungodly reason
             # RuntimeError: wrapped C/C++ object of type MatchFetcherThreadSignals has been deleted
             self.signals.matches_signal.emit(matches)
 
     def stop(self):
         self.running = False
+
+
+class MatchRecordTableItem:
+    def __init__(self, table: QTableWidget, i: int, match_record: core.MatchRecord):
+        # TODO? any parent constructors, if need be
+        self.table = table
+        self.index = i
+        self.load(match_record)
+
+    def load(self, match_record: core.MatchRecord):
+        self.record = match_record
+
+        self.table.setItem(self.index, 0, QTableWidgetItem(self.record.id))
+        self.table.setItem(self.index, 1, QTableWidgetItem(str(self.record.seed)))
+        self.table.setItem(self.index, 2, QTableWidgetItem(self.record.status))
+        self.table.setItem(self.index, 3, QTableWidgetItem(self.record.winner))
+        self.table.setItem(self.index, 4, QTableWidgetItem(self.record.timeStart))
+        self.table.setItem(self.index, 5, QTableWidgetItem(self.record.timeEnd))
+
 
 
 class MatchesTab(CEComponent, QWidget):
@@ -165,6 +184,8 @@ class MatchesTab(CEComponent, QWidget):
         self.match_fetch_thread.signals.matches_signal.connect(self.update_matches_action)
         qApp.aboutToQuit.connect(self.match_fetch_thread.stop)
         parent_window.thread_pool.start(self.match_fetch_thread)
+
+        self.match_record_index: dict = {}
 
         self.init_ui()
 
@@ -213,22 +234,15 @@ class MatchesTab(CEComponent, QWidget):
         header = self.table.horizontalHeader()
         for i in range(len(self.table_columns)):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
-        # header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        # header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-
 
         return self.table
     
-    def add_match_record(self, record: dict):
+    def add_match_record(self, record: core.MatchRecord):
         # TODO keep track of all matches, perhaps use web socket?
         i = self.table.rowCount()
         self.table.setRowCount(i+1)
-        self.table.setItem(i, 0, QTableWidgetItem(record.id))
-        self.table.setItem(i, 1, QTableWidgetItem(str(record.seed)))
-        self.table.setItem(i, 2, QTableWidgetItem(record.status))
-        self.table.setItem(i, 3, QTableWidgetItem(record.winner))
-        self.table.setItem(i, 4, QTableWidgetItem(record.timeStart))
-        self.table.setItem(i, 5, QTableWidgetItem(record.timeEnd))
+        li = MatchRecordTableItem(self.table, i, record)
+        self.match_record_index[record.id] = li
 
     # actions
     def start_match_action(self):
@@ -238,22 +252,33 @@ class MatchesTab(CEComponent, QWidget):
             p = self.match_player_edits[i-1]
             data[f'deckList{i}'] = self.m_window.deck_index[p.deck_box.currentText()].to_text()
             data[f'p{i}IsBot'] = p.is_bot_box.isChecked()
-        print(data)
         # TODO the stinky \r\n ruins everything
         result = requests.post(ce.SERVER_ADDR + 'matches', json=data).json()
         record = core.MatchRecord.from_json(result)
         self.add_match_record(record)
         # .json()
 
-    def update_matches_action(self, matches: list[core.MatchRecord]):
+    def update_matches_action(self, records: list[core.MatchRecord]):
+        # TODO should delete exist?
+        # delete - local records, whose id's are not present should be deleted
         # TODO bad, can't focus on match for more than timeout, fix to have:
-        # delete - local matches, whose id's are not present should be deleted
-        # update - local matches, whose id's are present, should be updated
-        # add - new matches, that are not in local matches, should be added
-        while self.table.rowCount() > 0:
-            self.table.removeRow(0)
-        for record in matches:
-            self.add_match_record(record)
+        # update - local records, whose id's are present, should be updated
+        # add - new records, that are not in local records, should be added
+
+        # update
+        for record in records:
+            if not record.id in self.match_record_index:
+                self.add_match_record(record)
+                continue
+
+            self.match_record_index[record.id].load(record)
+
+        
+
+        # while self.table.rowCount() > 0:
+        #     self.table.removeRow(0)
+        # for record in records:
+        #     self.add_match_record(record)
 
 
 
@@ -385,7 +410,6 @@ class DeckCardListItem(QListWidgetItem):
         self.widget.setLayout(layout)
 
         # self.widget = QLabel(self.card.name)
-        # print(self.card.name)
 
         self.setSizeHint(self.widget.sizeHint())
 
