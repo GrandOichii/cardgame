@@ -29,6 +29,7 @@ class Card:
         
         return result
     
+
 class DeckCard:
     def __init__(self, name: str, amount: int):
         self.name: str = name
@@ -75,3 +76,20 @@ class MatchRecord:
         result.__dict__ = d
         return result
     
+
+class MatchConfig:
+    def __init__(self) -> None:
+        self.seed: int = 0
+
+
+class PlayerPlayback:
+    def __init__(self) -> None:
+        self.deck_list: str = ''
+        self.responses: list[str] = []
+
+
+class MatchPlayback:
+    def __init__(self) -> None:
+        self.players: list = []
+        self.config: MatchConfig = None
+        self.timestamp: str = ''

@@ -40,6 +40,7 @@ class ManagerEditor(QMainWindow):
 
         self.fetch_cards()
         self.fetch_decks()
+        self.fetch_records()
         self.init_ui()
 
     # ui
@@ -86,3 +87,7 @@ class ManagerEditor(QMainWindow):
             deck = core.Deck.from_json(deck_raw)
             self.decks += [deck]
             self.deck_index[deck.name] = deck
+
+    def fetch_records(self):
+        # match id -- record
+        self.record_index = requests.get(SERVER_ADDR + 'records').json()

@@ -5,13 +5,23 @@ using game.decks;
 using game.match;
 using game.player;
 using Microsoft.AspNetCore.Mvc;
+using game.recording;
 
 namespace manager_back.Controllers
 {
+    class PlaybackIndex {
+        static public PlaybackIndex Instance { get; } = new();
+        private PlaybackIndex() {
+            Playbacks = new();
+        }
+
+        public Dictionary<string, game.recording.MatchRecord> Playbacks { get; }
+    }
+
     class RecordKeeper {
         public static RecordKeeper Instance = new();
 
-        public List<MatchRecord> Records { get; }
+        public List<MRecord> Records { get; }
         private RecordKeeper() {
             Records = new();
         }
@@ -22,7 +32,7 @@ namespace manager_back.Controllers
     public class MatchesController : ControllerBase
     {
 
-        private void RunMatch(MatchRecord record, MatchRequestBody config, Match match)
+        static private void RunMatch(MRecord record, MatchRequestBody config, Match match)
         {
             // player creation
             var decks = new Deck[2] {
@@ -93,18 +103,19 @@ namespace manager_back.Controllers
                 player.OriginalDeck.UnloadCards(match.Game.CardMaster);
             }
 
-
+            // add playback to index
+            PlaybackIndex.Instance.Playbacks.Add(record.ID, match.Record);
         }
 
         [HttpPost()]
-        public MatchRecord Post([FromBody] MatchRequestBody body)
+        public MRecord Post([FromBody] MatchRequestBody body)
         {
             var game = SingletonGame.Instance;
             var config = MatchConfig.FromText(System.IO.File.ReadAllText("../match_configs/normal.json"));
             config.Seed = body.Seed;
             var match = game.MatchPool.NewMatch(game, config);
 
-            var result = new MatchRecord(match);
+            var result = new MRecord(match);
 
             RecordKeeper.Instance.Records.Add(result);
             // RunMatch(result, body, match);
@@ -117,7 +128,7 @@ namespace manager_back.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<MatchRecord> Get()
+        public IEnumerable<MRecord> Get()
         {
             return RecordKeeper.Instance.Records;
         }

@@ -1,7 +1,7 @@
 - client: fix highlighting opponent's lanes when placing units
 - add targeting players
 - add charms
-- add condition-based life boosting
+-? add condition-based life boosting
 - add card burning
 - add viewing of burned cards
 - add viewing discarded cards
@@ -11,5 +11,5 @@
 - add condition-based keyword/ability granting
 
 - implement test decks
-- make presentable front end
+- create qt-based front
 - create app for contructing decks and card cretion

@@ -11,7 +11,7 @@ namespace manager_back
         public bool P2IsBot{ get; set; }
     }
 
-    public class MatchRecord
+    public class MRecord
     {
         public string ID { get; }
         public int Seed { get; }
@@ -26,7 +26,7 @@ namespace manager_back
 
         public string ErrorMsg { get; set; } = "";
 
-        public MatchRecord(Match match)
+        public MRecord(Match match)
         {
             Guid g = Guid.NewGuid();
             
