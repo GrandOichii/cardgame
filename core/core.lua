@@ -672,7 +672,7 @@ function CardCreation:CardObject(props)
     result.CanPowerUpP = Pipeline.New()
     result.CanPowerUpP:AddLayer(
         function ()
-            return nil, Utility:TableLength(self.mutable) > 0
+            return nil, Utility:TableLength(result.mutable) > 0
         end
     )
     function result:CanPowerUp()
@@ -704,7 +704,7 @@ function CardCreation:CardObject(props)
     result.CanPowerDownP = Pipeline.New()
     result.CanPowerDownP:AddLayer(
         function ()
-            return nil, Utility:TableLength(self.mutable) > 0
+            return nil, Utility:TableLength(result.mutable) > 0
         end
     )
     function result:CanPowerDown()

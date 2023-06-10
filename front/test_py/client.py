@@ -9,7 +9,6 @@ import pygame as pg
 from front.test_py.frame import *
 # from front.test_py.frame import WHITE, ClickConfig, Rect, WindowConfigs
 from front.test_py.sprites import *
-# import front.test_py.sprites as sprites
 # from frame import *
 # from sprites import *
 
@@ -66,7 +65,7 @@ class LogsContainer(GameWidget, ScrollWidget):
 class NameLabelWidget(GameWidget, LabelWidget):
     def __init__(self, parent_window: 'ClientWindow', font):
         GameWidget.__init__(self, parent_window)
-        font = ClientWindow.Instance.font
+        font = parent_window.font
 
         click_configs = []
         cc1 = ClickConfig()
@@ -97,7 +96,7 @@ class InfoContainer(GameWidget, VerContainer):
         # top = RectWidget(LGREEN)
         top = FormContainer()
 
-        self.name_label = NameLabelWidget(self.g_window.font)
+        self.name_label = NameLabelWidget(self.g_window, self.g_window.font)
         top.add_widget(self.name_label)
 
         self.health_label = LabelWidget(self.g_window.font, ' ')
@@ -108,7 +107,7 @@ class InfoContainer(GameWidget, VerContainer):
 
         self.add_widget(top)
         # card widget
-        self.bond = CardInPlayWidget()
+        self.bond = CardInPlayWidget(self.g_window)
         self.add_widget(self.bond)
         # self.add_widget(RectWidget(BLACK, max_height=2))
 
@@ -128,7 +127,7 @@ class UnitContainer(GameWidget, VerContainer):
 
         self.last_attacks_left = 0
 
-        self.card = UnitCardWidget(lane_i)
+        self.card = UnitCardWidget(self.g_window, lane_i)
         self.add_widget(self.card)
 
         cc = ClickConfig()
@@ -158,9 +157,10 @@ class UnitContainer(GameWidget, VerContainer):
         self.g_window.send_response(f'attack {self.lane_i}')
 
 
-class LanesContainer(VerContainer):
-    def __init__(self, parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
-        super().__init__(outline_color)
+class LanesContainer(GameWidget, VerContainer):
+    def __init__(self, parent_window: 'ClientWindow', parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
+        GameWidget.__init__(self, parent_window)
+        VerContainer.__init__(self, outline_color)
 
         self.pc_parent = parent
         self.units: list[UnitContainer] = []
@@ -174,7 +174,7 @@ class LanesContainer(VerContainer):
         sep = SPACE_FILLER
         self.lanes_container.add_widget(sep)
         for i in range(lane_count):
-            u = UnitContainer(i)
+            u = UnitContainer(self.g_window, i)
             self.units += [u]
             self.lanes_container.add_widget(u)
             self.lanes_container.add_widget(sep)
@@ -188,32 +188,34 @@ class LanesContainer(VerContainer):
             unit.load(data[i])
 
 
-class TreasuresContainer(StackContainer):
-    def __init__(self, parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
+class TreasuresContainer(GameWidget, StackContainer):
+    def __init__(self, parent_window: 'ClientWindow', parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
         # TODO configure optimal max_per_line
-        super().__init__(3, outline_color)
+        GameWidget.__init__(self, parent_window)
+        StackContainer.__init__(self, 3, outline_color)
 
     def load(self, data):
         self.widgets = [RectWidget()]
         self.last_container = None
         for card in data:
-            w = TreasureWidget()
+            w = TreasureWidget(self.g_window)
             w.load(card)
             self.add_widget(w)
         # return super().load(data)
 
 
-class PlayerContainer(HorContainer):
-    def __init__(self):
-        super().__init__(RED)
+class PlayerContainer(GameWidget, HorContainer):
+    def __init__(self, parent_window: 'client.ClientWindow'):
+        GameWidget.__init__(self, parent_window)
+        HorContainer.__init__(self, RED)
 
-        self.info_c = InfoContainer(self)
+        self.info_c = InfoContainer(self.g_window, self)
         self.add_widget(self.info_c)
 
-        self.lanes_c = LanesContainer(self)
+        self.lanes_c = LanesContainer(self.g_window, self)
         self.add_widget(self.lanes_c)
 
-        self.treasures_c = TreasuresContainer(self)
+        self.treasures_c = TreasuresContainer(self.g_window, self)
         self.add_widget(self.treasures_c)
 
     def load(self, data):
@@ -223,9 +225,10 @@ class PlayerContainer(HorContainer):
 
 
 BETWEEN_CARDS = 2
-class HandContainer(HorContainer):
-    def __init__(self, outline_color: tuple[int, int, int] = None):
-        super().__init__(outline_color)
+class HandContainer(GameWidget, HorContainer):
+    def __init__(self, parent_window: 'ClientWindow', outline_color: tuple[int, int, int] = None):
+        GameWidget.__init__(self, parent_window)
+        HorContainer.__init__(self, outline_color)
 
         self.start_widget = RectWidget(max_width=0, min_height=4+CARD_HEIGHT, max_height=4+CARD_HEIGHT)
         self.end_widget = SPACE_FILLER
@@ -244,7 +247,7 @@ class HandContainer(HorContainer):
         w = []
         for card in data:
             w += [RectWidget(WHITE, max_width=BETWEEN_CARDS)]
-            w += [CardInHandWidget.from_card(card)]
+            w += [CardInHandWidget.from_card(self.g_window, card)]
         self.set_widgets(w)
 
 
@@ -268,7 +271,7 @@ class ClientWindow(Window):
         # connection
 
         self.last_state = None
-        self.cursor_card_widget = CardWidget([])
+        self.cursor_card_widget = CardWidget(self, [])
 
     def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -302,9 +305,9 @@ class ClientWindow(Window):
 
     def init_player_data_ui(self):
         container = VerContainer()
-        self.top_player = PlayerContainer()
-        self.bottom_player = PlayerContainer()
-        self.hand = HandContainer()
+        self.top_player = PlayerContainer(self)
+        self.bottom_player = PlayerContainer(self)
+        self.hand = HandContainer(self)
 
         self.container.add_widget(container)
 
@@ -326,7 +329,7 @@ class ClientWindow(Window):
         container.add_widget(SPACE_FILLER)
         
         self.last_played_card_container = HorContainer()
-        self.last_played_card = CardWidget([])
+        self.last_played_card = CardWidget(self, [])
         self.last_played_card_container.add_widget(SPACE_FILLER)
         self.last_played_card_container.add_widget(self.last_played_card)
         self.last_played_card_container.add_widget(SPACE_FILLER)
@@ -335,7 +338,7 @@ class ClientWindow(Window):
         container.add_widget(self.last_played_card_container)
         container.add_widget(self.last_played_label)
         container.add_widget(SPACE_FILLER)
-        self.logs_container = LogsContainer()
+        self.logs_container = LogsContainer(self)
         container.add_widget(self.logs_container)
         container.add_widget(SPACE_FILLER)
 

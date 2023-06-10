@@ -14,7 +14,7 @@ CARD_HEIGHT = CARD_SIZE_RATIO * CARD_WIDTH
 CARD_NAME_OFFSET = 18
 
 
-class CardWidget(client.GameWidget, RectWidget):
+class CardWidget(RectWidget):
     # def from_card(card):
     #     result = CardWidget()
     #     result.load(card)
@@ -22,7 +22,7 @@ class CardWidget(client.GameWidget, RectWidget):
 
     def __init__(self, parent_window: 'client.ClientWindow', click_configs: list[ClickConfig]):
         self.last_data = None
-        client.GameWidget.__init__(self, parent_window)
+        self.g_window = parent_window
         RectWidget.__init__(self, LGRAY, CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, click_configs)
         
         self.image = pg.Surface((CARD_WIDTH, CARD_HEIGHT))
@@ -95,8 +95,8 @@ class CardWidget(client.GameWidget, RectWidget):
 
 
 class CardInHandWidget(CardWidget):
-    def from_card(card):
-        result = CardInHandWidget()
+    def from_card(parent_window: 'client.ClientWindow', card):
+        result = CardInHandWidget(parent_window)
         result.load(card)
         return result
     

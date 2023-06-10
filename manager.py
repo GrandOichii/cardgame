@@ -4,7 +4,7 @@ from front.test_py.client import ClientWindow
 
 from tools.manager.window import ManagerEditor, StartMatchInterface
 
-# TODO issues: front freezes when closing, can't open multiple windows at the same time
+# TODO issues: can't open multiple windows at the same time
 
 class GUIMatchStarter(StartMatchInterface):
     def start_match(self, host, port):
