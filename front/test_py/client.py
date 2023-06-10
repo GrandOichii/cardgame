@@ -7,7 +7,7 @@ import pygame as pg
 
 
 from front.test_py.frame import *
-from front.test_py.frame import WHITE, ClickConfig, Rect, WindowConfigs
+# from front.test_py.frame import WHITE, ClickConfig, Rect, WindowConfigs
 from front.test_py.sprites import *
 # from frame import *
 # from sprites import *
@@ -236,11 +236,18 @@ class HandContainer(HorContainer):
         self.set_widgets(w)
 
 
-HOST = 'localhost'
-PORT = 8080
+# HOST = 'localhost'
+# PORT = 8080
 class ClientWindow(Window):
-    def __init__(self):
+    def __init__(self, host, port):
+        super().__init__()
+
         ClientWindow.Instance = self
+        self.host = host
+        self.port = port
+
+        print(self.host)
+        print(self.port)
 
         super().__init__()
 
@@ -254,8 +261,9 @@ class ClientWindow(Window):
 
     def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((HOST, PORT))
+        self.sock.connect((self.host, self.port))
         self.sconfig = parse_state(self.read_msg())
+        print(self.sconfig.__dict__)
         self.top_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
         self.bottom_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
         # TODO untilize match configuration
@@ -337,7 +345,6 @@ class ClientWindow(Window):
             w = self.cursor_card_widget
             w._draw(self.screen, Rect(mx - CARD_WIDTH/2, my - CARD_HEIGHT/2, CARD_WIDTH, CARD_HEIGHT), self.configs)
 
-    # fuze = 0
     def update(self):
         super().update()
         statej = self.read_msg()
@@ -349,6 +356,7 @@ class ClientWindow(Window):
         # state = test_state()
         # self.load(state)
         # self.fuze = 1
+    # fuze = 0
 
     def load(self, state):
         self.last_state = state
@@ -401,6 +409,10 @@ class ClientWindow(Window):
 
     def process_key(self, event: pg.event.Event):
         super().process_key(event)
+
+        if self.last_state is None:
+            return
+        
         if self.last_state.request == 'enter command' and event.key == pg.K_SPACE:
             self.send_response('pass')
             return

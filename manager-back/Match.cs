@@ -20,6 +20,10 @@ namespace manager_back
         public string TimeStart { get; }
         public string TimeEnd { get; set; } = "";
 
+        public string P1Port { get; set; } = "";
+        public string P2Port { get; set; } = "";
+
+
         public string ErrorMsg { get; set; } = "";
 
         public MatchRecord(Match match)
@@ -32,7 +36,7 @@ namespace manager_back
 
             Seed = match.Config.Seed;
             TimeStart = DateTime.Now.ToString();
-            Status = "IN PROGRESS";
+            Status = "WAITING FOR PLAYERS";
         }
     }
 }

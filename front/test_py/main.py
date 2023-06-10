@@ -1,6 +1,6 @@
 from client import ClientWindow
 
-ClientWindow.Instance = ClientWindow()
+ClientWindow.Instance = ClientWindow('localhost', 8080)
 # ClientWindow.Instance.go_fullscreen()
 ClientWindow.Instance.run()
 

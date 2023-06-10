@@ -44,10 +44,10 @@ class WindowConfigs:
 
 
 class Window:
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(Window, cls).__new__(cls)
-        return cls.instance
+    # def __new__(cls):
+    #     if not hasattr(cls, 'instance'):
+    #         cls.instance = super(Window, cls).__new__(cls)
+    #     return cls.instance
     
     def __init__(self):
         pg.init()

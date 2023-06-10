@@ -1,4 +1,6 @@
-﻿using game.controllers;
+﻿using System.Net;
+using System.Net.Sockets;
+using game.controllers;
 using game.decks;
 using game.match;
 using game.player;
@@ -20,11 +22,56 @@ namespace manager_back.Controllers
     public class MatchesController : ControllerBase
     {
 
-        private async void RunMatch(MatchRecord record, Match match)
+        private void RunMatch(MatchRecord record, MatchRequestBody config, Match match)
         {
-            // await Task.Delay(2000);
+            // player creation
+            var decks = new Deck[2] {
+                Deck.FromText(match.Game.CardMaster, config.DeckList1),
+                Deck.FromText(match.Game.CardMaster, config.DeckList2)
+            };
+
+            var playerWaitTasks = new Task[2];
+
+            // TODO don't know if works
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+
+            string p = ((IPEndPoint)listener.LocalEndpoint).Port.ToString();
+            var isBotList = new bool[2] {config.P1IsBot, config.P2IsBot};
+            for (int i = 0; i < 2; i++) {
+                var copyI = i;
+                var t = new Task(() => {
+                    var pName = "P" + (copyI+1);
+                    PlayerController? controller;
+                    if (isBotList[copyI]) {
+                        // THIS (PROBABLY) THROWS EXCEPTION ON FILE READING
+                        controller = new LuaBotController("../bots/test_bot.lua");
+                        System.Console.WriteLine("BOT");
+                    } else {
+                        if (copyI == 0)
+                            record.P1Port = p;
+                        else record.P2Port = p;
+                        
+
+                        controller = new TCPPlayerController(listener, match.Config);
+                        
+                        if (copyI == 0)
+                            record.P1Port = ".";
+                        else record.P2Port = ".";
+                    }
+                    var player = new Player(match, pName, decks[copyI], controller);
+                    match.AddPlayer(player);
+                });
+                playerWaitTasks[copyI] = t;
+                t.Start();
+            }
+
+            Task.WaitAll(playerWaitTasks);
+            System.Console.WriteLine("Players connected");
+
             try
             {
+                record.Status = "IN PROGRESS";
                 match.Start();
 
                 var winner = match.Winner;
@@ -57,22 +104,16 @@ namespace manager_back.Controllers
             config.Seed = body.Seed;
             var match = game.MatchPool.NewMatch(game, config);
 
-            var deck1 = Deck.FromText(game.CardMaster, body.DeckList1);
-            var deck2 = Deck.FromText(game.CardMaster, body.DeckList2);
+            var result = new MatchRecord(match);
 
-            // TODO for now only bots
-            var p1 = new Player(match, "P1", deck1, new LuaBotController("../bots/test_bot.lua"));
-            var p2 = new Player(match, "P2", deck2, new LuaBotController("../bots/test_bot.lua"));
+            RecordKeeper.Instance.Records.Add(result);
+            // RunMatch(result, body, match);
 
-            match.AddPlayer(p1);
-            match.AddPlayer(p2);
+            Task.Run(() => {
+                RunMatch(result, body, match);
+            });
 
-            var record = new MatchRecord(match);
-            RecordKeeper.Instance.Records.Add(record);
-
-            RunMatch(record, match);
-
-            return record;
+            return result;
         }
 
         [HttpGet()]

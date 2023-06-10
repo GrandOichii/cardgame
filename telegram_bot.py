@@ -2,7 +2,7 @@ import pygame as pg
 import asyncio
 from front.test_py.client import ClientWindow
 from telegram.main import main, set_image_capturer, ImageCapturer
-ClientWindow.Instance = ClientWindow()
+ClientWindow.Instance = ClientWindow('localhost', 8080)
 WINDOW = ClientWindow.Instance
 WINDOW.set_screen_size(1200, 800)
 

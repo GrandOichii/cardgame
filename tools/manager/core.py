@@ -67,6 +67,9 @@ class MatchRecord:
         self.timeStart: str = ''
         self.timeEnd: str = ''
 
+        self.p1Port: str = ''
+        self.p2Port: str = ''
+
     def from_json(d: dict):
         result = MatchRecord()
         result.__dict__ = d

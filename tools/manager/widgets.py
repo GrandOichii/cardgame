@@ -168,8 +168,30 @@ class MatchRecordTableItem:
         self.table.setItem(self.index, 1, QTableWidgetItem(str(self.record.seed)))
         self.table.setItem(self.index, 2, QTableWidgetItem(self.record.status))
         self.table.setItem(self.index, 3, QTableWidgetItem(self.record.winner))
-        self.table.setItem(self.index, 4, QTableWidgetItem(self.record.timeStart))
-        self.table.setItem(self.index, 5, QTableWidgetItem(self.record.timeEnd))
+
+        ps = [self.record.p1Port, self.record.p2Port]
+        for i in range(len(ps)):
+            # possible:
+            # <port number> - display a button with Join label
+            # '' - is a bot
+            l = 'BOT'
+            if ps[i] == '.':
+                l = 'TAKEN'
+            
+            self.table.removeCellWidget(self.index, 4+i)
+            self.table.setItem(self.index, 4+i, QTableWidgetItem(l))
+            if len(ps[i]) > 0 and ps[i] != '.':
+                print(ps[i])
+                w = QPushButton(ps[i])
+                # TODO
+                self.table.setCellWidget(self.index, 4+i, w)
+
+
+        # self.table.setItem(self.index, 4, QTableWidgetItem(self.record.p1Port))
+        # self.table.setItem(self.index, 5, QTableWidgetItem(self.record.p1Port))
+        
+        self.table.setItem(self.index, 6, QTableWidgetItem(self.record.timeStart))
+        self.table.setItem(self.index, 7, QTableWidgetItem(self.record.timeEnd))
 
 
 
@@ -177,7 +199,7 @@ class MatchesTab(CEComponent, QWidget):
     def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
-        self.table_columns = ['Match ID', 'Seed', 'Status', 'Winner', 'Start', 'End']
+        self.table_columns = ['Match ID', 'Seed', 'Status', 'Winner', 'P1', 'P2', 'Start', 'End']
 
         self.match_fetch_thread = MatchFetcherThread(parent_window)
         # self.match_fetch_thread.matches_signal
