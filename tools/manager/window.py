@@ -3,9 +3,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 import json
-import widgets
+import tools.manager.widgets as widgets
 import requests
-import core
+import tools.manager.core as core
 
 CONFIG_PATH = 'config.json'
 
@@ -21,10 +21,17 @@ class Config:
         return result
 
 
+class StartMatchInterface:
+    def start_match(self, host, port):
+        print('Starting in', (host, port))
+
+
 SERVER_ADDR = 'http://localhost:5026/'
 class ManagerEditor(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.match_processor: StartMatchInterface = StartMatchInterface()
 
         # self.fetch_cards_signal = pyqtSignal(list[core.Card])
         # self.fetch_decks_signal = pyqtSignal(list[core.Deck])

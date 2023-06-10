@@ -5,12 +5,14 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget
 
-from flow import FlowLayout
-import window as ce
-import core
+from tools.manager.flow import FlowLayout
+import tools.manager.window as ce
+import tools.manager.core as core
+
 import pyperclip
 import time
 import requests
+
 
 class CEComponent:
     def __init__(self, parent_window: 'ce.ManagerEditor'):
@@ -154,9 +156,10 @@ class MatchFetcherThread(CEComponent, QRunnable):
         self.running = False
 
 
-class MatchRecordTableItem:
-    def __init__(self, table: QTableWidget, i: int, match_record: core.MatchRecord):
-        # TODO? any parent constructors, if need be
+class MatchRecordTableItem(CEComponent):
+    def __init__(self, parent_window: 'ce.ManagerEditor', table: QTableWidget, i: int, match_record: core.MatchRecord):
+        super().__init__(parent_window)
+
         self.table = table
         self.index = i
         self.load(match_record)
@@ -181,18 +184,17 @@ class MatchRecordTableItem:
             self.table.removeCellWidget(self.index, 4+i)
             self.table.setItem(self.index, 4+i, QTableWidgetItem(l))
             if len(ps[i]) > 0 and ps[i] != '.':
-                print(ps[i])
+                # w = QPushButton('Join')
                 w = QPushButton(ps[i])
+                port = ps[i]
+                w.clicked.connect(lambda: self.m_window.match_processor.start_match('localhost', port))
+
                 # TODO
                 self.table.setCellWidget(self.index, 4+i, w)
 
-
-        # self.table.setItem(self.index, 4, QTableWidgetItem(self.record.p1Port))
-        # self.table.setItem(self.index, 5, QTableWidgetItem(self.record.p1Port))
         
         self.table.setItem(self.index, 6, QTableWidgetItem(self.record.timeStart))
         self.table.setItem(self.index, 7, QTableWidgetItem(self.record.timeEnd))
-
 
 
 class MatchesTab(CEComponent, QWidget):
@@ -263,7 +265,7 @@ class MatchesTab(CEComponent, QWidget):
         # TODO keep track of all matches, perhaps use web socket?
         i = self.table.rowCount()
         self.table.setRowCount(i+1)
-        li = MatchRecordTableItem(self.table, i, record)
+        li = MatchRecordTableItem(self.m_window, self.table, i, record)
         self.match_record_index[record.id] = li
 
     # actions
@@ -301,7 +303,6 @@ class MatchesTab(CEComponent, QWidget):
         #     self.table.removeRow(0)
         # for record in records:
         #     self.add_match_record(record)
-
 
 
 class CardsTab(CEComponent, QWidget):
