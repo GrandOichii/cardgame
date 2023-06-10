@@ -9,6 +9,7 @@ import pygame as pg
 from front.test_py.frame import *
 # from front.test_py.frame import WHITE, ClickConfig, Rect, WindowConfigs
 from front.test_py.sprites import *
+# import front.test_py.sprites as sprites
 # from frame import *
 # from sprites import *
 
@@ -33,9 +34,16 @@ def random_string():
     return result
 
 
-class LogsContainer(ScrollWidget):
-    def __init__(self):
-        super().__init__(RED, min_height=200)
+class GameWidget:
+    def __init__(self, parent_window: 'ClientWindow'):
+        self.g_window = parent_window
+
+
+class LogsContainer(GameWidget, ScrollWidget):
+    def __init__(self, parent_window: 'ClientWindow'):
+        GameWidget.__init__(self, parent_window)
+        ScrollWidget.__init__(self, RED, min_height=200)
+
         self.container = VerContainer()
         self.container.add_widget(RectWidget(max_height=0))
         self.set_widget(self.container)
@@ -44,7 +52,7 @@ class LogsContainer(ScrollWidget):
 
     def load(self, data):
         for log in data:
-            l = LabelWidget(ClientWindow.Instance.font, log)
+            l = LabelWidget(self.g_window.font, log)
             self.container.add_widget(l)
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
@@ -55,15 +63,16 @@ class LogsContainer(ScrollWidget):
         return super().draw(surface, bounds, configs)
 
 
-class NameLabelWidget(LabelWidget):
-    def __init__(self, font):
+class NameLabelWidget(GameWidget, LabelWidget):
+    def __init__(self, parent_window: 'ClientWindow', font):
+        GameWidget.__init__(self, parent_window)
         font = ClientWindow.Instance.font
 
         click_configs = []
         cc1 = ClickConfig()
 
         # TODO
-        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick attack target'
+        cc1.mouse_over_condition = lambda: self.g_window.last_state.request == 'pick attack target'
         cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc1.mouse_click_condition = lambda: True
         cc1.mouse_click_action = self.pick_attack_action
@@ -72,28 +81,29 @@ class NameLabelWidget(LabelWidget):
             cc1
         ]
 
-        super().__init__(font, '', click_configs=click_configs)
+        LabelWidget.__init__(self, font, '', click_configs=click_configs)
 
     def pick_attack_action(self):
-        client.ClientWindow.Instance.send_response('player')
+        self.g_window.send_response('player')
 
 
-class InfoContainer(VerContainer):
-    def __init__(self, parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
-        super().__init__(outline_color)
+class InfoContainer(GameWidget, VerContainer):
+    def __init__(self, parent_window: 'ClientWindow', parent: 'PlayerContainer', outline_color: tuple[int, int, int] = None):
+        GameWidget.__init__(self, parent_window)
+        VerContainer.__init__(self, outline_color)
 
         self.pc_parent = parent
 
         # top = RectWidget(LGREEN)
         top = FormContainer()
 
-        self.name_label = NameLabelWidget(ClientWindow.Instance.font)
+        self.name_label = NameLabelWidget(self.g_window.font)
         top.add_widget(self.name_label)
 
-        self.health_label = LabelWidget(ClientWindow.Instance.font, ' ')
-        top.add_pair(LabelWidget(ClientWindow.Instance.font, 'Health', RED), self.health_label)
-        self.energy_label = LabelWidget(ClientWindow.Instance.font, ' ')
-        top.add_pair(LabelWidget(ClientWindow.Instance.font, 'Energy', BLUE), self.energy_label)
+        self.health_label = LabelWidget(self.g_window.font, ' ')
+        top.add_pair(LabelWidget(self.g_window.font, 'Health', RED), self.health_label)
+        self.energy_label = LabelWidget(self.g_window.font, ' ')
+        top.add_pair(LabelWidget(self.g_window.font, 'Energy', BLUE), self.energy_label)
         top.add_widget(SPACE_FILLER)
 
         self.add_widget(top)
@@ -109,9 +119,11 @@ class InfoContainer(VerContainer):
         self.bond.load(data.bond)
 
 
-class UnitContainer(VerContainer):
-    def __init__(self, lane_i: str):
-        super().__init__()
+class UnitContainer(GameWidget, VerContainer):
+    def __init__(self, parent_window: 'ClientWindow', lane_i: str):
+        GameWidget.__init__(self, parent_window)
+        VerContainer.__init__(self)
+
         self.lane_i = lane_i
 
         self.last_attacks_left = 0
@@ -120,13 +132,13 @@ class UnitContainer(VerContainer):
         self.add_widget(self.card)
 
         cc = ClickConfig()
-        cc.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'enter command' and self.last_attacks_left > 0
+        cc.mouse_over_condition = lambda: self.g_window.last_state.request == 'enter command' and self.last_attacks_left > 0
         cc.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, BLUE, (bounds.x, bounds.y, bounds.width, bounds.height), 1)
         cc.mouse_click_condition = lambda: True
         cc.mouse_click_action = self.attack_action
         click_configs = [cc]
 
-        self.attacks_label = LabelWidget(ClientWindow.Instance.font, '0', bg_color=LRED, click_configs=click_configs)
+        self.attacks_label = LabelWidget(self.g_window.font, '0', bg_color=LRED, click_configs=click_configs)
         self.add_widget(self.attacks_label)
 
     def load(self, data):
@@ -143,7 +155,7 @@ class UnitContainer(VerContainer):
         self.attacks_label.set_text(attacks_text)
 
     def attack_action(self):
-        ClientWindow.Instance.send_response(f'attack {self.lane_i}')
+        self.g_window.send_response(f'attack {self.lane_i}')
 
 
 class LanesContainer(VerContainer):
@@ -242,7 +254,6 @@ class ClientWindow(Window):
     def __init__(self, host, port):
         super().__init__()
 
-        ClientWindow.Instance = self
         self.host = host
         self.port = port
 

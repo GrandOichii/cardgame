@@ -14,16 +14,16 @@ CARD_HEIGHT = CARD_SIZE_RATIO * CARD_WIDTH
 CARD_NAME_OFFSET = 18
 
 
-class CardWidget(RectWidget):
+class CardWidget(client.GameWidget, RectWidget):
     # def from_card(card):
     #     result = CardWidget()
     #     result.load(card)
     #     return result
 
-    def __init__(self, click_configs: list[ClickConfig]):
+    def __init__(self, parent_window: 'client.ClientWindow', click_configs: list[ClickConfig]):
         self.last_data = None
-        
-        super().__init__(LGRAY, CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, click_configs)
+        client.GameWidget.__init__(self, parent_window)
+        RectWidget.__init__(self, LGRAY, CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH, CARD_HEIGHT, click_configs)
         
         self.image = pg.Surface((CARD_WIDTH, CARD_HEIGHT))
         self.image.fill(WHITE)
@@ -41,7 +41,7 @@ class CardWidget(RectWidget):
 
         pg.draw.rect(self.image, self.bg_color, (1, 3 + CARD_NAME_OFFSET*2, CARD_WIDTH-2, CARD_HEIGHT-4-2*CARD_NAME_OFFSET))
         
-        font = client.ClientWindow.Instance.font
+        font = self.g_window.font
 
         img = font.render(data.name, False, GRAY)
         r = img.get_rect()
@@ -100,15 +100,15 @@ class CardInHandWidget(CardWidget):
         result.load(card)
         return result
     
-    def __init__(self):
+    def __init__(self, parent_window: 'client.ClientWindow'):
         cc1 = ClickConfig()
-        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'enter command'
+        cc1.mouse_over_condition = lambda: self.g_window.last_state.request == 'enter command'
         cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc1.mouse_click_condition = lambda: True
         cc1.mouse_click_action = self.play_action
 
         cc2 = ClickConfig()
-        cc2.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'in_hand' and self.last_data.id in client.ClientWindow.Instance.last_state.args
+        cc2.mouse_over_condition = lambda: self.g_window.last_state.request == 'in_hand' and self.last_data.id in self.g_window.last_state.args
         cc2.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc2.mouse_click_condition = lambda: True
         cc2.mouse_click_action = self.in_hand_action
@@ -118,50 +118,50 @@ class CardInHandWidget(CardWidget):
             cc2
         ]
     
-        super().__init__(click_configs)
+        super().__init__(parent_window, click_configs)
 
     def play_action(self):
-        client.ClientWindow.Instance.send_response(f'play {self.last_data.id}')
+        self.g_window.send_response(f'play {self.last_data.id}')
 
     def in_hand_action(self):
-        client.ClientWindow.Instance.send_response(f'{self.last_data.id}')
+        self.g_window.send_response(f'{self.last_data.id}')
 
     
 class CardInPlayWidget(CardWidget):
-    def __init__(self):
+    def __init__(self, parent_window: 'client.ClientWindow'):
 
         cc1 = ClickConfig()
-        cc1.mouse_over_condition = lambda: self.last_data is not None and client.ClientWindow.Instance.last_state.request == 'target' and self.last_data.id in client.ClientWindow.Instance.last_state.args
+        cc1.mouse_over_condition = lambda: self.last_data is not None and self.g_window.last_state.request == 'target' and self.last_data.id in self.g_window.last_state.args
         cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc1.mouse_click_condition = lambda: True
         cc1.mouse_click_action = self.target_action
 
         click_configs = [cc1]
 
-        super().__init__(click_configs)
+        super().__init__(parent_window, click_configs)
 
     def target_action(self):
-        client.ClientWindow.Instance.send_response(f'{self.last_data.id}')
+        self.g_window.send_response(f'{self.last_data.id}')
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
         if self.last_data is not None:
-            client.ClientWindow.Instance.coord_dict[self.last_data.id] = (bounds.x, bounds.y)
+            self.g_window.coord_dict[self.last_data.id] = (bounds.x, bounds.y)
 
         return super().draw(surface, bounds, configs)
 
 
 class TreasureWidget(CardInPlayWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent_window: 'client.ClientWindow'):
+        super().__init__(parent_window)
 
         # cc1 = ClickConfig()
-        # cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'enter command'
+        # cc1.mouse_over_condition = lambda: self.g_window.last_state.request == 'enter command'
         # cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         # cc1.mouse_click_condition = lambda: True
         # cc1.mouse_click_action = self.attack_action
 
         cc1 = ClickConfig()
-        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick attack target'
+        cc1.mouse_over_condition = lambda: self.g_window.last_state.request == 'pick attack target'
         cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, BLUE, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc1.mouse_click_condition = lambda: True
         cc1.mouse_click_action = self.pick_attack_action
@@ -170,23 +170,23 @@ class TreasureWidget(CardInPlayWidget):
         self.click_configs += [cc1]
 
     def pick_attack_action(self):
-        client.ClientWindow.Instance.send_response(f'{self.last_data.id}')
+        self.g_window.send_response(f'{self.last_data.id}')
 
 
 class UnitCardWidget(CardInPlayWidget):
-    def __init__(self, lane_i: int):
-        super().__init__()
+    def __init__(self, parent_window: 'client.ClientWindow', lane_i: int):
+        super().__init__(parent_window)
 
         self.lane_i = lane_i
 
         # cc1 = ClickConfig()
-        # cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'enter command'
+        # cc1.mouse_over_condition = lambda: self.g_window.last_state.request == 'enter command'
         # cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, RED, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         # cc1.mouse_click_condition = lambda: True
         # cc1.mouse_click_action = self.attack_action
 
         cc1 = ClickConfig()
-        cc1.mouse_over_condition = lambda: client.ClientWindow.Instance.last_state.request == 'pick lane'
+        cc1.mouse_over_condition = lambda: self.g_window.last_state.request == 'pick lane'
         cc1.mouse_over_action = lambda surface, bounds: pg.draw.rect(surface, BLUE, (bounds.x, bounds.y, bounds.width, bounds.height), 2)
         cc1.mouse_click_condition = lambda: True
         cc1.mouse_click_action = self.pick_lane_action
@@ -198,4 +198,4 @@ class UnitCardWidget(CardInPlayWidget):
     #     client.ClientWindow.send_response(f'attack {self.lane_i}')
 
     def pick_lane_action(self):
-        client.ClientWindow.Instance.send_response(f'{self.lane_i}')
+        self.g_window.send_response(f'{self.lane_i}')

@@ -1,8 +1,8 @@
 from client import ClientWindow
 
-ClientWindow.Instance = ClientWindow('localhost', 8080)
-# ClientWindow.Instance.go_fullscreen()
-ClientWindow.Instance.run()
+w = ClientWindow('localhost', 8080)
+# w.go_fullscreen()
+w.run()
 
 
 # def random_rect():

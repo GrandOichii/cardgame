@@ -6,8 +6,8 @@ port = 8080
 if len(sys.argv) == 2:
     port = int(sys.argv[1])
 
-ClientWindow.Instance = ClientWindow('localhost', port)
-ClientWindow.Instance.config_connection()
-ClientWindow.Instance.set_screen_size(1200, 800)
-ClientWindow.Instance.go_fullscreen()
-ClientWindow.Instance.run()
+w = ClientWindow('localhost', port)
+w.config_connection()
+w.set_screen_size(1200, 800)
+w.go_fullscreen()
+w.run()
