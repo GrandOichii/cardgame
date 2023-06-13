@@ -33,6 +33,7 @@ namespace manager_back
             ID = Convert.ToBase64String(g.ToByteArray());
             ID = ID.Replace("=","");
             ID = ID.Replace("+","");
+            ID = ID.Replace("/","");
 
             Seed = match.Config.Seed;
             TimeStart = DateTime.Now.ToString();

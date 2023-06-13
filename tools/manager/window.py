@@ -90,4 +90,8 @@ class ManagerEditor(QMainWindow):
 
     def fetch_records(self):
         # match id -- record
-        self.record_index = requests.get(SERVER_ADDR + 'records').json()
+        self.record_index: dict = {}
+        
+        # data = requests.get(SERVER_ADDR + 'records').json()
+        # for key, item in data.items():
+        #     self.record_index[key] = core.MatchPlayback.from_json(item)

@@ -105,7 +105,12 @@ namespace game.cards.loaders {
         public override Card Load(string cName, string colName)
         {
             var name = FmtCard(cName, colName);
-            if (!_cardIndex.ContainsKey(name)) throw new Exception("Card " + name + " is not present in card loader");
+            if (!_cardIndex.ContainsKey(name)) {
+                System.Console.WriteLine("Searching for: " + name);
+                foreach (var key in _cardIndex.Keys)
+                    System.Console.WriteLine(key);
+                throw new Exception("Card " + name + " is not present in card loader");
+            }
             var path = _cardIndex[name];
             var template = JCard.Load(Path.Join(path, CARD_INFO_FILE));
             return new Card(

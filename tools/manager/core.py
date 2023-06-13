@@ -54,7 +54,7 @@ class Deck:
         # TODO BAD
         result = self.bond
         for card in self.cards:
-            result += f'\r\n{card.amount} {card.name}'
+            result += f'\n{card.amount} {card.name}'
         return result
     
 
@@ -81,15 +81,34 @@ class MatchConfig:
     def __init__(self) -> None:
         self.seed: int = 0
 
+    def from_json(j: dict) -> 'MatchConfig':
+        result = MatchConfig()
+        result.seed = j['seed']
+        return result
+
 
 class PlayerPlayback:
     def __init__(self) -> None:
         self.deck_list: str = ''
         self.responses: list[str] = []
 
+    def from_json(j: dict) -> 'PlayerPlayback':
+        result = PlayerPlayback()
+        result.deck_list = j['deckList']
+        result.responses = j['responses']
+        return result
+
 
 class MatchPlayback:
     def __init__(self) -> None:
-        self.players: list = []
+        self.players: list[PlayerPlayback] = []
         self.config: MatchConfig = None
         self.timestamp: str = ''
+
+    def from_json(j: dict) -> 'MatchPlayback':
+        result = MatchPlayback()
+        result.timestamp = j['timestamp']
+        result.config = MatchConfig.from_json(j['config'])
+        for item in j['players']:
+            result.players += [PlayerPlayback.from_json(item)]
+        return result

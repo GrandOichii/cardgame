@@ -12,5 +12,15 @@ namespace manager_back.Controllers
         {
             return PlaybackIndex.Instance.Playbacks;
         }
+
+        [HttpGet("{Id}")]
+        public game.recording.MatchRecord? GetByID(string Id) {
+            foreach (var pair in PlaybackIndex.Instance.Playbacks) {
+                if (pair.Key != Id) continue;
+
+                return pair.Value;
+            }
+            return null;
+        }
     }
 }

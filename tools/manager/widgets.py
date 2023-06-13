@@ -259,6 +259,8 @@ class MatchesTab(CEComponent, QWidget):
         for i in range(len(self.table_columns)):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
 
+        self.table.cellClicked.connect(self.table_cell_clicked_action)
+
         return self.table
     
     def add_match_record(self, record: core.MatchRecord):
@@ -280,7 +282,6 @@ class MatchesTab(CEComponent, QWidget):
         result = requests.post(ce.SERVER_ADDR + 'matches', json=data).json()
         record = core.MatchRecord.from_json(result)
         self.add_match_record(record)
-        # .json()
 
     def update_matches_action(self, records: list[core.MatchRecord]):
         # TODO should delete exist?
@@ -304,6 +305,23 @@ class MatchesTab(CEComponent, QWidget):
         # for record in records:
         #     self.add_match_record(record)
 
+    def table_cell_clicked_action(self, rowIndex: int):
+        matchID = self.table.item(rowIndex, 0).text()
+        if not matchID in self.m_window.record_index:
+            # TODO fetch record
+            print(ce.SERVER_ADDR + f'records/{matchID}')
+            data = requests.get(ce.SERVER_ADDR + f'records/{matchID}').json()
+            self.m_window.record_index[matchID] = core.MatchPlayback.from_json(data)
+        record = self.m_window.record_index[matchID]
+
+        # load record to list
+        actions_arr = [record.players[0].responses, record.players[1].responses]
+        print(actions_arr)
+        for i in range(len(self.match_player_record_widgets)):
+            al = self.match_player_record_widgets[i].actions_list
+            al.clear()
+            # TODO? custom elements
+            al.addItems(actions_arr[i])
 
 class CardsTab(CEComponent, QWidget):
     def __init__(self, parent_window: 'ce.ManagerEditor'):

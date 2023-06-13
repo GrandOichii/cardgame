@@ -260,9 +260,6 @@ class ClientWindow(Window):
         self.host = host
         self.port = port
 
-        print(self.host)
-        print(self.port)
-
         super().__init__()
 
         self.init_ui()
@@ -272,12 +269,17 @@ class ClientWindow(Window):
 
         self.last_state = None
         self.cursor_card_widget = CardWidget(self, [])
+        self.sock = None
+
+    def on_close(self):
+        super().on_close()
+        if self.sock:
+            self.sock.close()
 
     def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
         self.sconfig = parse_state(self.read_msg())
-        print(self.sconfig.__dict__)
         self.top_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
         self.bottom_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
         # TODO untilize match configuration

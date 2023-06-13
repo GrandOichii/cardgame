@@ -20,8 +20,13 @@ namespace game.cards {
             if (!_cardIndex.ContainsKey(name)) {
                 Logger.Instance.Log("CardMaster", "Card not present, loading...");
                 
-                // TODO load card
-                var card = _loader.Load(cName, colName);
+                Card? card;
+                try {
+                    card = _loader.Load(cName, colName);
+                } catch (Exception e) {
+                    System.Console.WriteLine(e);
+                    throw e;
+                }
                 _cardIndex.Add(name, card);
                 _refCount.Add(name, 0);
             }

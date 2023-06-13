@@ -97,6 +97,9 @@ class Window:
 
             # refresh screen
             pg.display.flip()
+        self.on_close()
+
+    def on_close(self):
         pg.quit()
 
     def update(self):

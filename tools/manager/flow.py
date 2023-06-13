@@ -79,13 +79,13 @@ class FlowLayout(QLayout):
             hspace = self.horizontalSpacing()
             if hspace == -1:
                 hspace = widget.style().layoutSpacing(
-                    QtGui.QSizePolicy.PushButton,
-                    QtGui.QSizePolicy.PushButton, Qt.Horizontal)
+                    QSizePolicy.PushButton,
+                    QSizePolicy.PushButton, Qt.Horizontal)
             vspace = self.verticalSpacing()
             if vspace == -1:
                 vspace = widget.style().layoutSpacing(
-                    QtGui.QSizePolicy.PushButton,
-                    QtGui.QSizePolicy.PushButton, Qt.Vertical)
+                    QSizePolicy.PushButton,
+                    QSizePolicy.PushButton, Qt.Vertical)
             nextX = x + item.sizeHint().width() + hspace
             if nextX - hspace > effective.right() and lineheight > 0:
                 x = effective.x()
