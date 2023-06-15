@@ -113,6 +113,8 @@ class MatchPlayerRecordWidget(CEComponent, QWidget):
 
         actions_label = QLabel(f'P{self.player_i} actions')
         self.actions_list = QListWidget()
+        self.actions_list.currentItemChanged.connect(self.action_in_list_changed_action)
+        # self.actions_list.itemClicked.connect()
         played_card_label = QLabel('Played card')
         self.played_card = CardWidget(self.m_window)
 
@@ -123,6 +125,16 @@ class MatchPlayerRecordWidget(CEComponent, QWidget):
         
 
         self.setLayout(layout)
+
+    def action_in_list_changed_action(self, a: QListWidgetItem):
+        text = a.text()
+        if not text.startswith('play '): return
+
+        card_id = text[5:]
+        record = self.m_window.matches_tab.current_record
+        card_name = record.card_index[card_id]
+        card = self.m_window.get_card(card_name)
+        self.played_card.load(card)
 
 
 class MatchFetcherThreadSignals(QObject):
@@ -201,6 +213,7 @@ class MatchesTab(CEComponent, QWidget):
     def __init__(self, parent_window: 'ce.ManagerEditor'):
         QWidget.__init__(self)
         CEComponent.__init__(self, parent_window)
+        self.current_record: core.MatchPlayback = None
         self.table_columns = ['Match ID', 'Seed', 'Status', 'Winner', 'P1', 'P2', 'Start', 'End']
 
         self.match_fetch_thread = MatchFetcherThread(parent_window)
@@ -244,6 +257,7 @@ class MatchesTab(CEComponent, QWidget):
         self.match_player_record_widgets: list[MatchPlayerRecordWidget] = []
         for i in [1, 2]:
             mpr = MatchPlayerRecordWidget(self.m_window, i)
+            # mpr.actions_list.itemClicked.connect(self.action_in_list_changed_action)
             self.match_player_record_widgets += [mpr]
             layout.addWidget(mpr)
 
@@ -308,20 +322,18 @@ class MatchesTab(CEComponent, QWidget):
     def table_cell_clicked_action(self, rowIndex: int):
         matchID = self.table.item(rowIndex, 0).text()
         if not matchID in self.m_window.record_index:
-            # TODO fetch record
-            print(ce.SERVER_ADDR + f'records/{matchID}')
             data = requests.get(ce.SERVER_ADDR + f'records/{matchID}').json()
             self.m_window.record_index[matchID] = core.MatchPlayback.from_json(data)
-        record = self.m_window.record_index[matchID]
+        self.current_record = self.m_window.record_index[matchID]
 
-        # load record to list
-        actions_arr = [record.players[0].responses, record.players[1].responses]
-        print(actions_arr)
+        # load reacord to list
+        actions_arr = [self.current_record.data.players[0].responses, self.current_record.data.players[1].responses]
         for i in range(len(self.match_player_record_widgets)):
             al = self.match_player_record_widgets[i].actions_list
             al.clear()
             # TODO? custom elements
             al.addItems(actions_arr[i])
+
 
 class CardsTab(CEComponent, QWidget):
     def __init__(self, parent_window: 'ce.ManagerEditor'):
@@ -695,6 +707,11 @@ class CardWidget(CEComponent, QFrame):
         self.setLayout(top_layout)
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         # self.setStyleSheet('border: 1px solid black;')
+
+    def load(self, card: 'core.Card'):
+        self.name_label.setText(card.name)
+        self.type_label.setText(card.type)
+        self.text_label.setText(card.text)
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         print(self.card.name)

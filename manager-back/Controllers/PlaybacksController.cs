@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace manager_back.Controllers
 {
@@ -8,14 +7,14 @@ namespace manager_back.Controllers
     public class PlaybacksController : ControllerBase
     {
         [HttpGet()]
-        public Dictionary<string, game.recording.MatchRecord> Get()
+        public Dictionary<string, Record> Get()
         {
-            return PlaybackIndex.Instance.Playbacks;
+            return PlaybackRecordKeeper.Instance.Records;
         }
 
         [HttpGet("{Id}")]
-        public game.recording.MatchRecord? GetByID(string Id) {
-            foreach (var pair in PlaybackIndex.Instance.Playbacks) {
+        public Record? GetByID(string Id) {
+            foreach (var pair in PlaybackRecordKeeper.Instance.Records) {
                 if (pair.Key != Id) continue;
 
                 return pair.Value;

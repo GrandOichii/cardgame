@@ -129,6 +129,11 @@ namespace game.cards {
             var table = Utility.GetReturnAs<LuaTable>(returned);
             return new CardW(owner, this, table, lState);
         }
+
+        public override string ToString()
+        {
+            return Collection + "::" + Name;
+        }
     }
 
 

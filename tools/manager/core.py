@@ -100,13 +100,25 @@ class PlayerPlayback:
 
 
 class MatchPlayback:
+    def __init__(self):
+        self.data: PlaybackData = None
+        self.card_index: dict = {}
+
+    def from_json(j: dict) -> 'MatchPlayback':
+        result = MatchPlayback()
+        result.data = PlaybackData.from_json(j['mRecord'])
+        result.card_index = j['cardIndex']
+        return result
+
+
+class PlaybackData:
     def __init__(self) -> None:
         self.players: list[PlayerPlayback] = []
         self.config: MatchConfig = None
         self.timestamp: str = ''
 
-    def from_json(j: dict) -> 'MatchPlayback':
-        result = MatchPlayback()
+    def from_json(j: dict) -> 'PlaybackData':
+        result = PlaybackData()
         result.timestamp = j['timestamp']
         result.config = MatchConfig.from_json(j['config'])
         for item in j['players']:

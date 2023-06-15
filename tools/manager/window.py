@@ -92,6 +92,11 @@ class ManagerEditor(QMainWindow):
         # match id -- record
         self.record_index: dict = {}
         
+        # TODO add back
         # data = requests.get(SERVER_ADDR + 'records').json()
         # for key, item in data.items():
         #     self.record_index[key] = core.MatchPlayback.from_json(item)
+
+    # other
+    def get_card(self, name: str):
+        return self.card_name_index[name]

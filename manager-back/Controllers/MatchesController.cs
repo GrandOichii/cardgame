@@ -9,13 +9,13 @@ using game.recording;
 
 namespace manager_back.Controllers
 {
-    class PlaybackIndex {
-        static public PlaybackIndex Instance { get; } = new();
-        private PlaybackIndex() {
-            Playbacks = new();
+    class MatchCardIndexRecords {
+        static public MatchCardIndexRecords Instance { get; }=new();
+        private MatchCardIndexRecords() {
+            CardIndicies = new();
         }
 
-        public Dictionary<string, game.recording.MatchRecord> Playbacks { get; }
+        public Dictionary<string, Dictionary<string, string>> CardIndicies { get; }
     }
 
     class RecordKeeper {
@@ -25,6 +25,22 @@ namespace manager_back.Controllers
         private RecordKeeper() {
             Records = new();
         }
+    }
+
+    public class Record {
+        public MatchRecord MRecord { get; set; }
+        public Dictionary<string, string> CardIndex { get; set; }
+        public Record(MatchRecord record, Dictionary<string, string> cIndex) {
+            MRecord = record;
+            CardIndex = cIndex;
+        }
+    }
+
+    class PlaybackRecordKeeper {
+        static public PlaybackRecordKeeper Instance { get; } = new();
+        private PlaybackRecordKeeper() {}
+
+        public Dictionary<string, Record> Records { get; }=new();
     }
 
     [Route("matches")]
@@ -89,6 +105,7 @@ namespace manager_back.Controllers
 
                 record.Winner = winner.Name;
                 record.Status = "FINISHED";
+                
             } catch (Exception ex)
             {
                 record.ErrorMsg = ex.ToString();
@@ -103,8 +120,16 @@ namespace manager_back.Controllers
                 player.OriginalDeck.UnloadCards(match.Game.CardMaster);
             }
 
+            // save match card index
+            var ci = new Dictionary<string, string>();
+            foreach (var pair in match.AllCards.Cards) {
+                var card = pair.Value;
+                ci.Add(pair.Key, card.Original.ToString());
+            }
+            // MatchCardIndexRecords.Instance.CardIndicies.Add(record.ID);
+
             // add playback to index
-            PlaybackIndex.Instance.Playbacks.Add(record.ID, match.Record);
+            PlaybackRecordKeeper.Instance.Records.Add(record.ID, new Record(match.Record, ci));
         }
 
         [HttpPost()]
