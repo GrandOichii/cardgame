@@ -12,7 +12,7 @@ import tools.manager.core as core
 import pyperclip
 import time
 import requests
-
+import random
 
 class CEComponent:
     def __init__(self, parent_window: 'ce.ManagerEditor'):
@@ -287,7 +287,13 @@ class MatchesTab(CEComponent, QWidget):
     # actions
     def start_match_action(self):
         data = {}
-        data['seed'] = int(self.seed_edit.text())
+        # TODO figure out max
+        seed = random.randint(0, 10000)
+
+        if len(self.seed_edit.text()) != 0:
+            seed = int(self.seed_edit.text())
+
+        data['seed'] = seed
         for i in [1, 2]:
             p = self.match_player_edits[i-1]
             data[f'deckList{i}'] = self.m_window.deck_index[p.deck_box.currentText()].to_text()
@@ -681,14 +687,26 @@ class CardWidget(CEComponent, QFrame):
 
         layout = QVBoxLayout()
         top_layout = QVBoxLayout()
-        top_layout.setAlignment(Qt.AlignTop)
+        # top_layout.setAlignment(Qt.AlignTop)
 
-        self.name_label = QLabel(self.card.name)
-        top_layout.addWidget(self.name_label)
-        self.type_label = QLabel(self.card.type)
-        top_layout.addWidget(self.type_label)
-        self.text_label = QLabel(self.card.text + '\n')
+        # self.name_label = QLabel(self.card.name)
+        # # self.is_bot_box.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+        # self.name_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        # top_layout.addWidget(self.name_label)
+
+
+        # self.type_label = QLabel(self.card.type)
+        # self.type_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        # top_layout.addWidget(self.type_label)
+
+        self.text_label = QLabel(self.card.name + '\n' + self.card.type + '\n\n' + self.card.text + '\n')
+        # self.text_label.setMinimumSize(QSize(35*SIZE_SCALE, 45*SIZE_SCALE))
+        self.text_label.setAlignment(Qt.AlignTop)
+        
+        # self.text_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         self.text_label.setWordWrap(True)
+
         top_layout.addWidget(self.text_label)
 
         # bottom_layout = QHBoxLayout()
@@ -709,9 +727,9 @@ class CardWidget(CEComponent, QFrame):
         # self.setStyleSheet('border: 1px solid black;')
 
     def load(self, card: 'core.Card'):
-        self.name_label.setText(card.name)
-        self.type_label.setText(card.type)
-        self.text_label.setText(card.text)
+        # self.name_label.setText(card.name)
+        # self.type_label.setText(card.type)
+        self.text_label.setText(card.name + '\n' + card.type + '\n\n' + card.text + '\n')
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         print(self.card.name)

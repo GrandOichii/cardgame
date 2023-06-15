@@ -7,9 +7,6 @@
 - add cards
 - create templates for cards
 - create match tab
-    - !figure out how to send data from server on match end
-        - possible solution: when creating match, send over a token, that identifies the match. every second or so, request, whether the match has ended. 
-        - for that, create a list of all match tokens left. iterate through the list every time span. if got results for the match, delete it from the list
     - start match
         - need to be able to specify the number of matches
     - analize match results
